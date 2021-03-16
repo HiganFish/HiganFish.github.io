@@ -20,7 +20,7 @@
 <meta name="verify" content=all />
     <!--Title-->
 
-<title>编程规范 | Lsmg的大学之路</title>
+<title>Linux笔记 | Lsmg的大学之路</title>
 
 <link rel="alternate" href="/atom.xml" title="Lsmg的大学之路" type="application/atom+xml">
 
@@ -140,9 +140,9 @@
     <article id="post">
         <div id="post-header">
 
-            <h1 id="编程规范">
+            <h1 id="Linux笔记">
                 
-                编程规范
+                Linux笔记
                 
             </h1>
             <div class="article-meta">
@@ -150,7 +150,7 @@
     
     <span class="categories-meta fa-wrap">
             <i class="fa fa-folder-open-o"></i>
-        <span>CPP</span>
+        <span>null</span>
     </span>
     
     
@@ -166,7 +166,7 @@
     
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
-        <span class="date-meta ">2020/05/02</span>
+        <span class="date-meta ">2021/03/16</span>
     </span>
     
     
@@ -178,92 +178,10 @@
         </div>
         
         <div id="post-body">
-            <p><strong>第一点</strong><br>有时, 把函数的定义同类的实例脱钩是有益的, 甚至是必要的. 这样的函数可以被定义成静态成员, 或是非成员函数. 非成员函数不应依赖于外部变量, 应尽量置于某个命名空间内. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 推荐</span></span><br><span class="line"><span class="keyword">namespace</span> myproject &#123;</span><br><span class="line"><span class="keyword">namespace</span> foo_bar &#123;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Function1</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Function2</span><span class="params">()</span></span>;</span><br><span class="line">&#125;  <span class="comment">// namespace foo_bar</span></span><br><span class="line">&#125;  <span class="comment">// namespace myproject</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不推荐</span></span><br><span class="line"><span class="keyword">namespace</span> myproject &#123;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooBar</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Function1</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Function2</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;  <span class="comment">// namespace myproject</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>第二点</strong><br>局部变量应当声明和初始化同时进行, 推荐使用C++11的花括号</p>
-<p><em>如果在循环中, 不要将对象的声明放入其中</em>, 每次进入作用域都会调用构造函数, 每次退出都会调用析构函数</p>
-<p><strong>第三点-类相关</strong><br>不要在构造函数中调用虚函数, 也不要在无法报出错误时进行可能失败的初始化.</p>
-<p>不要定义隐式类型转换. </p>
-<p>对于转换运算符和单参数构造函数, 请使用 explicit 关键字.</p>
-<ul>
-<li>单参数构造函数有可能会被无意地用作隐式类型转换.</li>
-</ul>
-<p>如果你的类型需要, 就让它们支持拷贝 / 移动. 否则, 就把隐式产生的拷贝和移动函数禁用.</p>
-<ul>
-<li>MyClass(const MyClass&amp;) = delete;</li>
-<li>MyClass&amp; operator=(const MyClass&amp;) = delete;</li>
-</ul>
-<p>仅当<code>只有</code>数据成员的时候<code>struct</code>, <code>其他一律</code>使用class</p>
-<p>使用组合常常比使用继承更合理</p>
-<ul>
-<li>所有的继承<code>必须是public</code>, </li>
-</ul>
-<p>多重继承(真正需要的时候很少)</p>
-<ul>
-<li>最多只有一个基类是非抽象类; 其它基类都是以 Interface 为后缀的 纯接口类.</li>
-</ul>
-<p>除少数特定环境外, 不要重载运算符. 也不要创建用户定义字面量</p>
-<ul>
-<li>重载运算符, 容易造成代码混乱, 因为没有统一的重载规范</li>
-</ul>
-<p>数据成员都必须是私有的</p>
-<p><strong>第四点-函数相关</strong></p>
-<p>输入参数在先, 后跟输出参数.</p>
-<p>编写简短函数</p>
-<p>所有按引用传递的参数必须加上 const.</p>
-<p>函数重载</p>
-<ul>
-<li>若要使用函数重载, 则必须能让读者一看调用点就胸有成竹,<br>而不用花心思猜测调用的重载函数到底是哪一种. 这一规则也适用于构造函数.</li>
-<li>如果重载函数的目的是为了支持不同数量的同一类型参数, 则优先考虑使用 std::vector 以便使用者可以用 列表初始化 指定参数.</li>
-</ul>
-<p>省却参数</p>
-<p>函数返回类型后置语法</p>
-<ul>
-<li><code>auto foo(int x) -&gt; int</code> 对于简单的类型, 优点体现不出</li>
-<li>对于复杂的情况, 例如类域中的类型声明或者以函数参数的形式书写的类型, 写法的不同会造成区别?????.</li>
-</ul>
-<p><strong>杂项</strong><br>在 C++11 里，用 constexpr 来定义真正的常量，或实现常量初始化。</p>
-<p><strong>第五点命名-版本最多的地方</strong></p>
-<p>文件命名</p>
-<ul>
-<li>全部小写包含<code>_</code>最好</li>
-<li>C++ 文件要以 .cc 结尾, 头文件以 .h 结尾.</li>
-</ul>
-<p>类型名称 - 类, 结构体, 类型定义 (typedef), 枚举, 类型模板参数</p>
-<ul>
-<li>类型名称的每个单词首字母均大写, 不包含下划线<code>MyExcitingClass</code></li>
-</ul>
-<p>变量命名</p>
-<ul>
-<li>变量 (包括函数参数) 和数据成员名一律小写, 单词之间用下划线连接. 类的成员变量以下划线结尾</li>
-</ul>
-<p>常量命名</p>
-<ul>
-<li>全部大写</li>
-<li>声明为 constexpr 或 const</li>
-</ul>
-<p>函数命名</p>
-<ul>
-<li>每个单词首字母大写, 没有下划线</li>
-<li>首字母缩写的单词, 经常对其的第一个字母大写</li>
-</ul>
-<p>命名空间命名</p>
-<ul>
-<li>小写字母命名</li>
-</ul>
-<p>枚举命名</p>
-<ul>
-<li>枚举的命名应当和 常量 或 宏 一致</li>
-</ul>
-<p><strong>第六点-格式</strong></p>
-<p>缩进四个空格</p>
-<p>函数定义与声明</p>
-<ul>
-<li>左圆括号总是和函数名在同一行.(没有标准,,,,,,,,,, emmm 我想我还是换行吧)</li>
-<li>函数名和左圆括号间永远没有空格.</li>
-<li>圆括号与参数间没有空格.</li>
-</ul>
+            <p>权限相关管理<br><code>ls -il</code>  -i 查看node编号<br>/proc/pid 目录的内容 映射查看的命令忘了<br>ABI和API<br>exec 系列系统调用<br>块设备和字符设备根据主板接口决定</p>
+<p>匿名管道 <code>pipe</code> 单向通信 fd1进fd0出 只能用于父子进程或者兄弟进程（有亲缘关系的进程 <code>socketpair</code>全双工版本<br>命名管道<code>mkfifo</code></p>
+<p><code>dpkg</code>  <code>-i</code> install <code>-l</code> location <code>-r</code> remove package <code>-s</code> search</p>
+<p><code>rpm</code> <code>-i</code> install <code>-v</code> 显示过程 <code>-h</code> 显示命令执行进度</p>
 
         </div>
         <div id="post-footer">
@@ -282,14 +200,12 @@
                     <a href="/about.html">Lsmg</a>
                 </li>
                 
-                <li>Published Date: <span>2020-05-02  17:03:25</span></li>
+                <li>Published Date: <span>2021-03-16  12:16:13</span></li>
                 
-                <li>Updated Date: <span>2020-12-05  10:26:20</span></li>
+                <li>Updated Date: <span>2021-03-16  12:16:13</span></li>
                 
                 <li class="post-category">
                     Categories:
-                    
-                    <a href="/categories/CPP/">CPP</a>
                     
                 </li>
                 <li class="post-tags">
@@ -306,10 +222,8 @@
     </article>
     <div class="article-nav">
         
-        <a href="/2020/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95130-%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8/" class="pre-post fa fa-caret-left">代码大全</a>
         
-        
-        <a href="/2020/04/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-Socket%E7%90%86%E8%AE%BA-%E9%9D%A2%E8%AF%95%E9%A2%98%E7%82%B9%E5%B8%A6%E9%9D%A2/" class="next-post fa">面试题点带面</a>
+        <a href="/2021/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-HTTPS/" class="next-post fa">HTTPS的基本流程和原理</a>
         
     </div>
     

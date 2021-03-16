@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.lsmg.xyz/"/>
-  <updated>2021-03-01T09:30:02.107Z</updated>
+  <updated>2021-03-16T04:16:13.101Z</updated>
   <id>http://blog.lsmg.xyz/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux笔记</title>
+    <link href="http://blog.lsmg.xyz/2021/03/Linux%E7%AC%94%E8%AE%B0/"/>
+    <id>http://blog.lsmg.xyz/2021/03/Linux%E7%AC%94%E8%AE%B0/</id>
+    <published>2021-03-16T04:16:13.099Z</published>
+    <updated>2021-03-16T04:16:13.101Z</updated>
+    
+    <content type="html"><![CDATA[<p>权限相关管理<br><code>ls -il</code>  -i 查看node编号<br>/proc/pid 目录的内容 映射查看的命令忘了<br>ABI和API<br>exec 系列系统调用<br>块设备和字符设备根据主板接口决定</p><p>匿名管道 <code>pipe</code> 单向通信 fd1进fd0出 只能用于父子进程或者兄弟进程（有亲缘关系的进程 <code>socketpair</code>全双工版本<br>命名管道<code>mkfifo</code></p><p><code>dpkg</code>  <code>-i</code> install <code>-l</code> location <code>-r</code> remove package <code>-s</code> search</p><p><code>rpm</code> <code>-i</code> install <code>-v</code> 显示过程 <code>-h</code> 显示命令执行进度</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;权限相关管理&lt;br&gt;&lt;code&gt;ls -il&lt;/code&gt;  -i 查看node编号&lt;br&gt;/proc/pid 目录的内容 映射查看的命令忘了&lt;br&gt;ABI和API&lt;br&gt;exec 系列系统调用&lt;br&gt;块设备和字符设备根据主板接口决定&lt;/p&gt;
+&lt;p&gt;匿名管道 &lt;code&gt;p
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>HTTPS的基本流程和原理</title>
@@ -492,35 +515,6 @@
 &lt;li&gt;Java的Springboot&lt;/li&gt;
 &lt;li&gt;Python的Django&lt;/li&gt;
 &lt;/u
-      
-    
-    </summary>
-    
-    
-      <category term="分享会" scheme="http://blog.lsmg.xyz/categories/%E5%88%86%E4%BA%AB%E4%BC%9A/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>远程连接宿舍电脑</title>
-    <link href="http://blog.lsmg.xyz/2020/10/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%AE%BF%E8%88%8D%E7%94%B5%E8%84%91/"/>
-    <id>http://blog.lsmg.xyz/2020/10/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%AE%BF%E8%88%8D%E7%94%B5%E8%84%91/</id>
-    <published>2020-10-29T08:40:39.000Z</published>
-    <updated>2020-10-28T09:16:59.234Z</updated>
-    
-    <content type="html"><![CDATA[<p>学校机房电脑配置低? 卡慢?</p><p>学习机房电脑没有自己电脑环境用着顺手?</p><p>你还在担心使用机房电脑后需要拷贝代码到U盘或者QQ吗?</p><p><del>机房电脑玩大型游戏?</del></p><p>使用远程连接吧!</p><h1 id="向日葵等"><a href="#向日葵等" class="headerlink" title="向日葵等"></a>向日葵等</h1><p>优点: 不需要公网IP就能使用, 安装使用非常方便<br>缺点: 由于数据交互经过了向日葵的服务器导致延迟较高?</p><h1 id="Win10自带远程连接"><a href="#Win10自带远程连接" class="headerlink" title="Win10自带远程连接"></a>Win10自带远程连接</h1><p>优点: 内网使用延迟极低, 就像直接操作远在其他地方的笔记本一样<br>缺点: 需要内网使用, 配置较为繁琐.</p><p>针对内网这一问题, 学校机房, 学校stuwifi, 宿舍网线都是同一内网(得益于三网通一, 没想到这货还有这样的好处), 所以最大的问题解决了.</p><h2 id="安装前提"><a href="#安装前提" class="headerlink" title="安装前提"></a>安装前提</h2><p>必须确保电脑为专业版  最好是正版专业版盗版可能会有账户配置等问题 自行查阅.</p><p>任务栏左下角Win10图标右击, 打开设置 –&gt; 更新和安全 –&gt; 选择激活  确保显示的为专业版<br><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/CPP%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A/%E4%B8%93%E4%B8%9A%E7%89%88.png" alt=""></p><p>可惜大部分笔记本都是家庭版, 我这里只推荐一种方法家庭版升级专业版. 其他方法自行百度尝试</p><p>去淘宝购买<strong>家庭版升级专业版Win10密钥</strong>注意不是简单的专业版就行了必须写着<strong>升级</strong>, 详细咨询客服吧</p><p>大概15软妹币左右即可拥有正版Win10专业版, 而且不需要重装系统C盘不会动.</p><p>购买密钥后 在更新和安全的激活那里选择<strong>更改产品密钥</strong> 输入确认即可.</p><h2 id="自己电脑开启远程连接"><a href="#自己电脑开启远程连接" class="headerlink" title="自己电脑开启远程连接"></a>自己电脑开启远程连接</h2><p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/CPP%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A/%E5%BC%80%E5%90%AF%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5.png" alt=""></p><p>桌面我的电脑(此电脑) 右击选择属性-&gt;远程设置-&gt;勾选图示三个对勾.</p><h2 id="确认电脑IP"><a href="#确认电脑IP" class="headerlink" title="确认电脑IP"></a>确认电脑IP</h2><p>cmd输入ipconfig记录好自己的IPV4地址和IPV6地址 IPV6不要记录临时地址</p><p>IPV6地址永远不会变,  且<strong>无论电脑是否登录都能使用</strong>, 但是机房电脑没有IPV6</p><p>IPV4地址可能会改变, 需要<strong>10.2.5.251电脑登录后</strong>才能使用 推荐设置静态IPV4地址或者每次使用记录下IPV4</p><h2 id="机房电脑设置"><a href="#机房电脑设置" class="headerlink" title="机房电脑设置"></a>机房电脑设置</h2><p>机房电脑任务栏左下角的Win10图标右侧的搜索(放大镜标志) –&gt; 输入<strong>远程</strong>二字-&gt;选择弹出来的<strong>远程桌面连接</strong>-&gt;输入<strong>IPV4</strong>地址</p><p>确保宿舍电脑联网的情况下 点击连接就提示让你输入账号密码.  账号和密码是你Win10账户的账号和密码. 输入账号密码就连接成功了.</p><h2 id="其他建议选项"><a href="#其他建议选项" class="headerlink" title="其他建议选项"></a>其他建议选项</h2><ol><li>宿舍建议直插网线, 宿舍电脑使用Wifi可能有延迟感觉</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;学校机房电脑配置低? 卡慢?&lt;/p&gt;
-&lt;p&gt;学习机房电脑没有自己电脑环境用着顺手?&lt;/p&gt;
-&lt;p&gt;你还在担心使用机房电脑后需要拷贝代码到U盘或者QQ吗?&lt;/p&gt;
-&lt;p&gt;&lt;del&gt;机房电脑玩大型游戏?&lt;/del&gt;&lt;/p&gt;
-&lt;p&gt;使用远程连接吧!&lt;/p&gt;
-&lt;h1 id=&quot;向日葵
       
     
     </summary>
