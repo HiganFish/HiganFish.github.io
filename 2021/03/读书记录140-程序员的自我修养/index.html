@@ -20,7 +20,7 @@
 <meta name="verify" content=all />
     <!--Title-->
 
-<title>定义与声明详解 | Lsmg的大学之路</title>
+<title>程序员的自我修养 | Lsmg的大学之路</title>
 
 <link rel="alternate" href="/atom.xml" title="Lsmg的大学之路" type="application/atom+xml">
 
@@ -140,9 +140,9 @@
     <article id="post">
         <div id="post-header">
 
-            <h1 id="定义与声明详解">
+            <h1 id="程序员的自我修养">
                 
-                定义与声明详解
+                程序员的自我修养
                 
             </h1>
             <div class="article-meta">
@@ -150,7 +150,7 @@
     
     <span class="categories-meta fa-wrap">
             <i class="fa fa-folder-open-o"></i>
-        <span>CPP</span>
+        <span>读书记录</span>
     </span>
     
     
@@ -166,7 +166,7 @@
     
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
-        <span class="date-meta ">2020/02/27</span>
+        <span class="date-meta ">2021/03/17</span>
     </span>
     
     
@@ -178,13 +178,23 @@
         </div>
         
         <div id="post-body">
-            <h1 id="变量声明和变量定义"><a href="#变量声明和变量定义" class="headerlink" title="变量声明和变量定义"></a>变量声明和变量定义</h1><p>变量声明: 用于向程序表明变量的类型和名字<br>变量定义: 用于为变量<em>分配存储空间</em>, 同时可为变量指定初始值</p>
-<p>定义时会自动声明, 变量只能被定义一次, 却可以声明多次<br>extern声明不是定义</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> i; <span class="comment">// 声明i 但没有定义i</span></span><br><span class="line"><span class="keyword">int</span> i; <span class="comment">// 定义且声明i</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> i = <span class="number">10</span>; <span class="comment">// 定义并声明</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果再函数体内部试图初始化一个由extern标记的变量,会引发错误</span></span><br></pre></td></tr></table></figure>
+            <p>这是大三下读的第一本书了。这本书在我准备面试之余还能零零碎碎读了一些。目前看了几章来总结一下。</p>
+<p>实体书上面做笔记和翻阅还是挺舒服的，这里总结的话就不按照书中章节顺序了，而是按照自己选择阅读的顺序。</p>
+<h1 id="第一部分-你看程序跑起来了"><a href="#第一部分-你看程序跑起来了" class="headerlink" title="第一部分 - 你看程序跑起来了!!!"></a>第一部分 - 你看程序跑起来了!!!</h1><p><strong>命令行一敲, 回车一按, 一个程序就运行起来了,这之间都做了哪些操作?</strong></p>
+<p>程序<code>.o</code>中有什么？</p>
+<p>程序是如何装入内存的？</p>
+<p>装入内存后如何启动程序?</p>
+<p>启动程序是从main开始的吗?</p>
+<h2 id="程序-o中有什么"><a href="#程序-o中有什么" class="headerlink" title="程序 .o中有什么?"></a>程序 <code>.o</code>中有什么?</h2><p>目前不考虑静态和动态链接库相关的内容.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_int1 = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_int2;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* str = <span class="string">"Hello World!"</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="extern"><a href="#extern" class="headerlink" title="extern"></a>extern</h1><p>只有extern声明位于函数外部的时候,才能被初始化</p>
-<p><strong>在C++中 可以用来声明全局变量</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// file1.cpp</span></span><br><span class="line"><span class="keyword">int</span> global_int = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// file2.cpp</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> global_int;</span><br><span class="line"><span class="comment">// 后面可以直接使用 global_int, 因为他在其他地方定义了</span></span><br></pre></td></tr></table></figure>
+<p>上面的一小段代码, 包含了<code>static 已初始化变量</code>, <code>static 未初始化变量</code>, 以及字符串常量<code>str</code>, 一段<code>main函数</code></p>
+<p>然后使用objdump命令查看这个文件, 这个命令可以解析出ELF文件的头部分。</p>
+<p>相关ELF文件的内容这里就不展开说了，ELF文件里面存在头和数据部分，头部分有一张类似下面的表，其中有偏移量等信息指向实际数据部分</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~] objdump -h g-main  # h表示</span><br><span class="line"></span><br><span class="line">g-main:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Sections:</span><br><span class="line">Idx Name          Size      VMA               LMA               File off  Algn</span><br><span class="line">  9 .init         0000001b  0000000000400450  0000000000400450  00000450  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 10 .text         00000175  0000000000400470  0000000000400470  00000470  2**4</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 11 .fini         0000000d  00000000004005e8  00000000004005e8  000005e8  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 12 .rodata       0000001d  00000000004005f8  00000000004005f8  000005f8  2**3</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, DATA</span><br><span class="line"> 20 .data         00000008  0000000000601018  0000000000601018  00001018  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, DATA</span><br><span class="line"> 21 .bss          00000008  0000000000601020  0000000000601020  00001020  2**2</span><br><span class="line">                  ALLOC</span><br></pre></td></tr></table></figure>
+
+<p>我删除了很多的内容， 只留下了目前我所学到的6段</p>
+
         </div>
         <div id="post-footer">
             <div class="avatar" style="padding-bottom: 0.2rem"
@@ -202,14 +212,14 @@
                     <a href="/about.html">Lsmg</a>
                 </li>
                 
-                <li>Published Date: <span>2020-02-27  10:38:08</span></li>
+                <li>Published Date: <span>2021-03-17  19:09:20</span></li>
                 
-                <li>Updated Date: <span>2020-12-05  10:26:20</span></li>
+                <li>Updated Date: <span>2021-03-17  22:52:14</span></li>
                 
                 <li class="post-category">
                     Categories:
                     
-                    <a href="/categories/CPP/">CPP</a>
+                    <a href="/categories/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95/">读书记录</a>
                     
                 </li>
                 <li class="post-tags">
@@ -226,10 +236,8 @@
     </article>
     <div class="article-nav">
         
-        <a href="/2020/03/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Jsoncpp%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB/" class="pre-post fa fa-caret-left">Jsoncpp代码阅读</a>
         
-        
-        <a href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95110-Effective%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95/" class="next-post fa">EffectiveCpp读书记录</a>
+        <a href="/2021/03/Linux%E7%AC%94%E8%AE%B0/" class="next-post fa">Linux笔记</a>
         
     </div>
     
@@ -294,7 +302,7 @@
     </div>
 </div>
 
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#变量声明和变量定义"><span class="toc-number">1.</span> <span class="toc-text">变量声明和变量定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#extern"><span class="toc-number">2.</span> <span class="toc-text">extern</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第一部分-你看程序跑起来了"><span class="toc-number">1.</span> <span class="toc-text">第一部分 - 你看程序跑起来了!!!</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#程序-o中有什么"><span class="toc-number">1.1.</span> <span class="toc-text">程序 .o中有什么?</span></a></li></ol></li></ol>
 
 
 

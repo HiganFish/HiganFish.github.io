@@ -3,6 +3,36 @@
     
     
     <entry>
+        <title><![CDATA[程序员的自我修养]]></title>
+        <url>http://blog.lsmg.xyz/2021/03/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595140-%25E7%25A8%258B%25E5%25BA%258F%25E5%2591%2598%25E7%259A%2584%25E8%2587%25AA%25E6%2588%2591%25E4%25BF%25AE%25E5%2585%25BB/</url>
+        <content type="html"><![CDATA[<p>这是大三下读的第一本书了。这本书在我准备面试之余还能零零碎碎读了一些。目前看了几章来总结一下。</p>
+<p>实体书上面做笔记和翻阅还是挺舒服的，这里总结的话就不按照书中章节顺序了，而是按照自己选择阅读的顺序。</p>
+<h1 id="第一部分-你看程序跑起来了"><a href="#第一部分-你看程序跑起来了" class="headerlink" title="第一部分 - 你看程序跑起来了!!!"></a>第一部分 - 你看程序跑起来了!!!</h1><p><strong>命令行一敲, 回车一按, 一个程序就运行起来了,这之间都做了哪些操作?</strong></p>
+<p>程序<code>.o</code>中有什么？</p>
+<p>程序是如何装入内存的？</p>
+<p>装入内存后如何启动程序?</p>
+<p>启动程序是从main开始的吗?</p>
+<h2 id="程序-o中有什么"><a href="#程序-o中有什么" class="headerlink" title="程序 .o中有什么?"></a>程序 <code>.o</code>中有什么?</h2><p>目前不考虑静态和动态链接库相关的内容.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_int1 = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> static_int2;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* str = <span class="string">"Hello World!"</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的一小段代码, 包含了<code>static 已初始化变量</code>, <code>static 未初始化变量</code>, 以及字符串常量<code>str</code>, 一段<code>main函数</code></p>
+<p>然后使用objdump命令查看这个文件, 这个命令可以解析出ELF文件的头部分。</p>
+<p>相关ELF文件的内容这里就不展开说了，ELF文件里面存在头和数据部分，头部分有一张类似下面的表，其中有偏移量等信息指向实际数据部分</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~] objdump -h g-main  # h表示</span><br><span class="line"></span><br><span class="line">g-main:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Sections:</span><br><span class="line">Idx Name          Size      VMA               LMA               File off  Algn</span><br><span class="line">  9 .init         0000001b  0000000000400450  0000000000400450  00000450  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 10 .text         00000175  0000000000400470  0000000000400470  00000470  2**4</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 11 .fini         0000000d  00000000004005e8  00000000004005e8  000005e8  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, CODE</span><br><span class="line"> 12 .rodata       0000001d  00000000004005f8  00000000004005f8  000005f8  2**3</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, DATA</span><br><span class="line"> 20 .data         00000008  0000000000601018  0000000000601018  00001018  2**2</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, DATA</span><br><span class="line"> 21 .bss          00000008  0000000000601020  0000000000601020  00001020  2**2</span><br><span class="line">                  ALLOC</span><br></pre></td></tr></table></figure>
+
+<p>我删除了很多的内容， 只留下了目前我所学到的6段</p>
+]]></content>
+        
+        <categories>
+            
+            <category> 读书记录 </category>
+            
+        </categories>
+        
+        
+    </entry>
+    
+    <entry>
         <title><![CDATA[Linux笔记]]></title>
         <url>http://blog.lsmg.xyz/2021/03/Linux%25E7%25AC%2594%25E8%25AE%25B0/</url>
         <content type="html"><![CDATA[<p>权限相关管理<br><code>ls -il</code>  -i 查看node编号<br>/proc/pid 目录的内容 映射查看的命令忘了<br>ABI和API<br>exec 系列系统调用<br>块设备和字符设备根据主板接口决定</p>
@@ -2737,7 +2767,7 @@
     
     <entry>
         <title><![CDATA[UNP记录]]></title>
-        <url>http://blog.lsmg.xyz/2020/10/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595150-UNP/</url>
+        <url>http://blog.lsmg.xyz/2020/10/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595-UNP/</url>
         <content type="html"><![CDATA[<p>由于已经在Linux高性能服务器开发中详细说明过绝大部分系统函数</p>
 <p>Linux高性能服务器开发的重叠部分, 我会将新的点补充到原博客中, 这里仅作部分简单的说明</p>
 <h1 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h1><p>通过定义<code>包裹函数</code>可以缩短程序. 在muduo框架中就存在包裹函数 将系统函数进行包装</p>
@@ -6275,31 +6305,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[游戏知识-腾讯游戏学院-如何进入游戏开发行业]]></title>
-        <url>http://blog.lsmg.xyz/2019/12/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E8%2585%25BE%25E8%25AE%25AF%25E6%25B8%25B8%25E6%2588%258F%25E5%25AD%25A6%25E9%2599%25A2-%25E5%25A6%2582%25E4%25BD%2595%25E8%25BF%259B%25E5%2585%25A5%25E6%25B8%25B8%25E6%2588%258F%25E5%25BC%2580%25E5%258F%2591%25E8%25A1%258C%25E4%25B8%259A/</url>
-        <content type="html"><![CDATA[<p>由于自己了解的实在是不足, 所以来腾讯游戏课堂来学习一些架构之类的东西 来完善自己的知识面<br><a href="https://gameinstitute.qq.com/course/detail/10156" target="_blank" rel="noopener">想做游戏吗？如何开始我的游戏开发职业生涯</a></p>
-<a id="more"></a>
-<p>做游戏不会重复做同样的工作, 项目不同</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 游戏知识 </category>
-            
-            <category> 腾讯游戏学院 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 腾讯游戏学院 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[游戏知识-服务器-服务器通信]]></title>
         <url>http://blog.lsmg.xyz/2019/12/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8-%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25E9%2580%259A%25E4%25BF%25A1/</url>
         <content type="html"><![CDATA[<p>由于自己了解的实在是不足, 所以来腾讯游戏课堂来学习一些架构之类的东西 来完善自己的知识面<br><a href="https://gameinstitute.qq.com/course/detail/10096" target="_blank" rel="noopener">服务器通信</a></p>
@@ -6329,6 +6334,31 @@
             <category> 游戏知识 </category>
             
             <category> 服务器 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 腾讯游戏学院 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+        <title><![CDATA[游戏知识-腾讯游戏学院-如何进入游戏开发行业]]></title>
+        <url>http://blog.lsmg.xyz/2019/12/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E8%2585%25BE%25E8%25AE%25AF%25E6%25B8%25B8%25E6%2588%258F%25E5%25AD%25A6%25E9%2599%25A2-%25E5%25A6%2582%25E4%25BD%2595%25E8%25BF%259B%25E5%2585%25A5%25E6%25B8%25B8%25E6%2588%258F%25E5%25BC%2580%25E5%258F%2591%25E8%25A1%258C%25E4%25B8%259A/</url>
+        <content type="html"><![CDATA[<p>由于自己了解的实在是不足, 所以来腾讯游戏课堂来学习一些架构之类的东西 来完善自己的知识面<br><a href="https://gameinstitute.qq.com/course/detail/10156" target="_blank" rel="noopener">想做游戏吗？如何开始我的游戏开发职业生涯</a></p>
+<a id="more"></a>
+<p>做游戏不会重复做同样的工作, 项目不同</p>
+]]></content>
+        
+        <categories>
+            
+            <category> 游戏知识 </category>
+            
+            <category> 腾讯游戏学院 </category>
             
         </categories>
         
