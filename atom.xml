@@ -47,17 +47,9 @@
     <link href="http://blog.lsmg.xyz/2021/03/Linux%E7%AC%94%E8%AE%B0/"/>
     <id>http://blog.lsmg.xyz/2021/03/Linux%E7%AC%94%E8%AE%B0/</id>
     <published>2021-03-16T04:16:13.099Z</published>
-    <updated>2021-03-16T04:16:13.101Z</updated>
-    
-    <content type="html"><![CDATA[<p>权限相关管理<br><code>ls -il</code>  -i 查看node编号<br>/proc/pid 目录的内容 映射查看的命令忘了<br>ABI和API<br>exec 系列系统调用<br>块设备和字符设备根据主板接口决定</p><p>匿名管道 <code>pipe</code> 单向通信 fd1进fd0出 只能用于父子进程或者兄弟进程（有亲缘关系的进程 <code>socketpair</code>全双工版本<br>命名管道<code>mkfifo</code></p><p><code>dpkg</code>  <code>-i</code> install <code>-l</code> location <code>-r</code> remove package <code>-s</code> search</p><p><code>rpm</code> <code>-i</code> install <code>-v</code> 显示过程 <code>-h</code> 显示命令执行进度</p>]]></content>
+    <updated>2021-03-19T04:34:13.569Z</updated>
     
     <summary type="html">
-    
-      
-      
-        &lt;p&gt;权限相关管理&lt;br&gt;&lt;code&gt;ls -il&lt;/code&gt;  -i 查看node编号&lt;br&gt;/proc/pid 目录的内容 映射查看的命令忘了&lt;br&gt;ABI和API&lt;br&gt;exec 系列系统调用&lt;br&gt;块设备和字符设备根据主板接口决定&lt;/p&gt;
-&lt;p&gt;匿名管道 &lt;code&gt;p
-      
     
     </summary>
     
