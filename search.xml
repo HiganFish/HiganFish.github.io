@@ -27,7 +27,10 @@
 <li><p><strong>进程家族树</strong>：所有的进程都是PID为1的init进程后代。每个进程都有<code>parent</code>指针指向父进程的<code>task_struct</code>和一个叫做<code>children</code>的子进程链表<em>所以Linux中可以通过一个进程遍历到所有其他进程</em></p>
 </li>
 </ul>
-<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96.png" alt=""></p>
+<img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96.png" style="zoom: 67%;" />
+
+
+
 <h2 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h2><p>通过<code>fork系统调用</code>可以拷贝当前进程创建一个子进程，此时父子进程的区别仅仅是PID和PPID和某些资源和统计量。</p>
 <p><strong>写时拷贝</strong>：Linux通过写时拷贝减少或者免除拷贝，<code>fork</code>之后并不是复制所有的进程地址空间，而是使用原来进程的地址空间。只有当需要写入的时候，才会进行拷贝，在此之前是通过只读方式共享。</p>
 <ul>
@@ -52,7 +55,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">UNKNOW <span class="title">do_exit</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    将task_struct中的标志成员设置为PF_EXITING();</span><br><span class="line">    </span><br><span class="line">    del_timer_sync(); <span class="comment">// 删除定时器</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (开启记账)</span><br><span class="line">    &#123;</span><br><span class="line">        进行记账();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    exit_mm(); <span class="comment">// 释放进程占用的mm_struct 如果这个地址空间没有被共享 则彻底释放</span></span><br><span class="line">    </span><br><span class="line">    sem_exit(); <span class="comment">// 取消IPC信号的排队等待</span></span><br><span class="line">    </span><br><span class="line">    exit_files(); <span class="comment">// 递减文件描述符和引用计数</span></span><br><span class="line">    exit_fs(); <span class="comment">// 递减文件系统的引用计数</span></span><br><span class="line">    </span><br><span class="line">    设置task_struct的exit_code成员中的任务退出代码(代码是<span class="built_in">exit</span>传入的值);</span><br><span class="line">    </span><br><span class="line">    exit_notify(); <span class="comment">// 向父进程发送信息，为本进程的子进程寻找养父 然后将自己设置成EXIT_ZOMBIE</span></span><br><span class="line">    </span><br><span class="line">    schedule(); <span class="comment">// 本进程已经终结，调用此函数切换到新的线程。因为EXIT_ZOMBIE的进程永远不会再次被调用，do_exit永远不会返回了😇</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>至此此进程没有了地址空间，仅存的是<code>内核栈</code>、<code>thread_info</code>和<code>task_struct</code>结构。为的是向父进程提供信息，可以通过wait系列函数收回仅存的这些内容</p>
-<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p> Linux提供了抢占式的任务调度和实时的任务调度策略</p>
+<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p> Linux提供了<code>抢占式的任务调度</code>和<code>实时的任务调度</code>策略</p>
 <p>主动让出  <code>VER1.0</code>  <code>EX协程</code></p>
 <ul>
 <li><p>抢占式调度器</p>
@@ -84,12 +87,35 @@
 
 
 
-
-
 <p><strong>唤醒</strong></p>
 <p>将自己标记为可执行状态，然后从等待队列移动回<code>可执行红黑树</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wake_up</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wake_up</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    唤醒等待队列上所有进程;</span><br><span class="line">    </span><br><span class="line">    将进程设置为TASK_RUNNING;</span><br><span class="line">    </span><br><span class="line">    将自己放入红黑树;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E4%BC%91%E7%9C%A0%E5%92%8C%E5%94%A4%E9%86%92.png" alt=""></p>
+<h3 id="抢占和上下文切换"><a href="#抢占和上下文切换" class="headerlink" title="抢占和上下文切换"></a>抢占和上下文切换</h3><p><strong>上下文切换</strong></p>
+<p>从一个可执行进程切换到另一个可执行进程。通过<code>context_switch</code>负责处理。当进程A被选定要投入运行的时候通过<code>schedule</code>函数就能调用前面的函数，实现上下文切换。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">schedule</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    context_switch();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">context_switch</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    switch_mm(); <span class="comment">// 将虚拟内存从上一个进程切换到新的进程</span></span><br><span class="line">    </span><br><span class="line">    switch_to(); <span class="comment">// 负责处理器状态的切换。包括保存、恢复进程和栈的信息。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内核必须知道什么时候调用<code>schedule</code>。</p>
+<p>当每个进程应该被抢占时，会被设置<code>need_resched</code>标志。这个标志告诉内核有其他进程应该被运行了，要尽快调动调度程序</p>
+<p><strong>用户抢占</strong></p>
+<p>从内核返回用户空间的时候，如果<code>need_resched</code>被设置，将会导致<code>schedule</code>被调用 内核会选取一个更加合适的进程投入运行</p>
+<p>用户抢占的发生时机</p>
+<ul>
+<li>从系统调用返回用户空间</li>
+<li>从中断处理程序返回用户空间</li>
+</ul>
+<p><strong>内核抢占</strong></p>
+<p>当从中断返回的时候如果当前没有持有锁（通过thread_info中的preempt_count计数器，加锁时+1，解锁时-1 为0时说明没有锁），而且<code>need_resched</code>被设置说明存在更加需要执行的进程可以被安全抢占</p>
+<p>如果内核中的进程被阻塞了，或者显示调用了<code>schedule</code>内核抢占就会显示的发生（<em>根本不需要额外的逻辑保证可以安全的抢占，因为如果代码显示的调用了schedule说明他清楚自己是可以安全的被抢占的</em>）</p>
+<h3 id="实时调度策略"><a href="#实时调度策略" class="headerlink" title="实时调度策略"></a>实时调度策略</h3><p><strong>SCHED_FIFO</strong></p>
+<p>不使用时间片，处于此状态的进程会比任何<code>SCHED_NORMAL</code>级的进程都先得到调度。他会一直执行下去直到自己受到阻塞或者主动让出，如果存在多个此策略的进程则会轮流执行。</p>
+<p><strong>SCHED_RR</strong></p>
+<p>带时间片的<code>SCHED_FIFO</code></p>
+<h3 id="绑定内核和主动让出"><a href="#绑定内核和主动让出" class="headerlink" title="绑定内核和主动让出"></a>绑定内核和主动让出</h3><p><strong>sched_setaffinity</strong></p>
+<p><strong>sched_getaffinity</strong></p>
+<p><strong>sched_yield 主动让出</strong></p>
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E4%B8%8E%E8%B0%83%E5%BA%A6%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.png" alt=""></p>
 ]]></content>
         
         <categories>
@@ -4743,60 +4769,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[权限管理]]></title>
-        <url>http://blog.lsmg.xyz/2020/03/Linux-%25E6%259D%2583%25E9%2599%2590%25E7%259B%25B8%25E5%2585%25B3/</url>
-        <content type="html"><![CDATA[<p><code>drwxr-xr-x | 3 | root | root | 4096 | Mar  2 20:26 | .vs</code><br>档案权限类型<br>连接数<br>档案拥有者<br>档案所属群组<br>档案容量<br>档案最后被修改时间<br>档名</p>
-<p>文件类型和权限<br><code>drwxr-xr-x</code></p>
-<p>第一位 d 表明档案类型是 目录</p>
-<table>
-<thead>
-<tr>
-<th>字符</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>d</td>
-<td>目录</td>
-</tr>
-<tr>
-<td>-</td>
-<td>文件</td>
-</tr>
-<tr>
-<td>|</td>
-<td>链接文件</td>
-</tr>
-<tr>
-<td>b</td>
-<td>设备文件中可供存储的周边设备, 可随机读取设备</td>
-</tr>
-<tr>
-<td>c</td>
-<td>序列号设备, 如键盘鼠标, 一次性读取设备</td>
-</tr>
-</tbody></table>
-<p>后面每三位一组 为<code>rwx</code>的组合 分别代表 <code>读</code>, <code>写</code>, <code>执行</code><br>三组 第一组<code>文件拥有者权限</code> 第二组<code>群组中账号权限</code> 第三组<code>非本人且没有加入本群组的其他账号权限</code></p>
-<p>第三部分表示这个文件的<code>拥有者账号</code><br>第四部分表示这个文件<code>所属群组</code></p>
-<p>相关命令<br>-chgrp 改变文件所属群组<br>-chown 改变文件拥有者<br>-chmod 改变文件权限</p>
-]]></content>
-        
-        <categories>
-            
-            <category> Linux </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 权限管理 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[GDB调试]]></title>
         <url>http://blog.lsmg.xyz/2020/03/Linux-GDB%25E8%25B0%2583%25E8%25AF%2595/</url>
         <content type="html"><![CDATA[<p><a href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html" target="_blank" rel="noopener">https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html</a></p>
@@ -5110,6 +5082,60 @@
         <tags>
             
             <tag> GDB调试 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+        <title><![CDATA[权限管理]]></title>
+        <url>http://blog.lsmg.xyz/2020/03/Linux-%25E6%259D%2583%25E9%2599%2590%25E7%259B%25B8%25E5%2585%25B3/</url>
+        <content type="html"><![CDATA[<p><code>drwxr-xr-x | 3 | root | root | 4096 | Mar  2 20:26 | .vs</code><br>档案权限类型<br>连接数<br>档案拥有者<br>档案所属群组<br>档案容量<br>档案最后被修改时间<br>档名</p>
+<p>文件类型和权限<br><code>drwxr-xr-x</code></p>
+<p>第一位 d 表明档案类型是 目录</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>d</td>
+<td>目录</td>
+</tr>
+<tr>
+<td>-</td>
+<td>文件</td>
+</tr>
+<tr>
+<td>|</td>
+<td>链接文件</td>
+</tr>
+<tr>
+<td>b</td>
+<td>设备文件中可供存储的周边设备, 可随机读取设备</td>
+</tr>
+<tr>
+<td>c</td>
+<td>序列号设备, 如键盘鼠标, 一次性读取设备</td>
+</tr>
+</tbody></table>
+<p>后面每三位一组 为<code>rwx</code>的组合 分别代表 <code>读</code>, <code>写</code>, <code>执行</code><br>三组 第一组<code>文件拥有者权限</code> 第二组<code>群组中账号权限</code> 第三组<code>非本人且没有加入本群组的其他账号权限</code></p>
+<p>第三部分表示这个文件的<code>拥有者账号</code><br>第四部分表示这个文件<code>所属群组</code></p>
+<p>相关命令<br>-chgrp 改变文件所属群组<br>-chown 改变文件拥有者<br>-chmod 改变文件权限</p>
+]]></content>
+        
+        <categories>
+            
+            <category> Linux </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 权限管理 </tag>
             
         </tags>
         
