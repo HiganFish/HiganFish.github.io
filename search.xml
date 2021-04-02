@@ -46,8 +46,8 @@
 
 <ul>
 <li>CLONE_VM 父子进程共享地址空间</li>
-<li>CLONE_FS 父子进程共享文件系统信息</li>
-<li>CLONE_FILES 父子进程共享打开的文件</li>
+<li>CLONE_FS 父子进程共享文件系统信息 <strong>如果不指定会进行拷贝使得引用计数+1，而共享的话则不会+1</strong></li>
+<li>CLONE_FILES 父子进程共享打开的文件.</li>
 <li>CLONE_SIGHAND 父子进程共享信号处理函数和被阻断的信号</li>
 </ul>
 <h3 id="进程终结"><a href="#进程终结" class="headerlink" title="进程终结"></a>进程终结</h3><p>虽然让人伤感😥，但进程终归要终结的。当一个进程终结的时候，内核必须释放其占有的资源，并将这一不幸通知父进程。</p>
@@ -55,7 +55,9 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">UNKNOW <span class="title">do_exit</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    将task_struct中的标志成员设置为PF_EXITING();</span><br><span class="line">    </span><br><span class="line">    del_timer_sync(); <span class="comment">// 删除定时器</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (开启记账)</span><br><span class="line">    &#123;</span><br><span class="line">        进行记账();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    exit_mm(); <span class="comment">// 释放进程占用的mm_struct 如果这个地址空间没有被共享 则彻底释放</span></span><br><span class="line">    </span><br><span class="line">    sem_exit(); <span class="comment">// 取消IPC信号的排队等待</span></span><br><span class="line">    </span><br><span class="line">    exit_files(); <span class="comment">// 递减文件描述符和引用计数</span></span><br><span class="line">    exit_fs(); <span class="comment">// 递减文件系统的引用计数</span></span><br><span class="line">    </span><br><span class="line">    设置task_struct的exit_code成员中的任务退出代码(代码是<span class="built_in">exit</span>传入的值);</span><br><span class="line">    </span><br><span class="line">    exit_notify(); <span class="comment">// 向父进程发送信息，为本进程的子进程寻找养父 然后将自己设置成EXIT_ZOMBIE</span></span><br><span class="line">    </span><br><span class="line">    schedule(); <span class="comment">// 本进程已经终结，调用此函数切换到新的线程。因为EXIT_ZOMBIE的进程永远不会再次被调用，do_exit永远不会返回了😇</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>至此此进程没有了地址空间，仅存的是<code>内核栈</code>、<code>thread_info</code>和<code>task_struct</code>结构。为的是向父进程提供信息，可以通过wait系列函数收回仅存的这些内容</p>
-<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p> Linux提供了<code>抢占式的任务调度</code>和<code>实时的任务调度</code>策略</p>
+<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p>从处理器的角度来看，它只是从程序计数器指向的地址中取得指令然后执行，并忠实的执行这些指令。而程序计数器在系统运行过程中，可能时不时地从指向一个进程的代码指向另一个进程的代码，从而实现进程的切换。</p>
+<p>进程必须能够被操作系统跟踪，也就是说，一个进程必须包含一些必要的信息（进程控制块、进程的状态和在内存中的地址），使得操作系统能够感知到进程的存在，从而调度它。</p>
+<p>Linux提供了<code>抢占式的任务调度</code>和<code>实时的任务调度</code>策略</p>
 <p>主动让出  <code>VER1.0</code>  <code>EX协程</code></p>
 <ul>
 <li><p>抢占式调度器</p>
