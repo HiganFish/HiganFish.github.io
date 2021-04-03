@@ -2634,20 +2634,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[左值引用和右值引用]]></title>
-        <url>http://blog.lsmg.xyz/2021/01/CPP-&amp;AND&&/</url>
-        <content type="html"></content>
-        
-        <categories>
-            
-            <category> CPP </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[.*_case]]></title>
         <url>http://blog.lsmg.xyz/2021/01/CPP-cast/</url>
         <content type="html"><![CDATA[<p><a href="https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used" target="_blank" rel="noopener">https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used</a>?</p>
@@ -2685,7 +2671,7 @@
     </entry>
     
     <entry>
-        <title><![CDATA[Linux-常用命令]]></title>
+        <title><![CDATA[Linux-调试常用命令]]></title>
         <url>http://blog.lsmg.xyz/2021/01/Linux-%25E8%25B0%2583%25E8%25AF%2595%25E5%25B8%25B8%25E7%2594%25A8Linux%25E5%2591%25BD%25E4%25BB%25A4/</url>
         <content type="html"><![CDATA[<h1 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h1><h2 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h2><p>查看实时信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum install sysstat -y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@fish ~]# iostat</span><br><span class="line">Linux 4.18.0-193.6.3.el8_2.x86_64	01&#x2F;09&#x2F;2021 	_x86_64_	(4 CPU)</span><br><span class="line"></span><br><span class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span><br><span class="line">           0.06    0.02    0.08    0.01    0.00   99.84</span><br><span class="line"></span><br><span class="line">Device             tps    kB_read&#x2F;s    kB_wrtn&#x2F;s    kB_read    kB_wrtn</span><br><span class="line">sda               0.00         1.68         0.00    3520393       3015</span><br><span class="line">sdb               0.16         0.81         2.68    1702968    5612922</span><br><span class="line">dm-0              0.17         0.79         2.78    1656682    5811573</span><br><span class="line">dm-1              0.00         0.00         0.01       4404      10828</span><br><span class="line">dm-2              0.00         0.00         0.00       1193       2209</span><br></pre></td></tr></table></figure>
@@ -2720,16 +2706,6 @@
             
         </categories>
         
-        
-        <tags>
-            
-            <tag> iostat </tag>
-            
-            <tag> df </tag>
-            
-            <tag> du </tag>
-            
-        </tags>
         
     </entry>
     
@@ -4343,7 +4319,7 @@
     
     <entry>
         <title><![CDATA[EPOLL本质]]></title>
-        <url>http://blog.lsmg.xyz/2020/03/%25E7%25BD%2591%25E7%25BB%259C%25E7%25BC%2596%25E7%25A8%258B-Socket%25E7%2590%2586%25E8%25AE%25BA-EPOLL%25E6%259C%25AC%25E8%25B4%25A8/</url>
+        <url>http://blog.lsmg.xyz/2020/03/%25E7%25BD%2591%25E7%25BB%259C%25E7%25BC%2596%25E7%25A8%258B-EPOLL%25E6%259C%25AC%25E8%25B4%25A8/</url>
         <content type="html"><![CDATA[<p>EPOLL本质是什么?  <del>本质当然是复读机</del></p>
 <p>参考和图片来源<br><a href="https://zhuanlan.zhihu.com/p/64138532" target="_blank" rel="noopener">如果这篇文章说不清epoll的本质，那就过来掐死我吧！</a></p>
 <p>一个socket对应一个端口号, 网络数据包中包含了端口, 内核可以通过端口号找到对应的socket</p>
@@ -4365,8 +4341,6 @@
         <categories>
             
             <category> 网络编程 </category>
-            
-            <category> Socket理论 </category>
             
         </categories>
         
@@ -4416,7 +4390,7 @@
     
     <entry>
         <title><![CDATA[Send返回值引出的(非)阻塞IO]]></title>
-        <url>http://blog.lsmg.xyz/2020/03/%25E7%25BD%2591%25E7%25BB%259C%25E7%25BC%2596%25E7%25A8%258B-Socket%25E7%2590%2586%25E8%25AE%25BA-Send%25E8%25BF%2594%25E5%259B%259E%25E5%2580%25BC%25E6%258E%25A2%25E6%259E%2590/</url>
+        <url>http://blog.lsmg.xyz/2020/03/%25E7%25BD%2591%25E7%25BB%259C%25E7%25BC%2596%25E7%25A8%258B-Send%25E8%25BF%2594%25E5%259B%259E%25E5%2580%25BC%25E6%258E%25A2%25E6%259E%2590/</url>
         <content type="html"><![CDATA[<h1 id="现存疑问"><a href="#现存疑问" class="headerlink" title="现存疑问"></a>现存疑问</h1><ol>
 <li>WNOWAIT和O_NONBLOCK 的关系?</li>
 <li>当非阻塞send时, 返回值与什么有关? 本地socket发送缓冲区空余还是对端空余?</li>
@@ -4437,8 +4411,6 @@
         <categories>
             
             <category> 网络编程 </category>
-            
-            <category> Socket理论 </category>
             
         </categories>
         
