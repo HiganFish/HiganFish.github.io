@@ -11,6 +11,7 @@ tags:
 
 # iostat
 
+查看实时信息
 ```
 yum install sysstat -y
 
@@ -31,6 +32,7 @@ dm-2              0.00         0.00         0.00       1193       2209
 
 # df
 
+一般用于查看磁盘挂载等信息
 ```
 [root@fish ~]# df -h
 Filesystem           Size  Used Avail Use% Mounted on

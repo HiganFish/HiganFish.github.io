@@ -1,5 +1,5 @@
 ---
-title: 分支管理和实际应用
+title: 分支管理和实际应用及commit规范
 date: 2020-03-06 19:34:25
 categories: 
 - Git操作
@@ -20,24 +20,6 @@ tags:
 `git branch -d dev` 分支删除
 
 `git branch` 查看当前所有分支
-
-`git merge dev` 将制定的dev分支合并到当前的分支
-
-**冲突解决**
-
-`git merge dev` 将制定的dev分支合并到当前的分支
-```
-1 111111111111111
-2 222222222222222
-3 333333333333333
-4 444444444444444
-5 <<<<<<< HEAD  # 我在master分支下添加了6666666 并提交
-6 6666666
-7 =======
-8 7777777
-9 >>>>>>> deb # 我在deb分支下添加了7777777 并提交
-```
-最后需要我手动修改这个文件为自己需要的内容 然后提交即可
   
 **分支管理**
 
@@ -163,3 +145,96 @@ Header Body 和 Footer
 
 **Footer**
 只用于两种情况 目前用不动 不摘了
+
+
+# 撤销add 以及 撤销 commit
+
+撤销add: `git reset 111.txt`
+
+撤销创建仓库后的第一次commit `git update-ref -d HEAD`
+
+不删除工作空间改动的代码, 撤销commit 撤销 git add `git reset --mixed HEAD^`对应默认`git reset HEAD^`
+
+不删除工作空间改动的代码, 撤销commit 不撤销 git add `git reset --soft HEAD^`
+
+删除上次commit之后工作空间改动的代码, 撤销commit 撤销 git add 代码回复到上一次提交结束`git reset --hard HEAD^`  这会直接让撤销的commit代码丢失
+
+恢复`git reset --hard` 使用`git reflog` 查看历史记录
+
+```
+$ git reflog
+15a06e6 (HEAD -> master) HEAD@{0}: reset: moving to HEAD^
+14b420e HEAD@{1}: commit: 111111
+15a06e6 (HEAD -> master) HEAD@{2}: commit (amend): 111
+
+$ git reset --hard 14b420e
+```
+
+修改commit内容 `git commit --amend`
+
+# Merge和Rebase
+
+```
+$ cat 111.txt(master)
+111
+222
+444
+
+$ cat 111.txt(develop)
+111
+222
+333
+```
+
+**Merge**
+
+在master分支使用`git merge develop`, 提示有冲突
+```
+$ git merge develop(master)
+Auto-merging 111.txt
+CONFLICT (content): Merge conflict in 111.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+$ cat 111.txt
+111
+222
+<<<<<<< HEAD
+444
+=======
+333
+>>>>>>> develop
+
+$ 解决完冲突后add commit 多了一条记录  合并后的commit按照从旧到新排列
+Merge: fa72731 0ad9e6b
+Author: lsmg <rjd67441@hotmail.com>
+Date:   Sat Mar 6 16:07:08 2021 +0800
+
+    merge develop into master
+```
+
+**Rebase**
+
+在develop分支进行rebase操作, 将develop的base改为master分支
+
+```
+$ git rebase master (develop)  提示develop分支的第一次提交和master的最新提交有冲突
+error: could not apply 0ad9e6b... develop-3
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+Could not apply 0ad9e6b... develop-3
+Auto-merging 111.txt
+CONFLICT (content): Merge conflict in 111.txt
+
+$ cat 111.txt
+111
+222
+<<<<<<< HEAD
+444
+=======
+333
+>>>>>>> 0ad9e6b... develop-3
+
+$ git add 111.txt 解决完冲突后 add
+```

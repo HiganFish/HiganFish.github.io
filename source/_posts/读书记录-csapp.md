@@ -92,11 +92,12 @@ main:
 ```
 汇编 生成 可重定位二进制目标程序
 gcc编译器 -c参数 起到的作用是编译和汇编 -S参数 仅仅是编译
+
 `g++ -c hello.s`
 
 链接 生成执行文件
-`g++ hello.o -o hello`
 
+`g++ hello.o -o hello`
 
 
 在不同进程间切换 交错执行的执行-上下文切换
@@ -108,11 +109,6 @@ gcc编译器 -c参数 起到的作用是编译和汇编 -S参数 仅仅是编译
 ## 第二章 信息存储
 
 孤立地讲,单个位不是非常有用. 然而, 当把位组合在一起, 再加上某种解释,即赋予不同可能位组合不同的含义, 我们就能表示任何有限集合的元素.
-
-
-# 第三章 程序的机器级表示
-
-
 
 ## 第五章 优化程序性能
 
@@ -128,4 +124,118 @@ gcc编译器 -c参数 起到的作用是编译和汇编 -S参数 仅仅是编译
 整数的表示虽然只能编码一个相对较小的数值范围, 但是这种标识是精确地
 浮点数能编码一个较大的数值范围, 但是这种表示只是近似的.
 
-## 第六章 存储器层次结构
+## 第十一章 网络编程
+
+从网络上接收到的数据经过网络适配器 IO总线 内存总线复制到内存, 通常使用的DMA传送. 反过来就是内存到网络的方式
+
+我们的实例抓住了互联网络思想的精髓, 封装是关键
+
+
+应改为IP地址, 确切地说是Ipv4地址定义一个特殊的类型, 不过标准成立后已经太迟了. 不过看着ipv6的地址表示, 获取标准成功了? 提供了一个看起来特殊的类型
+
+```c++
+typedef uint32_t in_addr_t;
+struct in_addr
+{
+in_addr_t s_addr;
+};
+
+
+struct in6_addr
+{
+union
+{
+uint8_t	__u6_addr8[16];
+uint16_t __u6_addr16[8];
+uint32_t __u6_addr32[4];
+} __in6_u;
+};
+```
+
+socket函数返回的套接字被操作系统默认为是主动实体(客户端), 通过listen告知操作系统这是被动实体(服务器)
+
+**getaddrinfo函数**
+
+```c++
+#include <netdb.h>
+
+struct addrinfo
+{
+    int              ai_flags; // hints 
+    int              ai_family; // hints AF_INET 限制返回ipv4 AF_INET6限制返回ipv6 不指定则二者都有
+    int              ai_socktype; // hints
+    int              ai_protocol; // hints
+    socklen_t        ai_addrlen;
+    struct sockaddr *ai_addr;
+    char            *ai_canonname; // 只有设置了AI_CANONNAME 这里将保存host的官方名字
+    struct addrinfo *ai_next; // 链表
+};
+
+// node: 可以是域名 点分十进制ip nullptr 
+//      AI_PASSIVE 告知返回的套接字地址可能用于listen套接字 此时应该设置为nullptr
+// service: 端口号, 服务名http  
+//      AI_NUMERICSERV 强制此参数为端口号
+// addrinfo 设置后可以控制返回的result
+
+// AI_ADDRINFO 只有当本机设置了ipv4才查询ipv4地址 ipv6亦然
+int getaddrinfo(const char *node, const char *service,
+                       const struct addrinfo *hints,
+                       struct addrinfo **result);
+
+void freeaddrinfo(struct addrinfo *res);
+
+const char *gai_strerror(int errcode);
+```
+
+调用`getaddrinfo`生成result链表后, 遍历链表直到socket和bind调用成功(socket和connect调用成功)
+
+
+**getnameinfo函数**
+
+```c++
+// host 存储主机名 IP地址
+// serv 存储端口号 服务名
+// NI_NUMERICHOST 直接返回IP地址 不解析,  NI_NUMERICSERV 字节返回端口号 不解析服务名
+int getnameinfo(const struct sockaddr *addr, socklen_t addrlen,
+                       char *host, socklen_t hostlen,
+                       char *serv, socklen_t servlen, int flags);
+```
+
+EOF并不存在对应的字符, 其是由内核检测到的一种条件
+
+
+## 第十二章 并发编程
+
+现代操作系统提供了三种基本的构造并发程序的方法
+1. 进程
+2. 线程
+3. I/O多路复用
+
+每个线程有自己的线程上下文, 线程id 栈 栈指针 程序计数器(存放下一条指令) 通用目的寄存器和条件码(CPU根据运算结果由硬件设置, 标识正负或者溢出等)
+
+在任何一个时间点上线城是可结合的(joinable)或者是可分离的(detached). 必须二选一来收回线程资源
+前者可以能够被其他线程收回和杀死, 后者则不可被其他线程回收或杀死, 它占用的资源在其终止时由系统自动释放
+
+pthread_detach 分离线程, 可以通过pthread_self来分离自己
+
+pthread_join 结合线程 只能等待一个指定的线程终止, 没有办法让其等待任意一个线程终止
+
+
+为了理解程序中一个变量是否是共享的有一些基本问题要解答
+1. 线程的基础内存模型是什么
+2. 根据这个模型, `变量实例`如何映射到内存的
+3. 有多少线程引用这些`实例`
+
+### 线程内存模型
+
+每个线程有自己独立的线程上下文包括线程id, 栈, 栈指针, 程序计数器, 通用目的寄存器和条件码 信号屏蔽字 线程优先级
+
+线程之间共享剩余部分, 包括整个用户虚拟地址空间(由只读文本(代码), 读/写数据(全局变量, 本地静态变量), 堆, 共享库代码和数据区域)
+
+共享相同的打开文件集合
+
+线程之间栈相互独立, 基本自己访问自己的栈. 然而如果一个线程得到了另一个线程的栈指针 就可以读写这个栈的任何部分
+
+
+**进度图**
+

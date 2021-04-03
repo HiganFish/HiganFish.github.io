@@ -73,8 +73,28 @@ int main()
 
 用于解决可选的参数传入和可选的返回值输出
 
-emm 重载下感觉也挺香的吧
-
+```c++
+std::optional<std::string> Foo(bool b)
+{
+	if (b)
+	{
+		return "123456";
+	}
+	else
+	{
+		return {};
+	}
+}
+int main()
+{
+	if (!Foo(false).has_value())
+	{
+		std::cout << "no value" << std::endl; // no value
+	}
+	std::cout << Foo(false).value_or("(null)"); // (null)
+	std::cout << Foo(true).value_or("no value"); // 123456
+}
+```
 
 # variant
 

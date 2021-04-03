@@ -8,9 +8,10 @@ categories:
 
 # C++11
 
-## mutex condition
+## 特性
 
-## Lambda
+### Lambda
+
 参考资料
 https://zh.cppreference.com/w/cpp/language/lambda
 https://blog.csdn.net/qq_34199383/article/details/80469780
@@ -51,11 +52,235 @@ auto add = [](int a, int b){return a + b;};
 int bar = add(1, 2);
 ```
 
-## 花括号初始
+### User-defined literals
 
-## 函数对象
+```c++
+using namespace std::chrono_literals;
 
-### std::function  functional
+std::this_thread::sleep_for(2000ms);
+
+chrono::milliseconds operator"" ms(unsigned long long _Val) noexcept
+```
+
+第一次看到上面代码 还疑惑了会 点了下ms发现是重载. 才知道这是c++11的特性...
+
+## 库
+
+### 智能指针
+
+自己简单实现了一下智能指针
+
+Counter作为计数类 当调用`AddRefCopy`时计数值增加`Release`时计数值减少
+
+`Release`计数值减少时判断`shared_count_`如果为0则调用`Dispose`删除掉保存的指针之后接着调用`Destroy`删除掉自己
+
+SharedPtr从`from`拷贝构造时, 内部Counter指针从`from`调用`AddRefCopy`获得 实现拷贝构造计数值增加, 两者共用一个`Counter`
+
+SharedPtr从`from`赋值时, 首先对自己保有的Counter指针调用`Release`减少计数值 然后调用`from`的`AddRefCopy`获得新的`Counter`
+
+SharedPtr析构时调用Counter的`Release`减少计数值
+
+```c++
+//
+// Created by rjd67 on 2021/2/28.
+//
+
+#ifndef BASE_MEMORY_H
+#define BASE_MEMORY_H
+
+template<class T>
+class Counter
+{
+public:
+	explicit Counter(T* ptr);
+	~Counter();
+	void Destroy();
+	void Dispose();
+	void Release();
+	Counter* AddRefCopy();
+	T* Get();
+private:
+	T* ptr_;
+	int shared_count_;
+};
+
+template<class T>
+Counter<T>::Counter(T* ptr)
+	:
+	ptr_(ptr),
+	shared_count_(1)
+{
+}
+
+template<class T>
+Counter<T>::~Counter()
+= default;
+
+template<class T>
+void Counter<T>::Destroy()
+{
+	delete this;
+}
+
+template<class T>
+void Counter<T>::Release()
+{
+	shared_count_--;
+	if (shared_count_ == 0)
+	{
+		Dispose();
+		Destroy();
+	}
+}
+
+template<class T>
+Counter<T>* Counter<T>::AddRefCopy()
+{
+	shared_count_++;
+	return this;
+}
+
+template<class T>
+void Counter<T>::Dispose()
+{
+	delete ptr_;
+}
+
+template<class T>
+T* Counter<T>::Get()
+{
+	return ptr_;
+}
+
+template<class T>
+class SharedPtr
+{
+public:
+	SharedPtr();
+	explicit SharedPtr(T* ptr);
+	~SharedPtr();
+	T* Get();
+	void Reset(T* ptr);
+	SharedPtr(const SharedPtr&);
+	SharedPtr<T>& operator=(const SharedPtr&);
+	T& operator*();
+	void Swap(SharedPtr& shared_ptr);
+private:
+	T* ptr_;
+	Counter<T>* counter_;
+};
+
+template<class T>
+SharedPtr<T>::SharedPtr()
+	:
+	ptr_(nullptr),
+	counter_(new Counter<T>(nullptr))
+{
+
+}
+
+template<class T>
+SharedPtr<T>::SharedPtr(T* ptr)
+	:
+	ptr_(ptr),
+	counter_(new Counter<T>(ptr))
+{
+
+}
+
+template<class T>
+SharedPtr<T>::~SharedPtr()
+{
+	counter_->Release();
+}
+template<class T>
+T* SharedPtr<T>::Get()
+{
+	return ptr_;
+}
+
+template<class T>
+void SharedPtr<T>::Reset(T* ptr)
+{
+	SharedPtr<T>(ptr).Swap(*this);
+}
+
+template<class T>
+void SharedPtr<T>::Swap(SharedPtr& shared_ptr)
+{
+	std::swap(ptr_, shared_ptr.ptr_);
+	std::swap(counter_, shared_ptr.counter_);
+}
+
+template<class T>
+SharedPtr<T>::SharedPtr(const SharedPtr& shared_ptr)
+{
+	Counter<T>* other_counter = shared_ptr.counter_;
+
+	counter_ = other_counter->AddRefCopy();
+	ptr_ = other_counter->Get();
+}
+
+template<class T>
+SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr& shared_ptr)
+{
+	Counter<T>* other_counter = shared_ptr.counter_;
+	if (counter_ != other_counter)
+	{
+		counter_->Release();
+		counter_ = other_counter->AddRefCopy();
+		ptr_ = other_counter->Get();
+	}
+	return *this;
+}
+
+template<class T>
+T& SharedPtr<T>::operator*()
+{
+	return *ptr_;
+}
+#endif //BASE_MEMORY_H
+```
+
+### async
+
+```c++
+#include <iostream>
+#include <future>
+#include <unistd.h>
+int Foo()
+{
+	std::cout << "Foo begin" << std::endl;
+	sleep(2);
+	std::cout << "Foo end" << std::endl;
+	return 1;
+}
+int main()
+{
+	auto get_id = std::async(Foo);
+
+	std::cout << "Other work begin" << std::endl;
+	sleep(1); // do other works
+	std::cout << "Other work end" << std::endl;
+	
+	get_id.wait();
+	std::cout << get_id.get() << std::endl;
+	return 0;
+}
+/*
+Other work begin
+Foo begin
+Other work end
+Foo end
+1
+*/
+```
+
+### mutex condition
+
+
+### std::function 和 std::bind
+
 ```c++
 ##include <functional>
 ##include <iostream>
@@ -89,14 +314,6 @@ $ A
 $ B
 $ Lambad
 ```
-
-### std::bind std::ref std::cref
-今天在学习
-https://github.com/baloonwj/flamingo
-的时候, 从中发现的这个函数. 这个函数跟std::function 一起使用.
-竟然实现了回调函数调用类的成员函数!!!!
-
-https://zh.cppreference.com/w/cpp/utility/functional/bind
 
 ```c++
 ##include <functional>
@@ -143,57 +360,281 @@ int main()
 }
 ```
 
+# C++14
 
+## 特性
+### 0b010101 二进制表达
 
-## std::pair utility std::tuple tuple
-
-https://zh.cppreference.com/w/cpp/utility/tuple
-
-pair是 结构体模板, 可在一个单元中存储两个相异对象. pair是tuple拥有两个元素的特殊情况
-
-tuple是固定大小的异类值(啥是异类值??)汇集
 ```c++
-std::tuple<int, double > GetInfoById(int id)
-{
-    if (id == 0) return std::make_tuple(1, 1.1);
-    if (id == 1) return std::make_tuple(2, 2.2);
+int a = 0b111111111;
+```
 
-    throw std::invalid_argument("id");
+## 库
+
+# C++17
+
+## 特性
+
+### 结构化绑定
+
+```c++
+#include <map>
+#include <iostream>
+int main()
+{
+	std::map<int, int> id_map{{1, 2}, {3, 4}};
+
+	for (const auto& id : id_map)
+	{
+		std::cout << id.first << id.second << std::endl;
+	}
+	for (const auto&[id1, id2] : id_map)
+	{
+		std::cout << id1 << id2 << std::endl;;
+	}
+	return 0;
+}
+
+/*
+12
+34
+12
+34
+*/
+```
+
+### 初始化语句不再局限于for语句 if和switch也能使用 while: ???
+
+```c++
+int Init()
+{
+	return 1;
+}
+int main()
+{
+	for (int a = Init(); a != 2; a++)
+	{
+		std::cout << 1 << std::endl;
+	}
+	if (int a = Init(); a == 1)
+	{
+		std::cout << 1 << std::endl;
+	}
+	switch (int a = Init(); a)
+	{
+	case 1:
+		std::cout << 1 << std::endl;
+	}
+	return 1;
+}
+```
+
+至于while为什么没有 https://stackoverflow.com/questions/59985550/while-statement-with-initializer
+
+说是C++已经足够复杂了, 每次增加复杂度的时候都要足够的小心, 让这些复杂度增加的合理而自然.
+
+如果对while增加初始化语句, 那么for? ~~干脆删掉while吧~~
+
+## 库
+
+### optional
+
+**optional**
+
+```c++
+std::optional<std::string> Foo(bool b)
+{
+	if (b)
+	{
+		return "123456";
+	}
+	else
+	{
+		return {};
+	}
+}
+int main()
+{
+	if (!Foo(false).has_value())
+	{
+		std::cout << "no value" << std::endl; // no value
+	}
+	std::cout << Foo(false).value_or("(null)"); // (null)
+	std::cout << Foo(true).value_or("no value"); // 123456
+}
+```
+
+### string_view
+
+提供了对`已经被其他持有所有权的字符串`的指针和长度的包装 仅仅提供包装
+```c++
+int main()
+{
+	const char* str = "123456789";
+	std::string_view message(str, strlen(str));
+	std::cout << message;
+}
+```
+
+# C++20
+
+## 库
+
+### 协程库
+
+```c++
+// SET(CMAKE_CXX_FLAGS "-fcoroutines -std=c++2a")
+
+#include <iostream>
+#include <thread>
+#include <coroutine>
+#include <chrono>
+#include <functional>
+
+using call_back = std::function<void(int)>;
+void Add100ByCallback(int init, call_back f) // 异步调用
+{
+	std::thread t([init, f]()
+	{
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+		f(init + 100);
+	});
+	t.detach();
+}
+
+struct Add100AWaitable
+{
+	Add100AWaitable(int init)
+			:init_(init)
+	{
+	}
+
+	/**
+	 * 返回 awaitable是否已经ready
+	 * @return
+	 */
+	bool await_ready() const
+	{
+		return false; // 返回true说明结果已经得到 不需要执行协程了
+	}
+	/**
+	 * 挂起 awaitable 通过handle.resume() 恢复协程
+	 * @param handle
+	 */
+	void await_suspend(std::coroutine_handle<> handle)
+	{
+		auto f = [handle, this](int value) mutable
+		{
+			result_ = value;
+			handle.resume();
+		};
+		Add100ByCallback(init_, f); // 调用原来的异步调用
+	}
+	/**
+	 * 协程恢复后 会调用此函数 返回结果即为co_wait的返回值
+	 * @return
+	 */
+	int await_resume()
+	{
+		return result_;
+	}
+	int init_; // Add100ByCallback的参数
+	int result_; // Add100ByCallback的结果
+};
+
+/**
+ * 最简单的Promise规范的类型
+ */
+struct Task
+{
+	struct promise_type
+	{
+		auto get_return_object()
+		{
+			return Task{};
+		}
+		auto initial_suspend()
+		{
+			return std::suspend_never{};
+		}
+		auto final_suspend()
+		{
+			return std::suspend_never{};
+		}
+		void unhandled_exception()
+		{
+			std::terminate();
+		}
+		void return_void()
+		{
+		}
+	};
+};
+
+/**
+ * 协程的入口函数 必须是在某个函数中. 函数的返回值需要满足Promise规范
+ * @return
+ */
+Task Add100ByCoroutine(int init, call_back f)
+{
+	/**
+	 * 协程可以解放异步函数的组织
+	 * 否则多个异步回调实现同步 需要嵌套调用
+	 * int ret = 0;
+	 * Add100ByCallback(5, [&](int value)
+	 * {
+	 * 		ret = value;
+	 * 		Add100ByCallback(ret, [&](int value)
+	 * 		{
+	 * 			ret += value;
+	 * 		});
+	 * });
+	 */
+	int ret = co_await Add100AWaitable(init); // 连续调用co_await
+	ret = co_await Add100AWaitable(ret); // 将多个异步调用转换为串行化的同步调用
+
+	f(ret);
 }
 
 int main()
 {
-    auto info = GetInfoById(0);
-	// 获取指定位置
-    std::cout << "1:" << std::get<0>(info)
-            << " 2:" << std::get<1>(info) << std::endl;
-
-    int val1;
-    double val2;
-	// 直接创建引用的tuple
-    std::tie(val1, val2) = GetInfoById(1);
-    std::cout << "1:" << val1
-              << " 2:" << val2 << std::endl;
-			  
-$ 1:1 2:1.1
-$ 1:2 2:2.2
+	Add100ByCallback(5, [](int value)
+	{ std::cout << "get result: " << value << "\n"; });
+	Add100ByCoroutine(10, [](int value) // 启动协程
+	{ std::cout << "get result from coroutine1: " << value << "\n"; });
+	Add100ByCoroutine(20, [](int value) // 启动协程
+	{ std::cout << "get result from coroutine2: " << value << "\n"; });
 }
 ```
 
-## auto static_assert 指定类型枚举
+协程一大用途就是可以方便的将多个异步调用转换为串行化的同步调用
 
-## async
+### format库
 
-# C++14
+https://github.com/fmtlib/fmt
 
-## 0b010101 二进制表达
+将项目中的include和src拷贝出放入format文件夹添加到项目根目录
 
-# C++17
+format文件夹新增CMakeLists.txt
 
-## 结构化绑定
+```cmake
+SET(FORMAT_SRC
+        src/os.cc
+        src/format.cc
+        )
+add_library(format ${FORMAT_SRC})
+```
 
-# C++20
+项目根CMakeLists.txt增加如下三行
+```cmake
+include_directories(format/include)
+add_subdirectory(format)
+target_link_libraries(YOUR EXECUTABLE format)
+```
 
-## 携程库 import
-
-## likely宏和unlikely宏
+即可使用fmt库 相关语法也非常简单
+```c++
+const char* errnum;
+const char* shortmsg;
+fmt::format("HTTP/1.0 {} {}\r\n", errnum, shortmsg);
+```

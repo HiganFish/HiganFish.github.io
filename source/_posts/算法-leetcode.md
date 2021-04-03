@@ -3535,3 +3535,323 @@ public:
     }
 };
 ```
+
+### [103\. 二叉树的锯齿形层序遍历](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
+
+Difficulty: **中等**
+
+
+给定一个二叉树，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+
+例如：  
+给定二叉树 `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回锯齿形层序遍历如下：
+
+```
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+```
+
+
+#### Solution - 无reverse
+
+```c++
+​/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) 
+    {
+        if (!root)
+        {
+            return {};
+        }
+
+        deque<TreeNode*> nodes_last;
+        deque<TreeNode*> nodes_next;
+        nodes_last.push_back(root);
+        bool r_to_l = false;
+
+        vector<vector<int>> result;
+        while (!nodes_last.empty())
+        {
+            vector<int> temp;
+            temp.reserve(nodes_last.size());
+            if (r_to_l)
+            {
+                while (!nodes_last.empty())
+                {
+                    TreeNode* node = nodes_last.back();
+                    nodes_last.pop_back();
+                    if (node->right)
+                    {
+                        nodes_next.push_front(node->right);
+                    }
+                    if (node->left)
+                    {
+                        nodes_next.push_front(node->left);
+                    }
+                    temp.push_back(node->val);
+                }
+            }
+            else
+            {
+                while (!nodes_last.empty())
+                {
+                    TreeNode* node = nodes_last.front();
+                    nodes_last.pop_front();
+                    if (node->left)
+                    {
+                        nodes_next.push_back(node->left);
+                    }
+                    if (node->right)
+                    {
+                        nodes_next.push_back(node->right);
+                    }
+                    temp.push_back(node->val);
+                }
+            }
+            result.push_back(move(temp));
+            r_to_l = !r_to_l;
+            nodes_next.swap(nodes_last);
+        }
+        return result;
+    }
+};
+```
+
+### [42\. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+
+Difficulty: **困难**
+
+
+给定 _n_ 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+**示例 1：**
+
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/22/rainwatertrap.png)
+
+```
+输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
+```
+
+**示例 2：**
+
+```
+输入：height = [4,2,0,3,2,5]
+输出：9
+```
+
+**提示：**
+
+*   `n == height.length`
+*   `0 <= n <= 3 * 10<sup>4</sup>`
+*   `0 <= height[i] <= 10<sup>5</sup>`
+
+
+#### Solution - 暴力法
+
+```c++
+​class Solution {
+public:
+    int trap(vector<int>& height) 
+    {
+        int n = 0;
+        int sum_rain = 0;
+        while (true)
+        {
+            int sum_wall_n = 0;
+            n++;
+            int left_wall = INT_MAX;
+            int right_wall = INT_MIN;
+            for (int i = 0; i < height.size(); ++i)
+            {
+                if (height[i] >= n)
+                {
+                    sum_wall_n++;
+
+                    left_wall = min(i, left_wall);
+                    right_wall = max(i, right_wall);
+                }
+            }
+            if (sum_wall_n >= 2)
+            {
+                int rain = right_wall - left_wall - 1 - (sum_wall_n - 2);
+                sum_rain += rain;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return sum_rain;
+    }
+};
+```
+
+一层一层判断, 当前层可存储雨水等于 当前层最左侧墙和当前层最右侧墙之间的数量 减去之间墙的数量 得到空位的数量 也就是雨水
+
+时间复杂度O(n^2) 空间复杂度O(1). 
+
+另外一种暴力方法是每次计算当前位置最多积多少水, 上面的暴力方法是一层一层计算 这里是一列一列计算. 需要从当前位置分别向左和右遍历找到两边的最高墙
+较矮的一边减去当前墙高度即为当前位置最多积累的雨水. 时间和空间复杂度同上
+
+#### Solution - 动态规划 提前遍历出每个位置处的左边最高和右边最高
+
+```c++
+class Solution {
+public:
+    int trap(vector<int>& height) 
+    {
+        if (height.empty())
+        {
+            return 0;
+        }
+
+        const int HEI_SIZE = height.size();
+
+        vector<int> left_max;
+        vector<int> right_max;
+        left_max.resize(HEI_SIZE);
+        right_max.resize(HEI_SIZE);
+
+        left_max[0] = height[0];
+        right_max[HEI_SIZE - 1] = height[HEI_SIZE - 1];
+        for (int i = 1; i < HEI_SIZE; ++i)
+        {
+            left_max[i] = max(left_max[i - 1], height[i]);
+        }
+        for (int i = HEI_SIZE - 2; i >= 0; --i)
+        {
+            right_max[i] = max(right_max[i + 1], height[i]);
+        }
+
+        int sum_rain_ret = 0;
+        for (int i = 1; i < HEI_SIZE; ++i)
+        {
+            int rain = min(left_max[i], right_max[i]) - height[i];
+            sum_rain_ret += max(rain, 0);
+        }
+        return sum_rain_ret;
+    }
+};
+```
+
+#### Solution - 递减栈
+
+```c++
+class Solution {
+public:
+    int trap(vector<int>& height) 
+    {
+        if (height.empty())
+        {
+            return 0;
+        }
+
+        int sum_rain_ret = 0;
+        stack<int> height_stack;
+        for (int i = 0; i < height.size(); ++i)
+        {
+            while (!height_stack.empty() && height[i] >= height[height_stack.top()])
+            {
+                int last_wall = height_stack.top(); // last_wall的高度 小于 i的高度 也小于 llast_wall的高度
+                height_stack.pop();
+
+                if (height_stack.empty())
+                {
+                    break;
+                }
+                int llast_wall = height_stack.top(); // 这里不进行pop()是因为 
+                // llast_wall的高度 小于 lllast_wall llast_wall 可能小于i的高度 这之间依然可能积水
+                
+                int distance = i - llast_wall - 1; // 间距
+                int rain = min(height[llast_wall], height[i]) - height[last_wall];
+                sum_rain_ret += rain * distance;
+            }
+            height_stack.push(i);
+        }
+        return sum_rain_ret;
+    }
+};
+```
+
+代码比较难理解 结合`[4,2,0,3,2,5]`输入走一遍就好理解了 `ans=9`
+
+#### Solution - 双指针
+
+```c++
+class Solution {
+public:
+    int trap(vector<int>& height) 
+    {
+        if (height.empty())
+        {
+            return 0;
+        }
+
+        int left_max_sub = 0;
+        int right_max_sub = height.size() - 1;
+
+        int left = left_max_sub + 1;
+        int right = right_max_sub - 1;
+
+        int sum_rain_ret = 0;
+        while (left <= right)
+        {
+            if (height[left_max_sub] < height[right_max_sub])
+            {
+                if (height[left] < height[left_max_sub])
+                {
+                    sum_rain_ret += height[left_max_sub] - height[left];
+                }
+                else
+                {
+                    left_max_sub = left;
+                }
+                left++;
+            }
+            else
+            {
+                if (height[right] < height[right_max_sub])
+                {
+                    sum_rain_ret += height[right_max_sub] - height[right];
+                }
+                else
+                {
+                    right_max_sub = right;
+                }
+                right--;
+            }
+        }
+        return sum_rain_ret;
+    }
+};
+```
+
+left_max_sub一定是left左边最高的墙, 但是right_max_sub不一定是left右边最高的墙. 也就是说右边的墙高度 大于等于 right_max_sub
+
+所以当left_max_sub的墙的高度小于right_max_sub的时候 上面的问题就不存在了, 因为取决于更矮的墙

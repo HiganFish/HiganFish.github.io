@@ -3,8 +3,7 @@ title: TCP状态机
 date: 2020-03-25 12:55:20
 tags:
 categories:
-  - 网络编程
-  - Socket理论
+  - 计算机网络
 ---
 
 - 待补充 双向管道的建立和断开细节

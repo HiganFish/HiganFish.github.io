@@ -1,6 +1,6 @@
 ---
-title: 	剑指Offer(年轻人你渴望力量吗)
-date: 2021-02-26 00:08:28
+title: 	剑指Offer
+date: 2021-02-10 00:08:28
 tags:
 categories:
  - 算法
@@ -991,7 +991,7 @@ Difficulty: **简单**
 注意：本题与主站 191 题相同：
 
 
-#### Solution - 右移运算符 循环M次 M为二进制位数和
+#### Solution - 右移运算符 循环M次 M为二进制位数和 负数会出错导致死循环
 
 ```c++
 ​class Solution {
@@ -1008,6 +1008,19 @@ public:
         return result;
     }
 };
+```
+
+#### Solution - 解决负数的一种方法
+
+```c++
+class Solution
+{
+public:
+    int hammingWeight(uint32_t n)
+    {
+
+    }
+}
 ```
 
 #### Solution - 更加高效的 循环M次 M为二进制1的位数
@@ -1028,6 +1041,8 @@ public:
     }
 };
 ```
+
+把一个整数减去1之后再和原来的整数作`&`运算, 得到的结果相当于将二进制表示中的最右边一个1变成0
 
 ### [剑指 Offer 16\. 数值的整数次方](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)
 
@@ -3074,3 +3089,2938 @@ public:
     }
 };​
 ```
+
+### [剑指 Offer 38\. 字符串的排列](https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/) - 30MIN
+
+Difficulty: **中等**
+
+
+输入一个字符串，打印出该字符串中字符的所有排列。
+
+你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+
+**示例:**
+
+```
+输入：s = "abc"
+输出：["abc","acb","bac","bca","cab","cba"]
+```
+
+**限制：**
+
+`1 <= s 的长度 <= 8`
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+
+    vector<string> result;
+
+    vector<string> permutation(string s)
+    {
+        std::string temp;
+        temp.resize(s.size());
+        
+        permutation(s, 0, temp);
+        return result;
+    }
+
+    void permutation(string& s, int sub, std::string& temp)
+    {
+        if (sub == s.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+
+        char flag['z' - 'A' + 1]{};
+        for (int i = 0; i < s.size(); ++i)
+        {
+            char back = s[i];
+            if (back != '#')
+            {
+                if (flag[back - 'A'] == 0)
+                {
+                    flag[back - 'A'] = 1;
+                    temp[sub] = s[i];
+
+                    s[i] = '#';
+                    permutation(s, sub + 1, temp);
+                    s[i] = back;
+                }
+            }
+        }
+    }
+};
+```
+
+代码中防止重复的代码太巧了, 自己一开始使用的set去重. 然后看到了题解的剪枝方法 在每一层中一个字母仅能出现一次, 时间消耗大幅下降了
+
+#### Solution - 改进版 - 源字符串上swap
+
+```c++
+class Solution {
+public:
+
+    vector<string> result;
+
+    vector<string> permutation(string s)
+    {        
+        permutation(s, 0);
+        return result;
+    }
+
+    void permutation(string& s, int sub)
+    {
+        if (sub == s.size() - 1) // 仅剩一个字符 该字符正好位于末尾 直接保存
+        {
+            result.push_back(s);
+            return;
+        }
+
+        char flag['z' - 'A' + 1]{};
+        for (int i = sub; i < s.size(); ++i) // 从本层开始 sub之前的字符已经被使用了
+        {
+            char back = s[i];
+
+            if (flag[back - 'A'] == 0)
+            {
+                flag[back - 'A'] = 1;
+
+                swap(s[i], s[sub]); // 交换未使用元素到本层位置
+                permutation(s, sub + 1);
+                swap(s[i], s[sub]);
+            }
+        }
+    }
+};
+```
+
+由于是全排列, 其实可以将未使用元素挨个的交换到本层位置 这样本层位置之前的字符是使用过的.
+
+### [剑指 Offer 39\. 数组中出现次数超过一半的数字](https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/) - 20MIN
+
+Difficulty: **简单**
+
+
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+**示例 1:**
+
+```
+输入: [1, 2, 3, 2, 2, 2, 5, 4, 2]
+输出: 2
+```
+
+**限制：**
+
+`1 <= 数组长度 <= 50000`
+
+注意：本题与主站 169 题相同：
+
+
+#### Solution - Map统计次数
+
+```c++
+​int majorityElement(vector<int>& nums)
+{
+    map<int, int> times;
+
+    int end_time = nums.size() / 2;
+
+    for (auto& num : nums)
+    {
+        times[num]++;
+        if (times[num] > end_time)
+        {
+            return num;
+        }
+    }
+    return 0;
+}
+```
+
+#### Solution - sort排序 中间位置元素为结果
+
+```c++
+int majorityElement(vector<int>& nums)
+{
+    sort(nums.begin(), nums.end());
+
+    return nums[nums.size() / 2];
+}
+```
+
+#### Solution - 摩尔投票法
+
+```c++
+int majorityElement(vector<int>& nums)
+{
+    int vote = nums[0];
+    int sum = 0;
+
+    for (auto& num : nums)
+    {
+        sum += vote == num ? 1 : -1;
+        if (sum < 0)
+        {
+            vote = num;
+            sum = 1;
+        }
+    }
+
+    // int times = 0;
+    // for (auto& num : nums)
+    // {
+    //     times += num == vote ? 1 : 0;
+    // }
+    // 如果可能不存在结果 则需要进行验证
+    return vote;
+}
+```
+
+### [剑指 Offer 40\. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
+
+Difficulty: **简单**
+
+
+输入整数数组 `arr` ，找出其中最小的 `k` 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+
+**示例 1：**
+
+```
+输入：arr = [3,2,1], k = 2
+输出：[1,2] 或者 [2,1]
+```
+
+**示例 2：**
+
+```
+输入：arr = [0,1,2,1], k = 1
+输出：[0]
+```
+
+**限制：**
+
+*   `0 <= k <= arr.length <= 10000`
+*   `0 <= arr[i] <= 10000`
+
+
+#### Solution - 维护最大堆 O(nlogk) O(k)
+
+```c++
+​class Solution {
+public:
+
+    priority_queue<int> min_heap;
+
+    void TryToAdd(int num, int k)
+    {
+        if (min_heap.size() < k)
+        {
+            min_heap.push(num);
+        }
+        else
+        {
+            if (num < min_heap.top())
+            {
+                min_heap.pop();
+                min_heap.push(num);
+            }
+        }
+    }
+
+    vector<int> getLeastNumbers(vector<int>& arr, int k)
+    {
+        if (k <= 0)
+        {
+            return {};
+        }
+
+        for (auto num : arr)
+        {
+            TryToAdd(num, k);
+        }
+
+        vector<int> result(k);
+        for (int i = 0; i < k; ++i)
+        {
+            result[i] = min_heap.top();
+            min_heap.pop();
+        }
+        return result;
+    }
+};
+```
+
+#### Solution - 基于快排分区思想 O(n) O(logn)
+
+```c++
+class Solution {
+public:
+
+    vector<int> getLeastNumbers(vector<int>& arr, int k)
+    {
+        if (k == 0)
+        {
+            return {};
+        }
+        Partition(arr, 0, arr.size() - 1, k);
+
+        return vector<int>(arr.begin(), arr.begin() + k);
+    }
+
+    int Partition(vector<int>& arr, int left , int right, int k)
+    {
+        if (right - left <= 0)
+        {
+            return left;
+        }
+        int ret = left;
+
+        int index = ret + 1;
+
+        for (int i = index; i <= right; ++i)
+        {
+            if (arr[i] < arr[ret])
+            {
+                swap(arr[index], arr[i]);
+                index++;
+            }
+        }
+        swap(arr[index - 1], arr[ret]);
+        int part = index - 1;
+
+        if (part == k)
+        {
+            return part;
+        }
+        else if (part < k)
+        {
+            return Partition(arr, part + 1, right, k);
+        }
+        else
+        {
+            return Partition(arr, left, part - 1, k);
+        }
+    }
+};
+```
+
+### [剑指 Offer 41\. 数据流中的中位数](https://leetcode-cn.com/problems/shu-ju-liu-zhong-de-zhong-wei-shu-lcof/) - 30MIN
+
+Difficulty: **困难**
+
+
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+
+例如，
+
+[2,3,4] 的中位数是 3
+
+[2,3] 的中位数是 (2 + 3) / 2 = 2.5
+
+设计一个支持以下两种操作的数据结构：
+
+*   void addNum(int num) - 从数据流中添加一个整数到数据结构中。
+*   double findMedian() - 返回目前所有元素的中位数。
+
+**示例 1：**
+
+```
+输入：
+["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"]
+[[],[1],[2],[],[3],[]]
+输出：[null,null,null,1.50000,null,2.00000]
+```
+
+**示例 2：**
+
+```
+输入：
+["MedianFinder","addNum","findMedian","addNum","findMedian"]
+[[],[2],[],[3],[]]
+输出：[null,null,2.00000,null,2.50000]
+```
+
+**限制：**
+
+*   最多会对 `addNum、findMedian` 进行 `50000` 次调用。
+
+注意：本题与主站 295 题相同：
+
+
+#### Solution 最大堆 + 最小堆 求中位数
+
+```c++
+​class MedianFinder {
+public:
+
+    priority_queue<int, vector<int>, greater<int>> min_heap;
+    priority_queue<int> max_heap;
+    int size = 0;
+
+    /** initialize your data structure here. */
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num)
+    {
+        if (size == 0)
+        {
+            min_heap.push(num);
+        }
+        else
+        {
+            if (size % 2 == 0)
+            {
+                if (num > max_heap.top())
+                {
+                    min_heap.push(num);
+                }
+                else
+                {
+                    max_heap.push(num);
+                    min_heap.push(max_heap.top());
+                    max_heap.pop();
+                }
+            }
+            else
+            {
+                if (num < min_heap.top())
+                {
+                    max_heap.push(num);
+                }
+                else
+                {
+                    min_heap.push(num);
+                    max_heap.push(min_heap.top());
+                    min_heap.pop();
+                }
+            }
+        }
+        size++;
+    }
+    
+    double findMedian()
+    {
+        if (size % 2 == 0)
+        {
+            return (max_heap.top() + min_heap.top()) / 2.0;
+        }
+        else
+        {
+            return min_heap.top();
+        }
+    }
+};
+```
+
+最开始写的时候堆的调整写在了findMedian里面, 实际应该写在addNum这样函数的功能才分工明确 而且由于两个堆大小基本平衡效率更高
+
+
+### [剑指 Offer 42\. 连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/) - 5MIN
+
+Difficulty: **简单**
+
+
+输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+
+要求时间复杂度为O(n)。
+
+**示例1:**
+
+```
+输入: nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出: 6
+解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
+```
+
+**提示：**
+
+*   `1 <= arr.length <= 10^5`
+*   `-100 <= arr[i] <= 100`
+
+注意：本题与主站 53 题相同：
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    int maxSubArray(vector<int>& nums)
+    {
+        int sum = 0;
+        int ret = nums[0];
+        for (auto& num : nums)
+        {
+            if (sum >= 0)
+            {
+                sum += num;
+            }
+            else
+            {
+                sum = num;
+            }
+            ret = max(sum, ret);
+        }
+        return ret;
+    }
+};
+```
+
+### [剑指 Offer 45\. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+
+Difficulty: **中等**
+
+
+输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+
+**示例 1:**
+
+```
+输入: [10,2]
+输出: "102"
+```
+
+**示例 2:**
+
+```
+输入: [3,30,34,5,9]
+输出: "3033459"
+```
+
+**提示:**
+
+*   `0 < nums.length <= 100`
+
+**说明:**
+
+*   输出结果可能非常大，所以你需要返回一个字符串而不是整数
+*   拼接起来的数字可能会有前导 0，最后结果不需要去掉前导 0
+
+
+#### Solution - 遇事不决dfs 超时..
+
+```c++
+​class Solution {
+public:
+
+    string minNumber(vector<int>& nums)
+    {
+        string result;
+        string temp;
+        dfs(nums, 0, result, temp);
+        return result;
+    }
+
+    void dfs(vector<int>& nums, int sub, string& result, string& temp)
+    {
+        if (!result.empty() && result.compare(temp) < 0) // 剪枝
+        {
+            return;
+        }
+
+        if (sub == nums.size())
+        {
+            if (result.empty() || result.compare(temp) > 0)
+            {
+                result = temp;
+            }
+            return;
+        }
+
+        set<int> exist;
+        for (int i = sub; i < nums.size(); ++i)
+        {
+            auto iter = exist.lower_bound(nums[i]); // 剪枝
+            if (iter == exist.end() || *iter != nums[i])
+            {
+                exist.insert(iter, nums[i]);
+
+                swap(nums[i], nums[sub]);
+
+                string num = to_string(nums[sub]);
+                temp += num;
+
+                dfs(nums, sub + 1, result, temp);
+
+                temp.erase(temp.end() - num.size(), temp.end());
+
+                swap(nums[i], nums[sub]);
+            }
+        }
+    }
+};
+```
+
+#### Solution - 特殊的排序(另类的comp函数)
+
+```c++
+class Solution {
+public:
+
+    void QuickSort(vector<string>& strs, int left, int right)
+    {
+        if (right - left <= 0)
+        {
+            return;
+        }
+
+        auto comp =
+            [](const string& lhs, const string& rhs)
+            {
+                return lhs + rhs < rhs + lhs;
+            };
+
+        int pivot = left;
+
+        int index = left + 1;
+        for (int i = index; i <= right; ++i)
+        {
+            if (comp(strs[i], strs[pivot]))
+            {
+                swap(strs[i], strs[index]);
+                index++;
+            }
+        }
+        swap(strs[pivot], strs[index - 1]);
+
+        // int le = left;
+        // int ri = right;
+
+        // while (le < ri)
+        // {
+        //     while (le < ri && !comp(strs[ri], strs[pivot]))
+        //     {
+        //         ri--;
+        //     }
+        //     while (le < ri && comp(strs[le], strs[pivot]))
+        //     {
+        //         le++;
+        //     }
+        //     swap(strs[le], strs[ri]);
+        // }
+        // swap(strs[le], strs[pivot]);
+
+        QuickSort(strs, left, index - 2);
+        QuickSort(strs, index, right);
+    }
+
+    string minNumber(vector<int>& nums)
+    {
+        vector<string> strs;
+        strs.reserve(nums.size());
+
+        for (int num : nums)
+        {
+            strs.push_back(to_string(num));
+        }
+    
+        QuickSort(strs, 0, strs.size() - 1);
+
+        string result;
+        for (const auto& str : strs)
+        {
+            result += str;
+        }
+        return result;
+    }
+};
+```
+
+### [剑指 Offer 46\. 把数字翻译成字符串](https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/)
+
+Difficulty: **中等**
+
+
+给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+
+**示例 1:**
+
+```
+输入: 12258
+输出: 5
+解释: 12258有5种不同的翻译，分别是"bccfi", "bwfi", "bczi", "mcfi"和"mzi"
+```
+
+**提示：**
+
+*   `0 <= num < 2<sup>31</sup>`
+
+
+#### Solution - 遇事不决dfs
+
+```c++
+​class Solution {
+public:
+    int translateNum(int num)
+    {
+        string num_str = to_string(num);
+
+        return dfs(num_str, 0);
+    }
+
+    int dfs(const string& str, int sub)
+    {
+        if (sub > str.size())
+        {
+            return 0;
+        }
+        else if (sub >= str.size() - 1)
+        {
+            return 1;
+        }
+
+        int time = 0;
+        if (sub < str.size() - 1 && str[sub] == '1')
+        {
+            time += dfs(str, sub + 2);
+        }
+        else if (sub < str.size() - 1 && str[sub] == '2' && 
+                str[sub + 1] >= '0' && str[sub + 1] <= '5')
+        {
+            time += dfs(str, sub + 2);
+        }
+
+        time += dfs(str, sub + 1);
+
+        return time;
+    }
+};
+```
+
+#### Solution - DP
+
+```c++
+class Solution {
+public:
+    int translateNum(int num)
+    {
+        string num_str = to_string(num);
+
+        vector<int> dp(num_str.size() + 1);
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i <= num_str.size(); ++i)
+        {
+            dp[i] = dp[i - 1];
+
+            if (num_str[i - 2] == '1')
+            {
+                dp[i] += dp[i - 2];
+            }
+            else if (num_str[i - 2] == '2' && num_str[i - 1] >= '0' && num_str[i - 1] <= '5')
+            {
+                dp[i] += dp[i - 2];
+            }
+        }
+        return dp[num_str.size()];
+    }
+};
+```
+
+可以对dp数组进行降维打击 易读性也被降维打击了
+```c++
+class Solution {
+public:
+    int translateNum(int num)
+    {
+        string num_str = to_string(num);
+
+        int a = 1; // i - 2
+        int b = 1; // i - 1
+        int dp = b; // i
+
+        for (int i = 2; i <= num_str.size(); ++i)
+        {
+            dp = b;
+
+            if (num_str[i - 2] == '1')
+            {
+                dp += a;
+            }
+            else if (num_str[i - 2] == '2' && num_str[i - 1] >= '0' && num_str[i - 1] <= '5')
+            {
+                dp += a;
+            }
+            a = b;
+            b = dp;
+        }
+        return dp;
+    }
+};
+```
+
+`dp[0]=1`这点没有考虑到, 本来设置的为0. 
+
+然而当num为25的时候`dp[2]`应该为2, 所以必须把`dp[0]`设置为1
+
+状态转移方程`dp[i] = dp[i - 1] + dp[i - 2](i-1和i-2字符需要能连接)` 是因为如果把`i-1和i-2`连接有`dp[i-2]`种
+
+如果不连接则有`dp[i - 1]`种 所以最终是二者之和
+
+
+可以对str字符串进行降维打击 易读性又双被降维打击了
+
+```c++
+class Solution {
+public:
+    int translateNum(int num)
+    {
+        int a = 1; // i - 2
+        int b = 1; // i - 1
+        int dp = b; // i
+        
+        int last_s = num % 10;
+        int now_s;
+        num /= 10;
+
+        while (num != 0)
+        {
+            now_s = num % 10;
+            num /= 10;
+
+            dp = b;
+
+            int temp = now_s * 10 + last_s;
+            if (temp >= 10 && temp <= 25)
+            {
+                dp += a;
+            }
+
+            a = b;
+            b = dp;
+
+            last_s = now_s;
+        }
+        return dp;
+    }
+};
+```
+
+### [剑指 Offer 47\. 礼物的最大价值](https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/)
+
+Difficulty: **中等**
+
+
+在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+
+**示例 1:**
+
+```
+输入: 
+[
+  [1,3,1],
+  [1,5,1],
+  [4,2,1]
+]
+输出: 12
+解释: 路径 1→3→5→2→1 可以拿到最多价值的礼物
+```
+
+提示：
+
+*   `0 < grid.length <= 200`
+*   `0 < grid[0].length <= 200`
+
+
+#### Solution - 备忘录 接近超时
+
+```c++
+​class Solution {
+public:
+    int maxValue(vector<vector<int>>& grid)
+    {
+        return dfs(grid, 0, 0);
+    }
+
+    std::map<std::string, int> bwl;
+    int dfs(const vector<vector<int>>& grid, int x, int y)
+    {
+        if (x == grid.size() - 1 && y == grid[0].size() - 1)
+        {
+            return grid[x][y];
+        }
+
+        std::string key = to_string(x) + "," + to_string(y);
+        auto iter = bwl.find(key);
+        if (iter != bwl.end())
+        {
+            return iter->second;
+        }
+
+        int r = 0;
+        int d = 0;
+        if (x < grid.size() - 1 && y < grid[0].size())
+        {
+            r = dfs(grid, x + 1, y);
+        }
+        if (y < grid[0].size() - 1 && x < grid.size())
+        {
+            d = dfs(grid, x, y + 1);
+        }
+
+        int result = max(r, d) + grid[x][y];
+        bwl[key] = result;
+        return result;
+    }
+};
+```
+
+#### Solution - dp table 接近100%
+
+```c++
+class Solution {
+public:
+    int maxValue(vector<vector<int>>& grid)
+    {
+        const int XS = grid.size();
+        const int YS = grid[0].size();
+
+        vector<vector<int>> dp(XS + 1, vector<int>(YS + 1, 0));
+
+        for (int x = 1; x <= XS; ++x)
+        {
+            for (int y = 1; y <= YS; ++y)
+            {
+                dp[x][y] = max(dp[x - 1][y], dp[x][y - 1]) + grid[x - 1][y - 1];
+            }
+        }
+        return dp[XS][YS];
+    }
+};
+```
+
+### [剑指 Offer 48\. 最长不含重复字符的子字符串](https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)
+
+Difficulty: **中等**
+
+
+请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+
+**示例 1:**
+
+```
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+```
+
+**示例 2:**
+
+```
+输入: "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+```
+
+**示例 3:**
+
+```
+输入: "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+```
+
+提示：
+
+*   `s.length <= 40000`
+
+注意：本题与主站 3 题相同：
+
+
+#### Solution - 双指针 + hash表
+
+```c++
+​class Solution {
+public:
+    int lengthOfLongestSubstring(string s) 
+    {
+        if (s.empty())
+        {
+            return 0;
+        }
+
+        int begin = 0;
+        int end = 0;
+        int hash[128]{};
+        for (int i = 0; i < 128; ++i)
+        {
+            hash[i] = -1;
+        }
+
+        int ret = 1;
+        for (;end < s.size(); ++end)
+        {
+            char c = s[end];
+            if (hash[c] >= begin)
+            {
+                int len = end - begin;
+                ret = max(len, ret);
+                begin = hash[c] + 1;
+            }
+            hash[c] = end;
+        }
+        ret = max(end - begin, ret);
+        return ret;
+    }
+};
+```
+
+```c++
+​class Solution {
+public:
+    int lengthOfLongestSubstring(string s) 
+    {
+        int begin = 0;
+        int end = 0;
+        int hash[128]{};
+        for (int i = 0; i < 128; ++i)
+        {
+            hash[i] = -1;
+        }
+
+        int ret = 0;
+        for (;end < s.size(); ++end)
+        {
+            char c = s[end];
+            if (hash[c] >= begin)
+            {
+                begin = hash[c] + 1;
+            }
+            ret = max(end - begin + 1, ret);
+            hash[c] = end;
+        }
+        return ret;
+    }
+};
+```
+简化版, `hash[c] >= begin`主要是更细begin指针, 而更新ret的可以放一起. 原版是end在重复的字符上进行取长度, 新版则是end未在重复字符上 所以需要长度 + 1
+
+#### Solution - Dp + hash表
+
+```c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) 
+    {
+        int hash[128]{};
+        vector<int> dp(s.size() + 1);
+        dp[0] = 0;
+        int begin = 1;
+        int ret = 0;
+        for(int i = 1; i <= s.size(); ++i)
+        {
+            char c = s[i - 1];
+            if (hash[c] >= begin)
+            {
+                dp[i] = i - hash[c];
+                begin = hash[c] + 1;
+            } 
+            else
+            {
+                dp[i] = dp[i - 1] + 1;
+            }
+            hash[c] = i;
+            ret = max(ret, dp[i]);
+        }
+        return ret;
+    }
+};
+```
+
+### [剑指 Offer 49\. 丑数](https://leetcode-cn.com/problems/chou-shu-lcof/)
+
+Difficulty: **中等**
+
+
+我们把只包含质因子 2、3 和 5 的数称作丑数（Ugly Number）。求按从小到大的顺序的第 n 个丑数。
+
+**示例:**
+
+```
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+```
+
+**说明: ** 
+
+1.  `1` 是丑数。
+2.  `n` **不超过**1690。
+
+注意：本题与主站 264 题相同：
+
+
+#### Solution - 逐个计算 超时
+
+```c++
+​class Solution {
+public:
+    int nthUglyNumber(int n)
+    {
+        if (n <= 1)
+        {
+            return 1;
+        }
+
+        unordered_set<int> ugly_num;
+        vector<int> bases = {2, 3, 5};
+        ugly_num.insert(1);
+
+        int k = 1;
+        int num = 1;
+        while (k < n)
+        {
+            num++;
+            for (int base : bases)
+            {
+                if (num % base == 0 && ugly_num.find(num / base) != ugly_num.end())
+                {
+                    ugly_num.insert(num);
+                    k++;
+                    break;
+                }
+            }
+        }
+        return num;
+    }
+};
+```
+
+#### Solution - 生成丑数
+
+```c++
+class Solution {
+public:
+    int nthUglyNumber(int n)
+    {
+        int dp[n];
+        dp[0] = 1;
+        int a = 0, b = 0, c = 0;
+        for (int i = 1; i < n; ++i)
+        {
+            int numa = dp[a] * 2;
+            int numb = dp[b] * 3;
+            int numc = dp[c] * 5;
+
+            int min_abc = min(numa, min(numb, numc));
+            dp[i] = min_abc;
+            if (min_abc == numa)
+            {
+                a++;
+            }
+            if (min_abc == numb)
+            {
+                b++;
+            }
+            if (min_abc == numc)
+            {
+                c++;
+            }
+        }
+        return dp[n - 1];
+    }
+};
+```
+
+每个新的丑数都是已有丑数的2 3 5倍, 需要按循序将这些丑数排好. 如果一个数字已经提供过了新的丑数, 那么就应该有这个新的丑数尝试去提供, 否则一定是重复的 对应了
+
+代码中的a++ b++ c++, 每次取出最小的丑数添加到结果中
+
+
+### [剑指 Offer 50\. 第一个只出现一次的字符](https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/)
+
+Difficulty: **简单**
+
+
+在字符串 s 中找出第一个只出现一次的字符。如果没有，返回一个单空格。 s 只包含小写字母。
+
+**示例:**
+
+```
+s = "abaccdeff"
+返回 "b"
+
+s = "" 
+返回 " "
+```
+
+**限制：**
+
+`0 <= s 的长度 <= 50000`
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    char firstUniqChar(string s)
+    {
+        if (s.empty())
+        {
+            return ' ';
+        }
+
+        int hash2[26]{};
+        for (int i = 0; i < 26; ++i)
+        {
+            hash2[i] = -1;
+        }
+
+        for (int i = 0; i < s.size(); ++i)
+        {
+            int c = s[i] - 'a';
+
+            if (hash2[c] == -1)
+            {
+                hash2[c] = i; // 标记第一次出现的位置
+            }
+            else
+            {
+                hash2[c] = -2;
+            }
+        }
+
+        int min_sub = -1;
+        int min = INT_MAX;
+        for (int i = 0; i < 26; ++i)
+        {
+            if (hash2[i] >= 0 && hash2[i] < min)
+            {
+                min = hash2[i];
+                min_sub = i;  
+            }
+        }
+        if (min_sub == -1)
+        {
+            return ' ';
+        }
+
+        char result = 'a' + min_sub;
+        return result;
+    }
+};
+```
+
+### [剑指 Offer 51\. 数组中的逆序对](https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)
+
+Difficulty: **困难**
+
+
+在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中的逆序对的总数。
+
+**示例 1:**
+
+```
+输入: [7,5,6,4]
+输出: 5
+```
+
+**限制：**
+
+`0 <= 数组长度 <= 50000`
+
+
+#### Solution - 归并排序 求逆序对
+
+```c++
+class Solution {
+public:
+    int reversePairs(vector<int>& nums)
+    {
+        vector<int> temp(nums.size());
+        return MergeSort(nums, temp, 0, nums.size() - 1);
+    }
+
+    int MergeSort(vector<int>& nums, vector<int>& temp, int left, int right)
+    {
+        if (left >= right)
+        {
+            return 0;
+        }
+
+        int mid = (left + right) / 2;
+
+        int result = 0;
+
+        result += MergeSort(nums, temp, left, mid);
+        result += MergeSort(nums, temp, mid + 1, right);
+
+        int temp_i = left;
+        int i = left;
+        int j = mid + 1;
+        int begin_j = j;
+        while (i <= mid && j <= right)
+        {
+            if (nums[i] <= nums[j])
+            {
+                temp[temp_i++] = nums[i];
+                i++;
+                result += (j - begin_j);
+
+            }
+            else
+            {
+                temp[temp_i++] = nums[j];
+                j++;
+            }
+        }
+        for (;i <= mid; ++i)
+        {
+            temp[temp_i++] = nums[i];
+            result += (j - begin_j);
+        }
+        for (; j <= right; ++j)
+        {
+            temp[temp_i++] = nums[j];
+        }
+        std::copy(temp.begin() + left, temp.begin() + right + 1, nums.begin() + left);
+
+        return result;
+    }
+};
+```
+
+### [剑指 Offer 52\. 两个链表的第一个公共节点](https://leetcode-cn.com/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/)
+
+Difficulty: **简单**
+
+
+输入两个链表，找出它们的第一个公共节点。
+
+如下面的两个链表**：**
+
+在节点 c1 开始相交。
+
+**示例 1：**
+
+```
+输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,0,1,8,4,5], skipA = 2, skipB = 3
+输出：Reference of the node with value = 8
+输入解释：相交节点的值为 8 （注意，如果两个列表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,0,1,8,4,5]。在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。
+```
+
+**示例 2：**
+
+```
+输入：intersectVal = 2, listA = [0,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
+输出：Reference of the node with value = 2
+输入解释：相交节点的值为 2 （注意，如果两个列表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [0,9,1,2,4]，链表 B 为 [3,2,4]。在 A 中，相交节点前有 3 个节点；在 B 中，相交节点前有 1 个节点。
+```
+
+**示例 3：**
+
+```
+输入：intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
+输出：null
+输入解释：从各自的表头开始算起，链表 A 为 [2,6,4]，链表 B 为 [1,5]。由于这两个链表不相交，所以 intersectVal 必须为 0，而 skipA 和 skipB 可以是任意值。
+解释：这两个链表不相交，因此返回 null。
+```
+
+**注意：**
+
+*   如果两个链表没有交点，返回 `null`.
+*   在返回结果后，两个链表仍须保持原有的结构。
+*   可假定整个链表结构中没有循环。
+*   程序尽量满足 O(_n_) 时间复杂度，且仅用 O(_1_) 内存。
+*   本题与主站 160 题相同：
+
+
+#### Solution - 相遇
+
+```c++
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) 
+    {
+        if (!headA || !headB)
+        {
+            return nullptr;
+        }
+        ListNode* temp_a = headA;
+        ListNode* temp_b = headB;
+
+        while (temp_a->next || temp_b->next)
+        {
+            if (temp_a == temp_b)
+            {
+                return temp_a;
+            }
+            temp_a = temp_a->next ? temp_a->next : headB;
+            
+            temp_b = temp_b->next ? temp_b->next : headA; 
+        }
+        return temp_a == temp_b ? temp_a : nullptr;
+    }
+};
+```
+
+这里踩了一个坑, 我开始是修改了next指针 首先题目不允许修改 其次修改之后会影响另一个指针的判断, 因为修改的这个node很可能是共享的node
+
+```c++
+​class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) 
+    {
+        ListNode* temp_a = headA;
+        ListNode* temp_b = headB;
+
+        while (temp_a != temp_b)
+        {
+            temp_a = temp_a ? temp_a->next : headB;
+            temp_b = temp_b ? temp_b->next : headA; 
+        }
+        return temp_a;
+    }
+};
+```
+
+退出条件优化了, 两种可能一种是二者相遇了 一种是二者都为空指针 这样代码能简化很多
+
+### [剑指 Offer 53 - II. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
+
+Difficulty: **简单**
+
+
+一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+
+**示例 1:**
+
+```
+输入: [0,1,3]
+输出: 2
+```
+
+**示例 2:**
+
+```
+输入: [0,1,2,3,4,5,6,7,9]
+输出: 8
+```
+
+**限制：**
+
+`1 <= 数组长度 <= 10000`
+
+
+#### Solution - 二分法
+
+```c++
+​class Solution {
+public:
+    int missingNumber(vector<int>& nums)
+    {
+        if (nums[0] != 0)
+        {
+            return 0;
+        }
+
+        int ret = find(nums, 0, nums.size() - 1);
+        if (ret == -1)
+        {
+            return nums[nums.size() - 1] + 1;
+        }
+        return ret;
+    }
+
+    int find(vector<int>& nums, int left, int right)
+    {
+        if (left >= right)
+        {
+            return -1;
+        }
+
+        int mid = (left + right) / 2;
+        if (mid + 1 <= right && nums[mid] == nums[mid + 1] - 2)
+        {
+            return nums[mid] + 1;
+        }
+        else if (mid - 1 >= left && nums[mid] == nums[mid - 1] + 2)
+        {
+            return nums[mid] - 1;
+        }
+        else
+        {
+            int ret = find(nums, left, mid - 1);
+            if (ret == -1)
+            {
+                ret = find(nums, mid + 1, right);
+            }
+            return ret;
+        }
+    }
+};
+```
+
+没错写了这么长的二分....  第一印象没有想到迭代版本 如何收缩区间. 索性就两侧都搜索. 实际看了题解才发现
+
+漏掉了一个条件, 当`num[i] > i`的时候就说明了缺失的数字在左边 反过来就是在右边
+
+```c++
+class Solution {
+public:
+    int missingNumber(vector<int>& nums)
+    {
+        int left = 0;
+        int right = nums.size() - 1;
+
+        while (left <= right)
+        {
+            int mid = (left + right) / 2;
+            if (nums[mid] > mid)
+            {
+                right = mid - 1;
+            }
+            else if (nums[mid] == mid)
+            {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+};
+```
+
+题解上面还多了一个判断点 循环结束的时候left位于右子数组的开始 right位于左子数组的结束
+
+结果为右子数组开始元素的下标
+
+```c++
+0 1 2 3 4 5
+
+0 1 2 3 5 6 // 右子数组 56 左子数组 0 1 2 3  5对应的下标4位答案 
+```
+
+### [剑指 Offer 54\. 二叉搜索树的第k大节点](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/)
+
+Difficulty: **简单**
+
+
+给定一棵二叉搜索树，请找出其中第k大的节点。
+
+**示例 1:**
+
+```
+输入: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+输出: 4
+```
+
+**示例 2:**
+
+```
+输入: root = [5,3,6,2,4,null,null,1], k = 3
+       5
+      / \
+     3   6
+    / \
+   2   4
+  /
+ 1
+输出: 4
+```
+
+**限制：**
+
+1 ≤ k ≤ 二叉搜索树元素个数
+
+
+#### Solution - 中序遍历得到递增序列
+
+```c++
+​class Solution {
+public:
+    int kthLargest(TreeNode* root, int k)
+    {
+        vector<int> temp;
+        dfs(root, k, temp);
+        return temp[temp.size() - k];
+    }
+
+    void dfs(TreeNode* root, int k, vector<int>& temp)
+    {
+        if (!root)
+        {
+            return 0;
+        }
+        dfs(root->left, k, temp);
+        temp.push_back(root->val);
+        dfs(root->right, k, temp);
+    }
+};
+```
+
+#### Solution - 先右再左的中序遍历 得到的是递减序列!!
+
+```c++
+class Solution {
+public:
+    int result;
+    int kthLargest(TreeNode* root, int k)
+    {
+        dfs(root, k);
+        return result;
+    }
+
+    void dfs(TreeNode* root, int& k)
+    {
+        if (!root)
+        {
+            return;
+        }
+        dfs(root->right, k);
+        if (k == 0)
+        {
+            return; // 提前返回这里也非常妙啊
+        }
+        if (--k == 0)
+        {
+            result = root->val;
+        }
+        dfs(root->left, k);
+    }
+};
+```
+
+看到题解这句话直接惊呆我了`先右再左的中序遍历 得到的是递减序列`
+
+还有提前返回的判断
+
+### [剑指 Offer 55 - I. 二叉树的深度](https://leetcode-cn.com/problems/er-cha-shu-de-shen-du-lcof/)
+
+Difficulty: **简单**
+
+
+输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。
+
+例如：
+
+给定二叉树 `[3,9,20,null,null,15,7]`，
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回它的最大深度 3 。
+
+**提示：**
+
+1.  `节点总数 <= 10000`
+
+注意：本题与主站 104 题相同：
+
+
+#### Solution - bfs + nullptr
+
+```c++
+​class Solution {
+public:
+    int maxDepth(TreeNode* root)
+    {
+        if (!root)
+        {
+            return 0;
+        }
+
+        deque<TreeNode*> nodes;
+        nodes.push_back(root);
+        nodes.push_back(nullptr);
+        int result = 0;
+
+        while (!nodes.empty())
+        {
+            TreeNode* node = nodes.front();
+            nodes.pop_front();
+
+            if (node == nullptr)
+            {
+                if (!nodes.empty())
+                {
+                    nodes.push_back(nullptr);
+                }
+                result++;
+                continue;
+            }
+            if (node->left)
+            {
+                nodes.push_back(node->left);
+            }
+            if (node->right)
+            {
+                nodes.push_back(node->right);
+            }
+        }
+        return result;
+    }
+};
+```
+
+第一印象还是使用了nullptr作为层之间的区分, 前面做过类似的第一印象也是nullptr实际上应该用
+
+for循环更加好 提前取出循环次数, 这样就算更改deque的size也不影响循环次数了
+
+```c++
+class Solution {
+public:
+    int maxDepth(TreeNode* root)
+    {
+        if (!root)
+        {
+            return 0;
+        }
+
+        deque<TreeNode*> nodes;
+        nodes.push_back(root);
+        int result = 0;
+
+        while (!nodes.empty())
+        {
+            result++;
+            const int SS = nodes.size();
+            for (int i = 0; i < SS; ++i)
+            {
+                TreeNode* node = nodes.front();
+                nodes.pop_front();
+                if (node->left)
+                {
+                    nodes.push_back(node->left);
+                }
+                if (node->right)
+                {
+                    nodes.push_back(node->right);
+                }
+            }
+        }
+        return result;
+    }
+};
+```
+
+#### dfs 第一个想出来的竟然不是这个...
+
+```c++
+class Solution {
+public:
+    int maxDepth(TreeNode* root)
+    {
+        if (!root)
+        {
+            return 0;
+        }
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+```
+
+### [剑指 Offer 55 - II. 平衡二叉树](https://leetcode-cn.com/problems/ping-heng-er-cha-shu-lcof/)
+
+Difficulty: **简单**
+
+
+输入一棵二叉树的根节点，判断该树是不是平衡二叉树。如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+
+**示例 1:**
+
+给定二叉树 `[3,9,20,null,null,15,7]`
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回 `true` 。  
+
+**示例 2:**
+
+给定二叉树 `[1,2,2,3,3,null,null,4,4]`
+
+```
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+```
+
+返回 `false` 。
+
+**限制：**
+
+*   `0 <= 树的结点个数 <= 10000`
+
+注意：本题与主站 110 题相同：
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    bool isBalanced(TreeNode* root)
+    {
+        return depth(root) != -1;
+    }
+
+    int depth(TreeNode* node)
+    {
+        if (!node)
+        {
+            return 0;
+        }
+        int left = depth(node->left);
+        if (left == -1)
+        {
+            return -1;
+        }
+ 
+        int right = depth(node->right);
+        if (right == -1)
+        {
+            return -1;
+        }
+        if (abs(left - right) > 1)
+        {
+            return -1;
+        }
+        return max(left, right) + 1;
+    }
+};
+```
+
+### [剑指 Offer 56 - I. 数组中数字出现的次数](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/)
+
+Difficulty: **中等**
+
+
+一个整型数组 `nums` 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
+
+**示例 1：**
+
+```
+输入：nums = [4,1,4,6]
+输出：[1,6] 或 [6,1]
+```
+
+**示例 2：**
+
+```
+输入：nums = [1,2,10,4,1,4,3,3]
+输出：[2,10] 或 [10,2]
+```
+
+**限制：**
+
+*   `2 <= nums.length <= 10000`
+
+
+#### Solution - xor 以及xor分组
+
+```c++
+​class Solution {
+public:
+    vector<int> singleNumbers(vector<int>& nums)
+    {
+        int xor_result = 0;
+        for (int num : nums)
+        {
+            xor_result ^= num;
+        }
+
+        int bit_1 = 1;
+        while ((xor_result & 1) == 0)
+        {
+            xor_result = xor_result >> 1;
+            bit_1++;
+        }
+
+        int xor_1 = 0;
+        int xor_2 = 0;
+        bit_1--;
+        for (int num : nums)
+        {
+            int bit_1_temp = (num >> bit_1) & 1;
+
+            if (bit_1_temp == 1)
+            {
+                xor_1 ^= num;
+            }
+            else
+            {
+                xor_2 ^= num;
+            }
+        }
+        return {xor_1, xor_2};
+    }
+};
+```
+
+第一印象看到这个题目想到了用xor运算, 然而却没有想到如何将两个不同的数字分开.
+
+看了题解发现 第一次xor出来的`xor_result` 如果是`11101`则说明两个不同的数字的右数第一位不同. 这样通过
+
+其他数字的最后一位是1还是0就能分成两个数组 然后分别xor
+
+```c++
+class Solution {
+public:
+    vector<int> singleNumbers(vector<int>& nums)
+    {
+        int xor_result = 0;
+        for (int num : nums)
+        {
+            xor_result ^= num;
+        }
+
+        int bit_1 = 1;
+        while ((xor_result & bit_1) == 0)
+        {
+            bit_1 = bit_1 << 1; // 通过逻辑左移取位
+        }
+
+        int xor_1 = 0;
+        int xor_2 = 0;
+        for (int num : nums)
+        {
+            if (num & bit_1) // 这里也变了
+            {
+                xor_1 ^= num;
+            }
+            else
+            {
+                xor_2 ^= num;
+            }
+        }
+        return {xor_1, xor_2};
+    }
+};
+```
+
+### [剑指 Offer 56 - II. 数组中数字出现的次数 II](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/)
+
+Difficulty: **中等**
+
+
+在一个数组 `nums` 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+
+**示例 1：**
+
+```
+输入：nums = [3,4,3,3]
+输出：4
+```
+
+**示例 2：**
+
+```
+输入：nums = [9,1,7,9,7,9,7]
+输出：1
+```
+
+**限制：**
+
+*   `1 <= nums.length <= 10000`
+*   `1 <= nums[i] < 2^31`
+
+
+#### Solution - 二进制位出现次数 % 3
+
+```c++
+​class Solution {
+public:
+    int singleNumber(vector<int>& nums)
+    {
+        int bits[32]{};
+
+        for (int num : nums)
+        {
+            int index = 0;
+            while (num != 0)
+            {
+                bits[index] += num & 1;
+                num = num >> 1;
+                index++;
+            }
+        }
+
+        int result = 0;
+        for (int i = 0; i < 32; ++i)
+        {
+            result = result << 1;
+            result |= bits[31 - i] % 3;
+        }
+        return result;
+    }
+};
+```
+
+#### Solution - 状态机
+
+
+### [剑指 Offer 57\. 和为s的两个数字](https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/)
+
+Difficulty: **简单**
+
+
+输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可。
+
+**示例 1：**
+
+```
+输入：nums = [2,7,11,15], target = 9
+输出：[2,7] 或者 [7,2]
+```
+
+**示例 2：**
+
+```
+输入：nums = [10,26,30,31,47,60], target = 40
+输出：[10,30] 或者 [30,10]
+```
+
+**限制：**
+
+*   `1 <= nums.length <= 10^5`
+*   `1 <= nums[i] <= 10^6`
+
+
+#### Solution - 双指针 O(n) O(1)
+
+```c++
+​class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) 
+    {
+        int le = 0;
+        int ri = nums.size() - 1;
+
+        while (le < ri)
+        {
+            int sum = nums[le] + nums[ri];
+            if (sum == target)
+            {
+                return {nums[le], nums[ri]};
+            }
+            else if (sum > target)
+            {
+                ri--;
+            }
+            else
+            {
+                le++;
+            }
+        }
+        return {0, 0};
+    }
+};
+```
+
+#### Solution - 如果题目是无序数组 用Hash表 O(n) O(n)
+
+```c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) 
+    {
+        unordered_set<int> set;
+
+        for (int num : nums)
+        {
+            int need = target - num;
+            
+            auto iter = set.find(need);
+            if (iter == set.end())
+            {
+                set.insert(num);
+            }
+            else
+            {
+                return {num, *iter};
+            }
+        }
+        return {0, 0};
+    }
+};
+```
+
+### [剑指 Offer 57 - II. 和为s的连续正数序列](https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/)
+
+Difficulty: **简单**
+
+
+输入一个正整数 `target` ，输出所有和为 `target` 的连续正整数序列（至少含有两个数）。
+
+序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+
+**示例 1：**
+
+```
+输入：target = 9
+输出：[[2,3,4],[4,5]]
+```
+
+**示例 2：**
+
+```
+输入：target = 15
+输出：[[1,2,3,4,5],[4,5,6],[7,8]]
+```
+
+**限制：**
+
+*   `1 <= target <= 10^5`
+
+
+#### Solution - 滑动窗口
+
+```c++
+​class Solution {
+public:
+    vector<vector<int>> findContinuousSequence(int target) 
+    {
+        vector<vector<int>> result;
+        int begin = 1;
+        int end = 2;
+        int sum = 3;
+
+        while (end < target && begin != end)
+        {
+            if (sum == target)
+            {
+                result.emplace_back();
+                vector<int>& vec = result.back();
+                vec.reserve(end - begin + 1);
+                for (int i = begin; i <= end; ++i)
+                {
+                    vec.push_back(i);
+                }
+                end++;
+                sum += end;
+            }
+            else if (sum < target)
+            {
+                end++;
+                sum += end;
+            }
+            else
+            {
+                sum -= begin;
+                begin++;
+            }
+        }
+        return result;
+    }
+};
+```
+
+### [剑指 Offer 58 - I. 翻转单词顺序](https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/)
+
+Difficulty: **简单**
+
+
+输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串"I am a student. "，则输出"student. a am I"。
+
+**示例 1：**
+
+```
+输入: "the sky is blue"
+输出: "blue is sky the"
+```
+
+**示例 2：**
+
+```
+输入: "  hello world!  "
+输出: "world! hello"
+解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+```
+
+**示例 3：**
+
+```
+输入: "a good   example"
+输出: "example good a"
+解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+```
+
+**说明：**
+
+*   无空格字符构成一个单词。
+*   输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+*   如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+
+**注意：**本题与主站 151 题相同：
+
+**注意：**此题对比原题有改动
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    string reverseWords(string s)
+    {
+        if (s.empty())
+        {
+            return "";
+        }
+        
+        int begin = 0;
+        int end = s.size();
+        while (begin < s.size() && s[begin] == ' ')
+        {
+            begin++;
+        }
+        while (end >= 1 && s[end - 1] == ' ')
+        {
+            end--;
+        }
+        if (begin >= end)
+        {
+            return "";
+        }
+        reverse(s.begin() + begin, s.begin() + end);
+
+        int word_begin = begin;
+        for (int i = begin; i < end; ++i)
+        {
+            if (s[i] == ' ')
+            {
+                int word_end = i;
+                reverse(s.begin() + word_begin, s.begin() + word_end);
+                word_begin = i + 1;
+            }
+        }
+        reverse(s.begin() + word_begin, s.begin() + end);
+
+        string result;
+        result.reserve(end - begin);
+        for (int i = begin; i < end; ++i)
+        {
+            if (s[i] == ' ')
+            {
+                if (result[result.size() - 1] != ' ')
+                {
+                    result.append(1, ' ');
+                }
+            }
+            else
+            {
+                result.append(1, s[i]);
+            }
+        }
+        return result;
+    }
+};
+```
+
+我用的解法是先翻转整个字符串 然后再把单词翻转过来 这样组成结果
+
+实际上可以直接从尾部遍历, 然后一个单词一个单词的拼接出结果
+
+```c++
+class Solution {
+public:
+    string reverseWords(string s)
+    {
+        int begin = 0;
+        int end = s.size();
+        while (begin < s.size() && s[begin] == ' ')
+        {
+            begin++;
+        }
+        while (end >= 1 && s[end - 1] == ' ')
+        {
+            end--;
+        }
+        if (begin >= end)
+        {
+            return "";
+        }
+        string result;
+        result.reserve(end - begin);
+
+        int i = end - 1;
+        int j = end;
+        while (i >= begin)
+        {
+            while (i >= begin && s[i] != ' ')
+            {
+                i--;
+            }
+            result.append(s.begin() + i + 1, s.begin() + j);
+            result.append(1, ' '); // 注意这里 第一个参数数量 第二个是字符 反过来也能运行 但是结果出错
+            while (i >= begin && s[i] == ' ')
+            {
+                i--;
+            }
+            j = i + 1;
+        }
+        return result.substr(0, result.size() - 1);
+    }
+};
+```
+
+### [剑指 Offer 59 - I. 滑动窗口的最大值](https://leetcode-cn.com/problems/hua-dong-chuang-kou-de-zui-da-zhi-lcof/)
+
+Difficulty: **简单**
+
+
+给定一个数组 `nums` 和滑动窗口的大小 `k`，请找出所有滑动窗口里的最大值。
+
+**示例:**
+
+```
+输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+输出: [3,3,5,5,6,7] 
+解释: 
+
+  滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+```
+
+**提示：**
+
+你可以假设 _k_ 总是有效的，在输入数组不为空的情况下，1 ≤ k ≤ 输入数组的大小。
+
+注意：本题与主站 239 题相同：
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k)
+    {
+        if (nums.empty())
+        {
+            return {};
+        }
+        vector<int> result;
+        result.reserve(nums.size() - k + 1);
+
+        int temp_i = 0;
+        for (int i = 1; i < k; ++i)
+        {
+            if (nums[i] > nums[temp_i])
+            {
+                temp_i = i;
+            }
+        }
+        result.push_back(nums[temp_i]);
+        
+        int left = 1;
+        int right = k;
+        while (right < nums.size())
+        {
+            if (left > temp_i)
+            {
+                temp_i = left;
+                for (int j = left + 1; j <= right; ++j)
+                {
+                    if (nums[j] > nums[temp_i])
+                    {
+                        temp_i = j;
+                    }
+                }
+            }
+            else
+            {
+                if (nums[right] > nums[temp_i])
+                {
+                    temp_i = right;
+                }
+            }
+            result.push_back(nums[temp_i]);
+            left++;
+            right++;
+        }
+        return result;
+    }
+};
+```
+
+实际不用在将最大元素移出时进行遍历,  可以采用如下方式, 添加一个deque来解决. 这样能保证获取最大元素为O(1)
+
+```c++
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k)
+    {
+        if (nums.empty())
+        {
+            return {};
+        }
+        vector<int> result;
+        result.reserve(nums.size() - k + 1);
+
+        deque<int> window;
+        for (int i = 0; i < k; ++i)
+        {
+            while (!window.empty() && nums[window.back()] < nums[i])
+            {
+                window.pop_back();
+            }
+            window.push_back(i);
+        }
+        result.push_back(nums[window.front()]);
+
+        for (int i = k; i < nums.size(); ++i)
+        {
+            if (i - k + 1 > window.front()) // 移除已经滑动出去的值
+            {
+                window.pop_front();
+            }
+            
+            while (!window.empty() && nums[window.back()] < nums[i]) // 每次添加元素前将小于其的元素移除 保证队列内有序
+            {
+                window.pop_back();
+            }
+            window.push_back(i);
+            result.push_back(nums[window.front()]);
+        }
+        return result;
+    }
+};
+```
+
+### [剑指 Offer 59 - II. 队列的最大值](https://leetcode-cn.com/problems/dui-lie-de-zui-da-zhi-lcof/)
+
+Difficulty: **中等**
+
+
+请定义一个队列并实现函数 `max_value` 得到队列里的最大值，要求函数`max_value`、`push_back` 和 `pop_front` 的**均摊**时间复杂度都是O(1)。
+
+若队列为空，`pop_front` 和 `max_value` 需要返回 -1
+
+**示例 1：**
+
+```
+输入: 
+["MaxQueue","push_back","push_back","max_value","pop_front","max_value"]
+[[],[1],[2],[],[],[]]
+输出: [null,null,null,2,1,2]
+```
+
+**示例 2：**
+
+```
+输入: 
+["MaxQueue","pop_front","max_value"]
+[[],[],[]]
+输出: [null,-1,-1]
+```
+
+**限制：**
+
+*   `1 <= push_back,pop_front,max_value的总操作数 <= 10000`
+*   `1 <= value <= 10^5`
+
+
+#### Solution
+
+鉴于上一题所以这一题一开始就想的这种方法, 结果有个地方开始没转过来
+
+如果压入123 那么maxs里面只会保留3 不管是否pop_front掉1和2 最大值只会是3, pop_front掉于最大值前面压入的数不会影响最大值
+
+```c++
+​class MaxQueue {
+public:
+    MaxQueue()
+    {
+
+    }
+    
+    int max_value()
+    {
+        return maxs.empty() ? -1 : maxs.front();
+    }
+    
+    void push_back(int value)
+    {
+        nums.push(value);
+
+        while (!maxs.empty() && maxs.back() < value)
+        {
+            maxs.pop_back();
+        }
+        maxs.push_back(value);
+    }
+    
+    int pop_front()
+    {
+        if (nums.empty())
+        {
+            return -1;
+        }
+        int ret = nums.front();
+        nums.pop();
+        if (maxs.front() == ret)
+        {
+            maxs.pop_front();
+        }
+
+        return ret;
+    }
+
+    queue<int> nums;
+    deque<int> maxs;
+};
+```
+
+### [剑指 Offer 60\. n个骰子的点数](https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/)
+
+Difficulty: **中等**
+
+
+把n个骰子扔在地上，所有骰子朝上一面的点数之和为s。输入n，打印出s的所有可能的值出现的概率。
+
+你需要用一个浮点数数组返回答案，其中第 i 个元素代表这 n 个骰子所能掷出的点数集合中第 i 小的那个的概率。
+
+**示例 1:**
+
+```
+输入: 1
+输出: [0.16667,0.16667,0.16667,0.16667,0.16667,0.16667]
+```
+
+**示例 2:**
+
+```
+输入: 2
+输出: [0.02778,0.05556,0.08333,0.11111,0.13889,0.16667,0.13889,0.11111,0.08333,0.05556,0.02778]
+```
+
+**限制：**
+
+`1 <= n <= 11`
+
+
+#### Solution - 暴力法
+
+```c++
+​class Solution {
+public:
+
+    vector<int> counter;
+
+    int n_back;
+
+    void dfs(int n, int sum)
+    {
+        if (n == 0)
+        {
+            counter[sum - n_back]++;
+            return;
+        }
+        for (int i = 1; i <= 6; ++i)
+        {
+            dfs(n - 1, sum + i);
+        }
+    }
+
+    vector<double> dicesProbability(int n) 
+    {
+        n_back = n;
+        counter.resize(n * 6 - n + 1);
+        dfs(n, 0);
+
+        double sum_count = pow(6, n);
+        vector<double> result;
+        result.resize(n *  6 - n + 1);
+        for (int i = 0; i < n * 6 - n + 1; ++i)
+        {
+            result[i] = counter[i] / sum_count;
+        }
+        return result;
+    }
+};
+```
+
+每个骰子都可能是1-6 将骰子掷完就能得到结果
+
+#### Solution - 动态规划
+
+```c++
+​class Solution {
+public:
+
+    vector<double> dicesProbability(int n) 
+    {
+        vector<int> vec1(n * 6 + 1, 0);
+        vector<int> vec2(n * 6 + 1, 0);
+
+        for (int i = 1; i <= 6; ++i) // n == 1时 是 1 1 1 1 1 1
+        {
+            vec1[i] = 1;
+        }
+
+        for (int i = 2; i <= n; ++i)
+        {
+            for (int j = 0; j < i; ++j)
+            {
+                vec2[j] = 0;
+            }
+
+            for (int j = i; j <= i * 6; ++j)
+            {
+                vec2[j] = 0;
+                for (int k = 1; j >= k && k <= 6; ++k)
+                {
+                    vec2[j] += vec1[j - k];
+                }
+            }
+            vec1.swap(vec2);
+        }
+
+        double sum = pow(6, n);
+        vector<double> ret;
+        ret.reserve(n * 6 - n + 1);
+        for (int i = n; i <= n * 6; ++i)
+        {
+            ret.push_back(vec1[i] / sum);
+        }
+        return ret;
+    }
+};
+```
+
+当投掷n个骰子的时候出现总和为m  那么 `x[n][m] = x[n-1][m-1] + x[n-1][m-2] + x[n-1][m-3] + x[n-1][m-4] + x[n-1][m-5] + x[n-1][m-6]`
+
+这样每计算n个骰子的时候只需要第n-1轮的结果 可以使用两个数组, 计算完第n轮后将这个数组swap到"上一轮数组"用于计算n+1轮
+
+### [剑指 Offer 61\. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+
+Difficulty: **简单**
+
+
+从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
+
+**示例 1:**
+
+```
+输入: [1,2,3,4,5]
+输出: True
+```
+
+**示例 2:**
+
+```
+输入: [0,0,1,2,5]
+输出: True
+```
+
+**限制：**
+
+数组长度为 5 
+
+数组的数取值为 [0, 13] .
+
+
+#### Solution
+
+```c++
+​class Solution {
+public:
+    bool isStraight(vector<int>& nums)
+    {
+        vector<int> vec(13, 0);
+        int left_sub = vec.size();
+        int zero_count = 0;
+        for (int num : nums)
+        {
+            if (num == 0)
+            {
+                zero_count++; // 统计0的数量
+            }
+            else if (vec[num - 1] == 0)
+            {
+                vec[num - 1] = 1; // 标记出现的非0卡牌
+                left_sub = min(left_sub, num - 1); // 更新第一张非0卡牌的开始位置
+            }
+            else
+            {
+                return false; // 存在重复的卡牌
+            }
+        }
+        
+        int right_sub = left_sub;
+        while (right_sub < vec.size() && (vec[right_sub] == 1 || zero_count > 0))
+        {
+            if (vec[right_sub] == 0) // 为0表示没有这张卡 需要消耗一张0来补齐
+            {
+                zero_count--;
+            }
+            right_sub++;
+        }
+
+        return right_sub - left_sub + zero_count == nums.size(); // 输入数据的长度 = 顺子的长度(含补齐) + 剩余下的0
+    }
+};
+```
+
+### [剑指 Offer 63\. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
+
+Difficulty: **中等**
+
+
+假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
+
+**示例 1:**
+
+```
+输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。
+```
+
+**示例 2:**
+
+```
+输入: [7,6,4,3,1]
+输出: 0
+解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+```
+
+**限制：**
+
+`0 <= 数组长度 <= 10^5`
+
+**注意：**本题与主站 121 题相同：
+
+
+#### Solution - 动态规划
+
+```c++
+​class Solution {
+public:
+    int maxProfit(vector<int>& prices)
+    {
+        int buy_price = INT_MAX;
+        int ans = 0;
+
+        for (int curr_price : prices)
+        {
+            if (curr_price > buy_price)
+            {
+                // try sell
+                ans = max(ans, curr_price - buy_price); // 当前价格大于卖出价格尝试卖出
+            }
+            else if (curr_price < buy_price)
+            {
+                // buy this
+                buy_price = curr_price; // 当前价格小于买入价格 尝试改为当前价格买入
+            }
+        }
+        return ans;
+    }
+};
+```
+
+### [剑指 Offer 64\. 求1+2+…+n](https://leetcode-cn.com/problems/qiu-12n-lcof/)
+
+Difficulty: **中等**
+
+
+求 `1+2+...+n` ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+
+**示例 1：**
+
+```
+输入: n = 3
+输出: 6
+```
+
+**示例 2：**
+
+```
+输入: n = 9
+输出: 45
+```
+
+**限制：**
+
+*   `1 <= n <= 10000`
+
+
+#### Solution - sizeof代替乘法 + 短路运算控制返回
+
+```c++
+​class Solution {
+public:
+    // int sumNums(int n)
+    // {
+    //     char a[n][n + 1];
+    //     return (sizeof a) >> 1;
+    // }
+
+    int sumNums(int n)
+    {
+        n > 1 && (n += sumNums(n - 1)); // 短路运算右边对n进行赋值
+        return n;
+    }
+};
+```
+
+### [剑指 Offer 65\. 不用加减乘除做加法](https://leetcode-cn.com/problems/bu-yong-jia-jian-cheng-chu-zuo-jia-fa-lcof/)
+
+Difficulty: **简单**
+
+
+写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。
+
+**示例:**
+
+```
+输入: a = 1, b = 1
+输出: 2
+```
+
+**提示：**
+
+*   `a`, `b` 均可能是负数或 0
+*   结果不会溢出 32 位整数
+
+
+#### Solution a + b = x(进位信息 使用 & << 1) + y(本位信息 使用 xor)
+
+```c++
+​class Solution {
+public:
+    int add(int a, int b)
+    {
+        while (b != 0)
+        {
+            int c = (a & b) << 1; // 进位信息  1 + 1 = 10 由于1&1=1所以需要 <<
+            a ^= b; // 本位信息 0 + 0 = 0  1 + 0 = 1 0 + 1 = 0 1 + 1 = 0
+            b = c; // a + b = x1(进位) + y1(本位) = x2(进位) + y2(本位) .... + 到进位为0 这样就是结果了 0 + x = x;
+        } // 已知a+b = 进位+本位 而进位+本位也是两个数字相加 所以可以连续调用公式 直到进位为0 本位就是结果
+        return a;
+    }
+};
+```
+
+
+### [剑指 Offer 68 - I. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
+
+Difficulty: **简单**
+
+
+给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+
+中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（**一个节点也可以是它自己的祖先**）。”
+
+例如，给定如下二叉搜索树:  root = [6,2,8,0,4,7,9,null,null,3,5]
+
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/binarysearchtree_improved.png)
+
+**示例 1:**
+
+```
+输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+输出: 6 
+解释: 节点 2 和节点 8 的最近公共祖先是 6。
+```
+
+**示例 2:**
+
+```
+输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+输出: 2
+解释: 节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
+```
+
+**说明:**
+
+*   所有节点的值都是唯一的。
+*   p、q 为不同节点且均存在于给定的二叉搜索树中。
+
+注意：本题与主站 235 题相同：
+
+
+#### Solution - 读题 利用好每一个条件
+
+```c++
+​/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
+    {
+        if (!root)
+        {
+            return nullptr;
+        }
+        if (p->val > q->val)
+        {
+            swap(p, q);
+        }
+        while (true)
+        {
+            if (root->val < p->val)
+            {
+                root = root->right;
+            }
+            else if (root->val > q->val)
+            {
+                root = root->left;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return root;
+    }
+};
+```
+
+我第一次写这个题目没有用上二叉搜索树这个条件, 把下一个题目二叉树给写出来了....
+
+没利用好题目, 没读好题 我有罪
+
+这个题目利用的是二叉搜索树 如果两个数都小于根节点 则位于根节点的左子树 两个都大于则位于根节点的右子树
+
+如果一个大于一个小于说明位于左右子树则当前节点即为答案. 通过保证p的值小于q可以简化以上的判断.  如果最小的p都大于根节点则较大的q也一定大于
+

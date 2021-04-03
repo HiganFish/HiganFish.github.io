@@ -841,7 +841,9 @@ value_type 元素类型
 
 ![](https://lsmg-img.oss-cn-beijing.aliyuncs.com/CPPPrimer/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.png)
 
-**make_share**
+**make_shared**
+
+
 
 **shared_ptr的拷贝和赋值**
 当进行拷贝或者赋值操作时候 shared_ptr都会记录有多少个其他的shared_ptr
@@ -1016,7 +1018,8 @@ d1.reset(d2.release()); // d2释放后由d1获取
 
 
 # 第三部分 类设计者的工具
-## 模板与泛型编程
+
+## 第十六章 模板与泛型编程
 
 `template <typename T>`
 
@@ -1088,8 +1091,10 @@ int compare(const T& v1, const T& v2, F f = f())
 }
 ```
 
+
 # 第四部分 高级主题
 
+## 第十七章 标准库特殊设施
 tuple这里看了, 例子写了总感觉实用性不是很大? 或许可以用在便捷处理输入参数?
 
 biset感觉还是有点用
@@ -1131,3 +1136,31 @@ bu.to_ullong();
 bu.to_string('a', 'b'); // 0->a 1->b
 ```
 
+## 第十九章 特殊工具与技术
+
+
+```c++
+string* sp = new string("a value");
+sp->~string();
+```
+可以销毁对象, 但是不会释放内存
+
+
+使用class 限定作用域的枚举类 默认类型是int 而未限定作用域的未知
+
+
+```c++
+void (TcpConnection::*fp)(const std::string_view&) = &TcpConnection::SendInLoop;
+			loop_->RunInLoop(std::bind(fp, 
+					this,
+					std::string(data, length))); // OK
+
+TcpConnection::SendInLoop;
+			loop_->RunInLoop(std::bind(&TcpConnection::SendInLoop, 
+					this,
+					std::string(data, length))); // ERROR
+```
+这里是由于存在函数重载, 需要显式指定函数. 同时成员函数需要使用`&`来获取地址, 而非成员函数则存在到地址的隐式转换
+
+
+mem_fn 可以自动将一个函数推断为function对象

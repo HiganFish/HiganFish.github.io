@@ -9,7 +9,51 @@ tags:
 
 # 原版
 
+## 文件打开
 
+```shell
+vim x x x # 打开所有文件
+
+:open file # 进入vim后打开文件
+
+:e file # 关闭当前文件 打开新文件
+
+:ls # 查看缓存
+    :ls
+    1 %a   "boot.sh"                      line 3
+    2      "login.sh"                     line 0
+```
+
+## 多文件操作
+
+```shell
+:split :sp  # 打开新的水平窗口
+:vsplit :vsp  # 打开新的垂直窗口
+
+ctrl + ww # 依次向后切换
+ctrl + w + 方向键 h/j/k/l # 向前下上后切换窗口
+
+:n # 编辑下一个文档
+:N # 编辑上一个文档
+```
+
+## 查找
+
+```shell
+:/http # 查找http 并高亮所有
+:noh # 取消高亮
+
+n # 查找下一个
+
+N # 查找上一个
+
+:%s/xxx/yyy/g # 将所有xxx替换为yyy
+# :[range]s/xxx/yyy/[c,e,g,i]
+# range 1,7 第一行到第七行 1,$ 第一行到结尾 % 全文
+# xxx 待替换字符
+# yyy 替换为的字符
+# c 每次替换前都询问 e 不显示错误 g 全部替换 i 不区分大小写
+```
 
 # spf13 
 https://www.cnblogs.com/floatedclouds/archive/2011/11/10/2245008.html vim分屏
