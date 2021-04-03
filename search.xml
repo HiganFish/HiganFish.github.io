@@ -5,7 +5,48 @@
     <entry>
         <title><![CDATA[TCP/IP详解]]></title>
         <url>http://blog.lsmg.xyz/2021/04/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595160-TCPIP%25E8%25AF%25A6%25E8%25A7%25A3/</url>
-        <content type="html"></content>
+        <content type="html"><![CDATA[<h1 id="第十二章-TCP：传输控制协议（初步）"><a href="#第十二章-TCP：传输控制协议（初步）" class="headerlink" title="第十二章 TCP：传输控制协议（初步）"></a>第十二章 TCP：传输控制协议（初步）</h1><p><strong>ARQ和重传</strong></p>
+<p>直接处理分组丢失或者比特查错的方法：一直重发直到本分组被正常接收</p>
+<ul>
+<li>接收方是否接收到了分组？</li>
+<li>接收方接收到的是不是和发送方发送的一样？</li>
+</ul>
+<p>ACK</p>
+<ul>
+<li>发送方应该等待一个ACK多长时间？</li>
+<li>ACK丢失了怎么办？</li>
+<li>分组被接收到了，但是有错怎么办？</li>
+</ul>
+<p>允许多个分组同时进入网络而不是发送一次确认一次存在的问题</p>
+<ul>
+<li>什么时候注入一个分组？</li>
+<li>注入多少个分组？</li>
+<li>等待ACK的时候如何维持计数器？保存未被确认的分组防止重传</li>
+<li>需要能够区分出哪些分组收到了哪些没有收到，而且能够组装乱序的分组</li>
+<li>如果接收方的接收速度慢怎么办？</li>
+</ul>
+<p><strong>滑动窗口 解决了上面的问题</strong></p>
+<p>发送方</p>
+<ul>
+<li>记录着哪些分组可以被释放</li>
+<li>哪些分组已经发送正在等待ACK</li>
+<li>哪些分组还待发送</li>
+</ul>
+<p>接收方</p>
+<ul>
+<li>哪些分组已经被接收和确认</li>
+<li>哪些分组是下一步期待的</li>
+</ul>
+<p><strong>变量窗口：流量控制和拥塞控制 解决了窗口大小确定和接收方接收不过来的问题</strong></p>
+<p><code>流量控制</code> 接收方跟不上的时候通过此迫使发送方慢下来</p>
+<p><code>窗口通告（窗口更新）</code>：跟ACK在一次 调整窗口大小</p>
+<p><code>拥塞控制</code>：流量控制应对的是接收端和发送端问题，拥塞控制则是之间的网络问题</p>
+<p>TCP不会自动插入记录标志或者消息边界，不会解读字节流中的内容，对于内容的解读交给了端点的应用程序。</p>
+<p>TCP的包头没有包长度字段，而UDP却有</p>
+<p>SYN会消耗一个序列号 尽管没有包体</p>
+<p>ACK则不会消耗序列号</p>
+<p><strong>TCP可以被描述为带累计正向确认的滑动窗口协议</strong></p>
+]]></content>
         
         <categories>
             
@@ -405,14 +446,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[Linux笔记]]></title>
-        <url>http://blog.lsmg.xyz/2021/03/Linux%25E7%25AC%2594%25E8%25AE%25B0/</url>
-        <content type="html"></content>
-        
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[HTTPS的基本流程和原理]]></title>
         <url>http://blog.lsmg.xyz/2021/03/%25E8%25AE%25A1%25E7%25AE%2597%25E6%259C%25BA%25E7%25BD%2591%25E7%25BB%259C-HTTPS/</url>
         <content type="html"><![CDATA[<h1 id="对称加密-or-非对称加密"><a href="#对称加密-or-非对称加密" class="headerlink" title="对称加密 or 非对称加密"></a>对称加密 or 非对称加密</h1><p>加密分为对称加密和非对称加密, 对称加密速度快但是涉及到了key的明文传输 非对称加密速度慢但是可以加密内容</p>
@@ -641,63 +674,8 @@
     </entry>
     
     <entry>
-        <title><![CDATA[小方说知识星球]]></title>
-        <url>http://blog.lsmg.xyz/2021/02/%25E5%259F%25BA%25E7%25A1%2580%25E7%259F%25A5%25E8%25AF%2586%25E6%259D%2582%25E7%2583%25A9-%25E5%25B0%258F%25E6%2596%25B9%25E8%25AF%25B4%25E7%259F%25A5%25E8%25AF%2586%25E6%2598%259F%25E7%2590%2583/</url>
-        <content type="html"><![CDATA[<h1 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h1><p>这里并不做过多的记录, 记录一些tips吧</p>
-<p>lsof 能用做文件删除恢复. 仅限于文件虽然被删除但依然被某个进程打开.</p>
-<p>bind函数<br>地址可以指定 INADDR_ANY<br>那么端口呢?  测试了下如果端口为0确实是 bind到了随机端口</p>
-<p>bind到一个已经bind的端口会出错. 然而如果端口为0 随机的端口则没有被bind过</p>
-<p>客户端connect前调用bind能够以指定端口号连接, 这个在高性能服务器见过 不过一直没有用过</p>
-<p>异步connect? 非阻塞connect</p>
-<p>connect尝试次数? 尝试间隔? </p>
-<table>
-<thead>
-<tr>
-<th>函数名称</th>
-<th>返回值</th>
-<th>阻塞</th>
-<th>非阻塞</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>recv</td>
-<td>-1</td>
-<td>出错</td>
-<td>判断是否为EWOULDBLOCK(数据已经收完, ET模式收完数据的标志) 或者 EINTR(信号中断)</td>
-</tr>
-<tr>
-<td>recv</td>
-<td>0</td>
-<td>对端关闭</td>
-<td>对端关闭</td>
-</tr>
-<tr>
-<td>send</td>
-<td>-1</td>
-<td>出错</td>
-<td>EWOULDBLOCK(数据无法继续发出) EAGAIN</td>
-</tr>
-</tbody></table>
-<p>LT 想收多少收多少 收不完就提醒<br>ET 爱收不收 过了这村没这店</p>
-<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><p>条件变量虚假唤醒</p>
-<p>协程操作系统自带还是语言实现的</p>
-<p>单机服务做好 找到单机的瓶颈 上并发</p>
-<p>每个线程都是如何启动的, 各个线程的作用. 线程间的数据交互方式</p>
-<p>unique_lock  lock_guard scope_lock lock 等的作用</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 基础知识杂烩 </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[剑指Offer]]></title>
-        <url>http://blog.lsmg.xyz/2021/02/%25E5%2589%2591%25E6%258C%2587Offer/</url>
+        <url>http://blog.lsmg.xyz/2021/02/%25E7%25AE%2597%25E6%25B3%2595-%25E5%2589%2591%25E6%258C%2587Offer/</url>
         <content type="html"><![CDATA[<h3 id="剑指-Offer-03-数组中重复的数字"><a href="#剑指-Offer-03-数组中重复的数字" class="headerlink" title="剑指 Offer 03. 数组中重复的数字"></a><a href="https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/" target="_blank" rel="noopener">剑指 Offer 03. 数组中重复的数字</a></h3><p>Difficulty: <strong>简单</strong></p>
 <p>找出数组中重复的数字。</p>
 <p>在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。</p>
@@ -2585,7 +2563,7 @@
     
     <entry>
         <title><![CDATA[浏览器访问URL到显示]]></title>
-        <url>http://blog.lsmg.xyz/2021/02/%25E5%259F%25BA%25E7%25A1%2580%25E7%259F%25A5%25E8%25AF%2586%25E6%259D%2582%25E7%2583%25A9-%25E6%25B5%258F%25E8%25A7%2588%25E5%2599%25A8%25E8%25AE%25BF%25E9%2597%25AEURL%25E5%2588%25B0%25E6%2598%25BE%25E7%25A4%25BA/</url>
+        <url>http://blog.lsmg.xyz/2021/02/%25E8%25AE%25A1%25E7%25AE%2597%25E6%259C%25BA%25E7%25BD%2591%25E7%25BB%259C-%25E6%25B5%258F%25E8%25A7%2588%25E5%2599%25A8%25E8%25AE%25BF%25E9%2597%25AEURL%25E5%2588%25B0%25E6%2598%25BE%25E7%25A4%25BA/</url>
         <content type="html"><![CDATA[<h1 id="http"><a href="#http" class="headerlink" title="http"></a>http</h1><p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/base/ip-wireshark.png" alt=""></p>
 <p>浏览器访问虚拟机创建的nginx默认网页</p>
 <p>浏览器根据输入的URL中的IP 进行三次握手建立TCP连接 然后浏览器发送GET请求 服务器回复GET请求 获取各种文件</p>
@@ -2621,7 +2599,7 @@
         
         <categories>
             
-            <category> 基础知识杂烩 </category>
+            <category> 计算机网络 </category>
             
         </categories>
         
@@ -2707,17 +2685,34 @@
     </entry>
     
     <entry>
-        <title><![CDATA[Linux-IO状态相关命令]]></title>
-        <url>http://blog.lsmg.xyz/2021/01/Linux-IO%25E7%258A%25B6%25E6%2580%2581%25E7%259B%25B8%25E5%2585%25B3%25E5%2591%25BD%25E4%25BB%25A4/</url>
-        <content type="html"><![CDATA[<h1 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h1><p>查看实时信息</p>
+        <title><![CDATA[Linux-常用命令]]></title>
+        <url>http://blog.lsmg.xyz/2021/01/Linux-%25E8%25B0%2583%25E8%25AF%2595%25E5%25B8%25B8%25E7%2594%25A8Linux%25E5%2591%25BD%25E4%25BB%25A4/</url>
+        <content type="html"><![CDATA[<h1 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h1><h2 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h2><p>查看实时信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum install sysstat -y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@fish ~]# iostat</span><br><span class="line">Linux 4.18.0-193.6.3.el8_2.x86_64	01&#x2F;09&#x2F;2021 	_x86_64_	(4 CPU)</span><br><span class="line"></span><br><span class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span><br><span class="line">           0.06    0.02    0.08    0.01    0.00   99.84</span><br><span class="line"></span><br><span class="line">Device             tps    kB_read&#x2F;s    kB_wrtn&#x2F;s    kB_read    kB_wrtn</span><br><span class="line">sda               0.00         1.68         0.00    3520393       3015</span><br><span class="line">sdb               0.16         0.81         2.68    1702968    5612922</span><br><span class="line">dm-0              0.17         0.79         2.78    1656682    5811573</span><br><span class="line">dm-1              0.00         0.00         0.01       4404      10828</span><br><span class="line">dm-2              0.00         0.00         0.00       1193       2209</span><br></pre></td></tr></table></figure>
 
-<h1 id="df"><a href="#df" class="headerlink" title="df"></a>df</h1><p>一般用于查看磁盘挂载等信息</p>
+<h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>一般用于查看磁盘挂载等信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# df -h</span><br><span class="line">Filesystem           Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs             1.8G     0  1.8G   0% &#x2F;dev</span><br><span class="line">tmpfs                1.8G   84K  1.8G   1% &#x2F;dev&#x2F;shm</span><br><span class="line">tmpfs                1.8G   40M  1.8G   3% &#x2F;run</span><br><span class="line">tmpfs                1.8G     0  1.8G   0% &#x2F;sys&#x2F;fs&#x2F;cgroup</span><br><span class="line">&#x2F;dev&#x2F;mapper&#x2F;cl-root   19G   13G  6.5G  67% &#x2F;</span><br><span class="line">&#x2F;dev&#x2F;sda             112G   34G   79G  30% &#x2F;nas1</span><br><span class="line">&#x2F;dev&#x2F;mapper&#x2F;cl-home  4.0G   61M  4.0G   2% &#x2F;home</span><br><span class="line">&#x2F;dev&#x2F;sdb1            2.0G  211M  1.6G  12% &#x2F;boot</span><br><span class="line">tmpfs                368M     0  368M   0% &#x2F;run&#x2F;user&#x2F;0</span><br></pre></td></tr></table></figure>
 
-<h1 id="du"><a href="#du" class="headerlink" title="du"></a>du</h1><p>estimate file space usage</p>
+<h2 id="du"><a href="#du" class="headerlink" title="du"></a>du</h2><p>estimate file space usage</p>
 <p>估计文件空间使用量 默认察看当前目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# du -h</span><br><span class="line">8.0K	.&#x2F;book</span><br><span class="line">244K	.&#x2F;.halo&#x2F;logs</span><br><span class="line">72K	.&#x2F;.halo&#x2F;db</span><br><span class="line">36K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism&#x2F;css</span><br><span class="line">152K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism&#x2F;js</span><br><span class="line">188K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism</span><br><span class="line">900K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;fonts</span><br><span class="line">32K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;css&#x2F;images</span><br><span class="line">104K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;css</span><br><span class="line">56K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;js&#x2F;ie</span><br><span class="line">180K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;js</span><br><span class="line">1.2M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery</span><br><span class="line">1.4M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins</span><br><span class="line">72K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;images</span><br><span class="line">1.1M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;fonts</span><br><span class="line">80K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;css</span><br><span class="line">356K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;js</span><br><span class="line">2.9M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source</span><br><span class="line">24K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;module</span><br><span class="line">3.1M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole</span><br></pre></td></tr></table></figure>]]></content>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# du -h</span><br><span class="line">8.0K	.&#x2F;book</span><br><span class="line">244K	.&#x2F;.halo&#x2F;logs</span><br><span class="line">72K	.&#x2F;.halo&#x2F;db</span><br><span class="line">36K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism&#x2F;css</span><br><span class="line">152K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism&#x2F;js</span><br><span class="line">188K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;prism</span><br><span class="line">900K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;fonts</span><br><span class="line">32K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;css&#x2F;images</span><br><span class="line">104K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;css</span><br><span class="line">56K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;js&#x2F;ie</span><br><span class="line">180K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery&#x2F;js</span><br><span class="line">1.2M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins&#x2F;gallery</span><br><span class="line">1.4M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;plugins</span><br><span class="line">72K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;images</span><br><span class="line">1.1M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;fonts</span><br><span class="line">80K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;css</span><br><span class="line">356K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source&#x2F;js</span><br><span class="line">2.9M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;source</span><br><span class="line">24K	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole&#x2F;module</span><br><span class="line">3.1M	.&#x2F;.halo&#x2F;templates&#x2F;themes&#x2F;anatole</span><br></pre></td></tr></table></figure>
+
+<h1 id="进程线程状态"><a href="#进程线程状态" class="headerlink" title="进程线程状态"></a>进程线程状态</h1><h2 id="top"><a href="#top" class="headerlink" title="top"></a>top</h2><p>Linux下的任务管理器</p>
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux/top.png" alt=""></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 察看多核心CPU各个核心的情况</span><br><span class="line"></span><br><span class="line">P 按照CPU使用率排行</span><br><span class="line">T 按照CPU使用时间排行</span><br><span class="line">M 按照物理内存使用率排行</span><br><span class="line"></span><br><span class="line">top -p xx 察看指定pid的信息</span><br></pre></td></tr></table></figure>
+
+<h2 id="htop"><a href="#htop" class="headerlink" title="htop"></a>htop</h2><p>更加现代的top 有颜色 支持鼠标 杀进程极其方便</p>
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux/htop.png" alt=""></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br><span class="line"></span><br><span class="line">sudo yum install htop</span><br></pre></td></tr></table></figure>
+
+<h2 id="strace"><a href="#strace" class="headerlink" title="strace"></a>strace</h2><p>跟踪进程运行时使用的系统调用和信号</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-t          每行前加上输出信息</span><br><span class="line"></span><br><span class="line">-tt         the time printed will include the microseconds.</span><br><span class="line"></span><br><span class="line">-ttt        开头部分将打印为自该纪元以来的秒数。 the time printed will include the microseconds</span><br><span class="line"></span><br><span class="line">-T          显示系统调用所需时间</span><br><span class="line"></span><br><span class="line">-o          输出文件</span><br><span class="line"></span><br><span class="line">-p          指定pid</span><br><span class="line"></span><br><span class="line">-f -F       跟踪fork和vfork</span><br></pre></td></tr></table></figure>
+
+
+<p>strace -T -tt -p $(lsof -i tcp:4000 -t) -o /root/live.log</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">17:27:51.212449 accept(5, &#123;sa_family&#x3D;AF_INET6, sin6_port&#x3D;htons(1596), inet_pton(AF_INET6, &quot;::ffff:10.4.168.250&quot;, &amp;sin6_addr), sin6_flowinfo&#x3D;htonl(0), sin6_scope_id&#x3D;0&#125;, [46-&gt;28]) &#x3D; 7 &lt;0.000046&gt;</span><br><span class="line">17:27:51.212686 write(1, &quot;[INFO ][ TcpServer.cpp:56 ]: cre&quot;..., 95) &#x3D; 95 &lt;0.000048&gt;</span><br><span class="line">17:27:51.212842 epoll_ctl(3, EPOLL_CTL_ADD, 7, &#123;EPOLLIN, &#123;u32&#x3D;17383160, u64&#x3D;17383160&#125;&#125;) &#x3D; 0 &lt;0.000058&gt;</span><br><span class="line">17:27:51.213006 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17383160, u64&#x3D;17383160&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000028&gt;</span><br><span class="line">17:27:51.213131 recvfrom(7, &quot;GET &#x2F;lsmg HTTP&#x2F;1.1\r\nHost: live.l&quot;..., 4096, 0, NULL, NULL) &#x3D; 358 &lt;0.000031&gt;</span><br><span class="line">17:27:51.213295 write(1, &quot;[INFO ][ main.cpp:67 ]: connecti&quot;..., 105) &#x3D; 105 &lt;0.000038&gt;</span><br><span class="line">17:27:51.213461 write(1, &quot;[INFO ][ RtmpServerConnection.cp&quot;..., 144) &#x3D; 144 &lt;0.000040&gt;</span><br><span class="line">17:27:51.213648 sendto(7, &quot;HTTP&#x2F;1.1 200 OK\r\nServer: FISH_LI&quot;..., 703, 0, NULL, 0) &#x3D; 703 &lt;0.000091&gt;</span><br><span class="line">17:27:51.213886 sendto(7, &quot;35d\r\n\0\0\0&lt;\10\0\3N\1-!\0\0\0\0\257\1!\fT-\3754\21\10\35\343&quot;..., 868, 0, NULL, 0) &#x3D; 868 &lt;0.000030&gt;</span><br><span class="line">17:27:51.214032 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.005512&gt;</span><br><span class="line">17:27:51.219659 recvfrom(6, &quot;D\0\0\n\0&#125;\354\t&#39;\1\0\0S\0\0&#125;\343A\232\3534LG\377\363 \0\0\3\0\1,&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000057&gt;</span><br><span class="line">17:27:51.219857 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000028&gt;</span><br><span class="line">17:27:51.219978 recvfrom(6, &quot;\266S\231C\363J\342(\304\274]\3361\354:~\37r\363\332&#39;\366\30\276\261\344\1\312\242\230R\t&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000029&gt;</span><br><span class="line">17:27:51.220117 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220237 recvfrom(6, &quot;\0014O2hll\300&quot;, 8, 0, NULL, NULL) &#x3D; 8 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220371 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.220504 recvfrom(6, &quot;h\304\23\227&#39;c\341\355\263\330n\245\0021\3048\\\331n\226y\313\370Bu\371\242&#x3D;\233\250\316\226&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000029&gt;</span><br><span class="line">17:27:51.220641 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.220762 recvfrom(6, &quot;\207&quot;, 1, 0, NULL, NULL) &#x3D; 1 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220895 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.221010 recvfrom(6, &quot;\324\304\260-\337\316\3261\311\260F\256\233\377\302\327\236\366\2249\3\361\273\r0H|\3415C]I&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000027&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="pstack"><a href="#pstack" class="headerlink" title="pstack"></a>pstack</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# pstack $(lsof -i tcp:4000 -t)</span><br><span class="line">#0  0x00007f8b40e5b17b in epoll_wait (epfd&#x3D;3, events&#x3D;0x108dfb0, maxevents&#x3D;50, timeout&#x3D;20) at ..&#x2F;sysdeps&#x2F;unix&#x2F;sysv&#x2F;linux&#x2F;epoll_wait.c:30</span><br><span class="line">#1  0x0000000000446668 in Epoll::LoopOnce (this&#x3D;0x108df80, timeout&#x3D;20, active_channels&#x3D;0x7ffcbd1242f8) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;network&#x2F;multiplexing&#x2F;Epoll.cpp:18</span><br><span class="line">#2  0x0000000000443d9c in EventLoop::Loop (this&#x3D;0x7ffcbd1242f0) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;network&#x2F;EventLoop.cpp:31</span><br><span class="line">#3  0x0000000000438d48 in main (argc&#x3D;3, argv&#x3D;0x7ffcbd1244d8) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;main.cpp:106</span><br></pre></td></tr></table></figure>]]></content>
         
         <categories>
             
@@ -2733,47 +2728,6 @@
             <tag> df </tag>
             
             <tag> du </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[Linux-进程线程状态相关命令]]></title>
-        <url>http://blog.lsmg.xyz/2021/01/Linux-%25E8%25BF%259B%25E7%25A8%258B%25E7%25BA%25BF%25E7%25A8%258B%25E7%258A%25B6%25E6%2580%2581%25E7%259B%25B8%25E5%2585%25B3%25E5%2591%25BD%25E4%25BB%25A4/</url>
-        <content type="html"><![CDATA[<h1 id="top"><a href="#top" class="headerlink" title="top"></a>top</h1><p>Linux下的任务管理器</p>
-<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux/top.png" alt=""></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 察看多核心CPU各个核心的情况</span><br><span class="line"></span><br><span class="line">P 按照CPU使用率排行</span><br><span class="line">T 按照CPU使用时间排行</span><br><span class="line">M 按照物理内存使用率排行</span><br><span class="line"></span><br><span class="line">top -p xx 察看指定pid的信息</span><br></pre></td></tr></table></figure>
-
-<h1 id="htop"><a href="#htop" class="headerlink" title="htop"></a>htop</h1><p>更加现代的top 有颜色 支持鼠标 杀进程极其方便</p>
-<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux/htop.png" alt=""></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br><span class="line"></span><br><span class="line">sudo yum install htop</span><br></pre></td></tr></table></figure>
-
-<h1 id="strace"><a href="#strace" class="headerlink" title="strace"></a>strace</h1><p>跟踪进程运行时使用的系统调用和信号</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-t          每行前加上输出信息</span><br><span class="line"></span><br><span class="line">-tt         the time printed will include the microseconds.</span><br><span class="line"></span><br><span class="line">-ttt        开头部分将打印为自该纪元以来的秒数。 the time printed will include the microseconds</span><br><span class="line"></span><br><span class="line">-T          显示系统调用所需时间</span><br><span class="line"></span><br><span class="line">-o          输出文件</span><br><span class="line"></span><br><span class="line">-p          指定pid</span><br><span class="line"></span><br><span class="line">-f -F       跟踪fork和vfork</span><br></pre></td></tr></table></figure>
-
-
-<p>strace -T -tt -p $(lsof -i tcp:4000 -t) -o /root/live.log</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">17:27:51.212449 accept(5, &#123;sa_family&#x3D;AF_INET6, sin6_port&#x3D;htons(1596), inet_pton(AF_INET6, &quot;::ffff:10.4.168.250&quot;, &amp;sin6_addr), sin6_flowinfo&#x3D;htonl(0), sin6_scope_id&#x3D;0&#125;, [46-&gt;28]) &#x3D; 7 &lt;0.000046&gt;</span><br><span class="line">17:27:51.212686 write(1, &quot;[INFO ][ TcpServer.cpp:56 ]: cre&quot;..., 95) &#x3D; 95 &lt;0.000048&gt;</span><br><span class="line">17:27:51.212842 epoll_ctl(3, EPOLL_CTL_ADD, 7, &#123;EPOLLIN, &#123;u32&#x3D;17383160, u64&#x3D;17383160&#125;&#125;) &#x3D; 0 &lt;0.000058&gt;</span><br><span class="line">17:27:51.213006 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17383160, u64&#x3D;17383160&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000028&gt;</span><br><span class="line">17:27:51.213131 recvfrom(7, &quot;GET &#x2F;lsmg HTTP&#x2F;1.1\r\nHost: live.l&quot;..., 4096, 0, NULL, NULL) &#x3D; 358 &lt;0.000031&gt;</span><br><span class="line">17:27:51.213295 write(1, &quot;[INFO ][ main.cpp:67 ]: connecti&quot;..., 105) &#x3D; 105 &lt;0.000038&gt;</span><br><span class="line">17:27:51.213461 write(1, &quot;[INFO ][ RtmpServerConnection.cp&quot;..., 144) &#x3D; 144 &lt;0.000040&gt;</span><br><span class="line">17:27:51.213648 sendto(7, &quot;HTTP&#x2F;1.1 200 OK\r\nServer: FISH_LI&quot;..., 703, 0, NULL, 0) &#x3D; 703 &lt;0.000091&gt;</span><br><span class="line">17:27:51.213886 sendto(7, &quot;35d\r\n\0\0\0&lt;\10\0\3N\1-!\0\0\0\0\257\1!\fT-\3754\21\10\35\343&quot;..., 868, 0, NULL, 0) &#x3D; 868 &lt;0.000030&gt;</span><br><span class="line">17:27:51.214032 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.005512&gt;</span><br><span class="line">17:27:51.219659 recvfrom(6, &quot;D\0\0\n\0&#125;\354\t&#39;\1\0\0S\0\0&#125;\343A\232\3534LG\377\363 \0\0\3\0\1,&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000057&gt;</span><br><span class="line">17:27:51.219857 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000028&gt;</span><br><span class="line">17:27:51.219978 recvfrom(6, &quot;\266S\231C\363J\342(\304\274]\3361\354:~\37r\363\332&#39;\366\30\276\261\344\1\312\242\230R\t&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000029&gt;</span><br><span class="line">17:27:51.220117 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220237 recvfrom(6, &quot;\0014O2hll\300&quot;, 8, 0, NULL, NULL) &#x3D; 8 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220371 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.220504 recvfrom(6, &quot;h\304\23\227&#39;c\341\355\263\330n\245\0021\3048\\\331n\226y\313\370Bu\371\242&#x3D;\233\250\316\226&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000029&gt;</span><br><span class="line">17:27:51.220641 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.220762 recvfrom(6, &quot;\207&quot;, 1, 0, NULL, NULL) &#x3D; 1 &lt;0.000026&gt;</span><br><span class="line">17:27:51.220895 epoll_wait(3, [&#123;EPOLLIN, &#123;u32&#x3D;17360872, u64&#x3D;17360872&#125;&#125;], 50, 20) &#x3D; 1 &lt;0.000025&gt;</span><br><span class="line">17:27:51.221010 recvfrom(6, &quot;\324\304\260-\337\316\3261\311\260F\256\233\377\302\327\236\366\2249\3\361\273\r0H|\3415C]I&quot;..., 4096, 0, NULL, NULL) &#x3D; 4096 &lt;0.000027&gt;</span><br></pre></td></tr></table></figure>
-
-<h1 id="pstack"><a href="#pstack" class="headerlink" title="pstack"></a>pstack</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# pstack $(lsof -i tcp:4000 -t)</span><br><span class="line">#0  0x00007f8b40e5b17b in epoll_wait (epfd&#x3D;3, events&#x3D;0x108dfb0, maxevents&#x3D;50, timeout&#x3D;20) at ..&#x2F;sysdeps&#x2F;unix&#x2F;sysv&#x2F;linux&#x2F;epoll_wait.c:30</span><br><span class="line">#1  0x0000000000446668 in Epoll::LoopOnce (this&#x3D;0x108df80, timeout&#x3D;20, active_channels&#x3D;0x7ffcbd1242f8) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;network&#x2F;multiplexing&#x2F;Epoll.cpp:18</span><br><span class="line">#2  0x0000000000443d9c in EventLoop::Loop (this&#x3D;0x7ffcbd1242f0) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;network&#x2F;EventLoop.cpp:31</span><br><span class="line">#3  0x0000000000438d48 in main (argc&#x3D;3, argv&#x3D;0x7ffcbd1244d8) at &#x2F;tmp&#x2F;tmp.p1UxXqj1vP&#x2F;main.cpp:106</span><br></pre></td></tr></table></figure>]]></content>
-        
-        <categories>
-            
-            <category> Linux </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> top </tag>
-            
-            <tag> htop </tag>
-            
-            <tag> strace </tag>
-            
-            <tag> pstack </tag>
             
         </tags>
         
@@ -3111,29 +3065,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[蓝图与C++交互]]></title>
-        <url>http://blog.lsmg.xyz/2020/10/UE4&amp;3DMAX-%25E8%2593%259D%25E5%259B%25BEC++%25E4%25BA%25A4%25E4%25BA%2592/</url>
-        <content type="html"><![CDATA[<h1 id="蓝图Widget与C-代码交互-反射"><a href="#蓝图Widget与C-代码交互-反射" class="headerlink" title="蓝图Widget与C++代码交互-反射"></a>蓝图Widget与C++代码交互-反射</h1><ol>
-<li>创建UserWidget的C++子类 MyUserWidget<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用于初始化</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">Initialize</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"><span class="comment">// 绑定到按钮的点击事件</span></span><br><span class="line">UFUNCTION() <span class="comment">// 必须加不然会导致无反应 日志报错</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ButtonLoginEvent</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过反射获取实例 需要名称保持一致</span></span><br><span class="line">UPROPERTY(Meta = (BindWidget))</span><br><span class="line">UButton* ButtonLogin;</span><br><span class="line">UPROPERTY(Meta = (BindWidget))</span><br><span class="line">UTextBlock* TextBlockUsername; <span class="comment">// 一个文本框</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">UMyUserWidget::Initialize</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!Super::Initialize()) <span class="comment">// 会报错提示不存在 无影响</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行点击函数绑定</span></span><br><span class="line">    ButtonLogin-&gt;OnClicked.__Internal_AddDynamic(<span class="keyword">this</span>, &amp;UMyUserWidget::ButtonLoginEvent, FName(<span class="string">"ButtonLoginEvent"</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取并显示 文本框文字</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UMyUserWidget::ButtonLoginEvent</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (GEngine)</span><br><span class="line">    &#123;</span><br><span class="line">        FString Username = TextBlockUsername-&gt;GetText().ToString();</span><br><span class="line"></span><br><span class="line">        GEngine-&gt;AddOnScreenDebugMessage(<span class="number">-1</span>, <span class="number">20</span>, FColor::Yellow, Username);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>创建需要绑定的蓝图NewWidgetBlueprint</li>
-<li>打开蓝图后点击File-&gt;Reparent Blueprint选择MyUserWidget作为父类</li>
-<li>添加名为ButtonLogin的按钮和TextBlockUsername的文本框 用于反射</li>
-<li>创建HUD的C++子类MyHud</li>
-<li>创建MyHud的蓝图BP_MuHud</li>
-<li>将MyHud的蓝图设置为 GameMode的HUDClass, 这样启动的时候就能创建MuHud蓝图的实例<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从BP_MuHud中选择 NewWidgetBlueprint蓝图</span></span><br><span class="line">UPROPERTY(EditAnywhere, Category = <span class="string">"UserWidget"</span>)</span><br><span class="line">TSubclassOf&lt;<span class="class"><span class="keyword">class</span> <span class="title">UMUserWidget</span>&gt; <span class="title">WidgetClass</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动时创建蓝图实例并显示 设置输入方式</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AMyHUD::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::BeginPlay();</span><br><span class="line"></span><br><span class="line">    UUserWidget* Widget = CreateWidget&lt;UMyUserWidget&gt;(GetWorld(), WidgetClass);</span><br><span class="line">    <span class="keyword">if</span> (Widget != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        Widget-&gt;AddToViewport();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    APlayerController* MyPlayerController = Cast&lt;APlayerController&gt;(UGameplayStatics::GetPlayerController(GetWorld(), <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输入只对UI</span></span><br><span class="line">    <span class="keyword">if</span> (MyPlayerController != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        MyPlayerController-&gt;bShowMouseCursor = <span class="literal">true</span>;</span><br><span class="line">        FInputModeUIOnly InputMode;</span><br><span class="line">        MyPlayerController-&gt;SetInputMode(InputMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-        
-        <categories>
-            
-            <category> UE4&amp;3DMAX </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[UNP记录]]></title>
         <url>http://blog.lsmg.xyz/2020/10/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595-UNP/</url>
         <content type="html"><![CDATA[<p>由于已经在Linux高性能服务器开发中详细说明过绝大部分系统函数</p>
@@ -3455,32 +3386,6 @@
         <tags>
             
             <tag> 采坑记 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[网络配置]]></title>
-        <url>http://blog.lsmg.xyz/2020/07/Linux-%25E7%25BD%2591%25E7%25BB%259C%25E9%2585%258D%25E7%25BD%25AE/</url>
-        <content type="html"><![CDATA[<h1 id="服务器双网卡配置"><a href="#服务器双网卡配置" class="headerlink" title="服务器双网卡配置"></a>服务器双网卡配置</h1><p>内网访问外网</p>
-<p>外网接在了校园网上, 不过我的路由器不支持Ipv6, 有没有多余的lan口 只能接在服务器的lan口上</p>
-<p>需要设置内网网卡开机启动 固定的Ip地址10.5.1.2 以及子网掩码255.255.255.0<br>然后路由器设置固定Ip地址10.5.1.3 子网掩码255.255.255.0 与内网网卡同网段</p>
-<p>然后使用<code>firewall-cmd --add-masquerade --permanent</code></p>
-<p>Masquerading is useful if the machine is a router and machines connected over an interface in another zone should be able to use the first connection.<br>通过另一个区域(zone)的接口 使用默认zone的接口上网</p>
-<p><a href="https://www.server-world.info/en/note?os=CentOS_7&amp;p=firewalld&amp;f=2" target="_blank" rel="noopener">https://www.server-world.info/en/note?os=CentOS_7&amp;p=firewalld&amp;f=2</a><br>配置完才发现的神网址…. 好吧 写得非常清楚</p>
-]]></content>
-        
-        <categories>
-            
-            <category> Linux </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 网络配置 </tag>
             
         </tags>
         
@@ -3991,96 +3896,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[陀螺球(废弃)]]></title>
-        <url>http://blog.lsmg.xyz/2020/06/%25E9%25A1%25B9%25E7%259B%25AE%25E5%2588%25B6%25E4%25BD%259C-%25E9%2599%2580%25E8%259E%25BA%25E7%2590%2583/</url>
-        <content type="html"><![CDATA[<h1 id="基础设计"><a href="#基础设计" class="headerlink" title="基础设计"></a>基础设计</h1><h2 id="基本玩法"><a href="#基本玩法" class="headerlink" title="基本玩法"></a>基本玩法</h2><p>使用手机陀螺仪控制圆形小球的移动.  存在各种关卡组件以及小球装备 从初始点最终到达目的地</p>
-<p>首先考虑制作出地图编辑器<br>玩家可以下载并游玩其他人创建的地图</p>
-<p>其次增加双人联机的功能 双人共同通关?</p>
-<p>包含计时以及通关星数 通过碰撞获得两颗星 关卡时间一颗星</p>
-<h2 id="关卡组件"><a href="#关卡组件" class="headerlink" title="关卡组件"></a>关卡组件</h2><table>
-<thead>
-<tr>
-<th>物品代码</th>
-<th>物品名称</th>
-<th>物品描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>10001</td>
-<td>基础方块</td>
-<td>提供基础阻挡功能</td>
-</tr>
-<tr>
-<td>10002</td>
-<td>出生点</td>
-<td></td>
-</tr>
-<tr>
-<td>10003</td>
-<td>终点</td>
-<td></td>
-</tr>
-<tr>
-<td>10004</td>
-<td>关卡星星</td>
-<td>用于增加通关星数</td>
-</tr>
-<tr>
-<td>10100</td>
-<td>加速</td>
-<td>提供一个方向的瞬时力</td>
-</tr>
-</tbody></table>
-<h3 id="基础方块"><a href="#基础方块" class="headerlink" title="基础方块"></a>基础方块</h3><p>均使用int</p>
-<p>| 10001 | 位置X | 位置Y | 位置Z | 物品旋转X | 物品旋转Y | 物品旋转Z | 物品缩放X | 物品缩放Y | 物品缩放Z |</p>
-<h3 id="出生点"><a href="#出生点" class="headerlink" title="出生点"></a>出生点</h3><p>| 10002 | 位置X | 位置Y | 位置Z |</p>
-<h3 id="终点"><a href="#终点" class="headerlink" title="终点"></a>终点</h3><p>| 10003 | 位置X | 位置Y | 位置Z |</p>
-<h3 id="关卡星星"><a href="#关卡星星" class="headerlink" title="关卡星星"></a>关卡星星</h3><p>| 10004 | 位置X | 位置Y | 位置Z |</p>
-<p>增加一颗通关星1</p>
-<p>| 10005 | 位置X | 位置Y | 位置Z |</p>
-<p>增加一颗通关星2</p>
-<h3 id="加速"><a href="#加速" class="headerlink" title="加速"></a>加速</h3><p>| 10100 | 位置X | 位置Y | 位置Z | 物品旋转X | 物品旋转Y | 物品旋转Z |</p>
-<p>提供方块对向的瞬时力</p>
-<ul>
-<li>用于改善体验</li>
-<li>用于所短时间完成要求</li>
-</ul>
-<h3 id="传送"><a href="#传送" class="headerlink" title="传送"></a>传送</h3><p>| 10101 | 位置X | 位置Y | 位置Z | 物品旋转X | 物品旋转Y | 物品旋转Z | 颜色代码 |</p>
-<h2 id="小球装备"><a href="#小球装备" class="headerlink" title="小球装备"></a>小球装备</h2><h2 id="地图设计"><a href="#地图设计" class="headerlink" title="地图设计"></a>地图设计</h2><h1 id="前端实现"><a href="#前端实现" class="headerlink" title="前端实现"></a>前端实现</h1><p>创建基础方块父类</p>
-<p>父类必要组件</p>
-<ul>
-<li>Static Mesh</li>
-</ul>
-<p>父类函数</p>
-<ul>
-<li>Serialize(TArray<int32>&amp; Data);</li>
-</ul>
-<p>必要成员变量</p>
-<ul>
-<li>物品代码</li>
-<li>物品参数数量</li>
-</ul>
-<h2 id="地图保存"><a href="#地图保存" class="headerlink" title="地图保存"></a>地图保存</h2><p>调用各个组件的Serialize将各自的数据保存入Data</p>
-<h2 id="地图加载"><a href="#地图加载" class="headerlink" title="地图加载"></a>地图加载</h2><p>struct Component<br>{<br>  TSubclassOf&lt;组件父类&gt; Obj<br>  int Nums 生成此组件需要的参数数量<br>}</p>
-<p>TMap&lt;int32, Component&gt;</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 项目制作 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 陀螺球 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[代码大全]]></title>
         <url>http://blog.lsmg.xyz/2020/05/%25E8%25AF%25BB%25E4%25B9%25A6%25E8%25AE%25B0%25E5%25BD%2595130-%25E4%25BB%25A3%25E7%25A0%2581%25E5%25A4%25A7%25E5%2585%25A8/</url>
         <content type="html"><![CDATA[<p>距离上次什么时候写博客已经记不清了, 看了眼GitHub备份记录 已经25天了. 这25天我咕了吗? 咕是不可能咕的. 这段时间我终于做出了第一个UE4比较完善的联机游戏.<br>学习了更多的muduo自己的mongo也更加完善. 只看书写博客不写代码可不行.</p>
@@ -4276,137 +4091,6 @@
         <categories>
             
             <category> 读书记录 </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[编程规范]]></title>
-        <url>http://blog.lsmg.xyz/2020/05/CPP-%25E7%25BC%2596%25E7%25A8%258B%25E8%25A7%2584%25E8%258C%2583/</url>
-        <content type="html"><![CDATA[<p><strong>第一点</strong><br>有时, 把函数的定义同类的实例脱钩是有益的, 甚至是必要的. 这样的函数可以被定义成静态成员, 或是非成员函数. 非成员函数不应依赖于外部变量, 应尽量置于某个命名空间内. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 推荐</span></span><br><span class="line"><span class="keyword">namespace</span> myproject &#123;</span><br><span class="line"><span class="keyword">namespace</span> foo_bar &#123;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Function1</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Function2</span><span class="params">()</span></span>;</span><br><span class="line">&#125;  <span class="comment">// namespace foo_bar</span></span><br><span class="line">&#125;  <span class="comment">// namespace myproject</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不推荐</span></span><br><span class="line"><span class="keyword">namespace</span> myproject &#123;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooBar</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Function1</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Function2</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;  <span class="comment">// namespace myproject</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>第二点</strong><br>局部变量应当声明和初始化同时进行, 推荐使用C++11的花括号</p>
-<p><em>如果在循环中, 不要将对象的声明放入其中</em>, 每次进入作用域都会调用构造函数, 每次退出都会调用析构函数</p>
-<p><strong>第三点-类相关</strong><br>不要在构造函数中调用虚函数, 也不要在无法报出错误时进行可能失败的初始化.</p>
-<p>不要定义隐式类型转换. </p>
-<p>对于转换运算符和单参数构造函数, 请使用 explicit 关键字.</p>
-<ul>
-<li>单参数构造函数有可能会被无意地用作隐式类型转换.</li>
-</ul>
-<p>如果你的类型需要, 就让它们支持拷贝 / 移动. 否则, 就把隐式产生的拷贝和移动函数禁用.</p>
-<ul>
-<li>MyClass(const MyClass&amp;) = delete;</li>
-<li>MyClass&amp; operator=(const MyClass&amp;) = delete;</li>
-</ul>
-<p>仅当<code>只有</code>数据成员的时候<code>struct</code>, <code>其他一律</code>使用class</p>
-<p>使用组合常常比使用继承更合理</p>
-<ul>
-<li>所有的继承<code>必须是public</code>, </li>
-</ul>
-<p>多重继承(真正需要的时候很少)</p>
-<ul>
-<li>最多只有一个基类是非抽象类; 其它基类都是以 Interface 为后缀的 纯接口类.</li>
-</ul>
-<p>除少数特定环境外, 不要重载运算符. 也不要创建用户定义字面量</p>
-<ul>
-<li>重载运算符, 容易造成代码混乱, 因为没有统一的重载规范</li>
-</ul>
-<p>数据成员都必须是私有的</p>
-<p><strong>第四点-函数相关</strong></p>
-<p>输入参数在先, 后跟输出参数.</p>
-<p>编写简短函数</p>
-<p>所有按引用传递的参数必须加上 const.</p>
-<p>函数重载</p>
-<ul>
-<li>若要使用函数重载, 则必须能让读者一看调用点就胸有成竹,<br>而不用花心思猜测调用的重载函数到底是哪一种. 这一规则也适用于构造函数.</li>
-<li>如果重载函数的目的是为了支持不同数量的同一类型参数, 则优先考虑使用 std::vector 以便使用者可以用 列表初始化 指定参数.</li>
-</ul>
-<p>省却参数</p>
-<p>函数返回类型后置语法</p>
-<ul>
-<li><code>auto foo(int x) -&gt; int</code> 对于简单的类型, 优点体现不出</li>
-<li>对于复杂的情况, 例如类域中的类型声明或者以函数参数的形式书写的类型, 写法的不同会造成区别?????.</li>
-</ul>
-<p><strong>杂项</strong><br>在 C++11 里，用 constexpr 来定义真正的常量，或实现常量初始化。</p>
-<p><strong>第五点命名-版本最多的地方</strong></p>
-<p>文件命名</p>
-<ul>
-<li>全部小写包含<code>_</code>最好</li>
-<li>C++ 文件要以 .cc 结尾, 头文件以 .h 结尾.</li>
-</ul>
-<p>类型名称 - 类, 结构体, 类型定义 (typedef), 枚举, 类型模板参数</p>
-<ul>
-<li>类型名称的每个单词首字母均大写, 不包含下划线<code>MyExcitingClass</code></li>
-</ul>
-<p>变量命名</p>
-<ul>
-<li>变量 (包括函数参数) 和数据成员名一律小写, 单词之间用下划线连接. 类的成员变量以下划线结尾</li>
-</ul>
-<p>常量命名</p>
-<ul>
-<li>全部大写</li>
-<li>声明为 constexpr 或 const</li>
-</ul>
-<p>函数命名</p>
-<ul>
-<li>每个单词首字母大写, 没有下划线</li>
-<li>首字母缩写的单词, 经常对其的第一个字母大写</li>
-</ul>
-<p>命名空间命名</p>
-<ul>
-<li>小写字母命名</li>
-</ul>
-<p>枚举命名</p>
-<ul>
-<li>枚举的命名应当和 常量 或 宏 一致</li>
-</ul>
-<p><strong>第六点-格式</strong></p>
-<p>缩进四个空格</p>
-<p>函数定义与声明</p>
-<ul>
-<li>左圆括号总是和函数名在同一行.(没有标准,,,,,,,,,, emmm 我想我还是换行吧)</li>
-<li>函数名和左圆括号间永远没有空格.</li>
-<li>圆括号与参数间没有空格.</li>
-</ul>
-]]></content>
-        
-        <categories>
-            
-            <category> CPP </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[面试题点带面]]></title>
-        <url>http://blog.lsmg.xyz/2020/04/%25E7%25BD%2591%25E7%25BB%259C%25E7%25BC%2596%25E7%25A8%258B-Socket%25E7%2590%2586%25E8%25AE%25BA-%25E9%259D%25A2%25E8%25AF%2595%25E9%25A2%2598%25E7%2582%25B9%25E5%25B8%25A6%25E9%259D%25A2/</url>
-        <content type="html"><![CDATA[<p>马上步入四月中旬了, 自己对于socket理论知识知道的还是不多, 于是想了下可以整理下面试题.</p>
-<p>单纯整理”正确答案”怎么行. 我相信大部分面试题代表的都是某个知识点 某个知识面 或有他的重要实际应用</p>
-<p>部分题目是我自己凭空想出来的, 单独开一篇博客又不是内容足够, 索性放在一起</p>
-<h1 id="基础api相关"><a href="#基础api相关" class="headerlink" title="基础api相关"></a>基础api相关</h1><h2 id="send发送的时候会自动转换字节序"><a href="#send发送的时候会自动转换字节序" class="headerlink" title="send发送的时候会自动转换字节序??"></a>send发送的时候会自动转换字节序??</h2><p>作为开篇问题, 我选了这个. 这个问题也算是困扰了一段时间.<br>网上的解答自然已经有了<br><a href="https://stackoverflow.com/questions/23106938/do-recv-and-send-convert-the-messages-in-network-order-format-automatically" target="_blank" rel="noopener">https://stackoverflow.com/questions/23106938/do-recv-and-send-convert-the-messages-in-network-order-format-automatically</a></p>
-<p>最先接触到socket字节序转换相信大多是<code>htons()</code><br>这个说明是将主机字节序转换成网络字节序, 我使用的自然是小端 将小端转换成大端 反转链表就好<br>而在大端上 头文件自动选择了<code>htons()</code>空命令版本</p>
-<p>起初我使用send发送全是 类似string的东西 char*保存, 单字节数据自然不会受字节序影响</p>
-<p>但是最近学习了moduo后发现了发送数字的实际应用<br>对于一个 <code>int32_t</code>类型的数字需要调用<code>htobe32()</code>转换成<code>大端序</code>然后<code>std::copy</code>到buffer中<br>接收端读取出四个字节 <code>std::copy</code>到<code>int32_t</code>中, 需要调用下<code>be32toh()</code>转换成<code>小端序</code> 这就涉及到了字节序转换</p>
-<p>总结下就是单字节数据比如发送一个字符串 是不会收到字节序影响<br>而如果你直接发送数字比如<code>int32_t</code> 就会受到影响</p>
-<h2 id="SIGPIPE信号触发原因和防治"><a href="#SIGPIPE信号触发原因和防治" class="headerlink" title="SIGPIPE信号触发原因和防治"></a>SIGPIPE信号触发原因和防治</h2><p>client与server建立连接后 在server发送信息给client的时候, 由于client已经退出,<br>client方会向server发送RST. 此时server向已经接收到RST的client的socket继续写入数据 会导致SIGPIPE信号</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> listen_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">listen_address</span>&#123;</span>&#125;;</span><br><span class="line">    listen_address.sin_family = AF_INET;</span><br><span class="line">    listen_address.sin_port = htons(<span class="number">9123</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> ret = bind(listen_fd, (struct sockaddr*)&amp;listen_address,</span><br><span class="line">            <span class="keyword">static_cast</span>&lt;<span class="keyword">socklen_t</span>&gt;(<span class="keyword">sizeof</span> listen_address));</span><br><span class="line">    <span class="keyword">if</span> (ret == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, strerror(errno));</span><br><span class="line">        <span class="built_in">exit</span>(ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret = <span class="built_in">listen</span>(listen_fd, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">client_address</span>&#123;</span>&#125;;</span><br><span class="line">    <span class="keyword">socklen_t</span> client_address_len = <span class="keyword">static_cast</span>&lt;<span class="keyword">socklen_t</span>&gt;(<span class="keyword">sizeof</span> client_address);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> client_fd = accept(listen_fd, (struct sockaddr*)&amp;client_address,</span><br><span class="line">            &amp;client_address_len);</span><br><span class="line"></span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">char</span> msg_first[<span class="number">20</span>] = &#123;<span class="string">"first message\n"</span>&#125;;</span><br><span class="line">    send(client_fd, msg_first, <span class="built_in">strlen</span>(msg_first), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 第一条信息发送后收到RST</span></span><br><span class="line"></span><br><span class="line">    sleep(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">char</span> msg_second[<span class="number">20</span>] = &#123;<span class="string">"second message\n"</span>&#125;;</span><br><span class="line">    send(client_fd, msg_second, <span class="built_in">strlen</span>(msg_second), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 第二次信息发送后出现SIGPIPE</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测试代码如上 运行nc 127.0.0.1 9123后立刻按下Ctrl+C杀死client  截获的所有数据包如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">[root@fish ~]# tcpdump -i lo -Xx tcp port 9123</span><br><span class="line">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span><br><span class="line">listening on lo, link-type EN10MB (Ethernet), capture size 262144 bytes</span><br><span class="line">00:26:27.780746 IP localhost.40580 &gt; localhost.grcp: Flags [S], seq 2027132643, win 43690, options [mss 65495,sackOK,TS val 1567772563 ecr 0,nop,wscale 7], length 0</span><br><span class="line">	0x0000:  4500 003c db97 4000 4006 6122 7f00 0001  E..&lt;..@.@.a&quot;....</span><br><span class="line">	0x0010:  7f00 0001 9e84 23a3 78d3 96e3 0000 0000  ......#.x.......</span><br><span class="line">	0x0020:  a002 aaaa fe30 0000 0204 ffd7 0402 080a  .....0..........</span><br><span class="line">	0x0030:  5d72 4f93 0000 0000 0103 0307            ]rO.........</span><br><span class="line">00:26:27.780802 IP localhost.grcp &gt; localhost.40580: Flags [S.], seq 2570863062, ack 2027132644, win 43690, options [mss 65495,sackOK,TS val 1567772563 ecr 1567772563,nop,wscale 7], length 0</span><br><span class="line">	0x0000:  4500 003c 0000 4000 4006 3cba 7f00 0001  E..&lt;..@.@.&lt;.....</span><br><span class="line">	0x0010:  7f00 0001 23a3 9e84 993c 41d6 78d3 96e4  ....#....&lt;A.x...</span><br><span class="line">	0x0020:  a012 aaaa fe30 0000 0204 ffd7 0402 080a  .....0..........</span><br><span class="line">	0x0030:  5d72 4f93 5d72 4f93 0103 0307            ]rO.]rO.....</span><br><span class="line">00:26:27.780839 IP localhost.40580 &gt; localhost.grcp: Flags [.], ack 1, win 342, options [nop,nop,TS val 1567772563 ecr 1567772563], length 0</span><br><span class="line">	0x0000:  4500 0034 db98 4000 4006 6129 7f00 0001  E..4..@.@.a)....</span><br><span class="line">	0x0010:  7f00 0001 9e84 23a3 78d3 96e4 993c 41d7  ......#.x....&lt;A.</span><br><span class="line">	0x0020:  8010 0156 fe28 0000 0101 080a 5d72 4f93  ...V.(......]rO.</span><br><span class="line">	0x0030:  5d72 4f93                                ]rO.</span><br><span class="line"></span><br><span class="line">三次握手结束后 由于立刻按下了Ctrl+C 客户端连接异常结束 发送FIN</span><br><span class="line"></span><br><span class="line">00:26:27.969734 IP localhost.40580 &gt; localhost.grcp: Flags [F.], seq 1, ack 1, win 342, options [nop,nop,TS val 1567772752 ecr 1567772563], length 0</span><br><span class="line">	0x0000:  4500 0034 db99 4000 4006 6128 7f00 0001  E..4..@.@.a(....</span><br><span class="line">	0x0010:  7f00 0001 9e84 23a3 78d3 96e4 993c 41d7  ......#.x....&lt;A.</span><br><span class="line">	0x0020:  8011 0156 fe28 0000 0101 080a 5d72 5050  ...V.(......]rPP</span><br><span class="line">	0x0030:  5d72 4f93                                ]rO.</span><br><span class="line"></span><br><span class="line">服务端回复收到FIN</span><br><span class="line"></span><br><span class="line">00:26:27.970294 IP localhost.grcp &gt; localhost.40580: Flags [.], ack 2, win 342, options [nop,nop,TS val 1567772753 ecr 1567772752], length 0</span><br><span class="line">	0x0000:  4500 0034 8f0d 4000 4006 adb4 7f00 0001  E..4..@.@.......</span><br><span class="line">	0x0010:  7f00 0001 23a3 9e84 993c 41d7 78d3 96e5  ....#....&lt;A.x...</span><br><span class="line">	0x0020:  8010 0156 fe28 0000 0101 080a 5d72 5051  ...V.(......]rPQ</span><br><span class="line">	0x0030:  5d72 5050                                ]rPP</span><br><span class="line"></span><br><span class="line">第一次写入信息</span><br><span class="line"></span><br><span class="line">00:26:32.781104 IP localhost.grcp &gt; localhost.40580: Flags [P.], seq 1:15, ack 2, win 342, options [nop,nop,TS val 1567777564 ecr 1567772752], length 14</span><br><span class="line">	0x0000:  4500 0042 8f0e 4000 4006 ada5 7f00 0001  E..B..@.@.......</span><br><span class="line">	0x0010:  7f00 0001 23a3 9e84 993c 41d7 78d3 96e5  ....#....&lt;A.x...</span><br><span class="line">	0x0020:  8018 0156 fe36 0000 0101 080a 5d72 631c  ...V.6......]rc.</span><br><span class="line">	0x0030:  5d72 5050 6669 7273 7420 6d65 7373 6167  ]rPPfirst.messag</span><br><span class="line">	0x0040:  650a                                     e.</span><br><span class="line"></span><br><span class="line">收到客户端返回的复位RST</span><br><span class="line"></span><br><span class="line">00:26:32.781155 IP localhost.40580 &gt; localhost.grcp: Flags [R], seq 2027132645, win 0, length 0</span><br><span class="line">	0x0000:  4500 0028 0000 4000 4006 3cce 7f00 0001  E..(..@.@.&lt;.....</span><br><span class="line">	0x0010:  7f00 0001 9e84 23a3 78d3 96e5 0000 0000  ......#.x.......</span><br><span class="line">	0x0020:  5004 0000 dffd 0000                      P.......</span><br><span class="line"></span><br><span class="line">第二次写入信息触发 SIGPIPE</span><br></pre></td></tr></table></figure>
-
-<p>方式SIGPIPE中断进程使用<code>signal(SIGPIPE, SIG_IGN)</code>忽略这个信号, 这时send会返回-1并设置errno=EPIPE</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 网络编程 </category>
-            
-            <category> Socket理论 </category>
             
         </categories>
         
@@ -4764,7 +4448,7 @@
     <entry>
         <title><![CDATA[Linux的使用]]></title>
         <url>http://blog.lsmg.xyz/2020/03/Linux-Linux%25E4%25BD%25BF%25E7%2594%25A8/</url>
-        <content type="html"><![CDATA[<table>
+        <content type="html"><![CDATA[<h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><table>
 <thead>
 <tr>
 <th>命令</th>
@@ -4836,6 +4520,46 @@
 </tbody></table>
 <p>| 给文件增加别名 | 功能 |<br>| ln a b | 创建硬链接, 删除一个另一个仍能使用 |<br>| ln -s a b | 创建符号链接(软连接) 删除源后另一个无法使用 |</p>
 <p>命令行快捷键<br>Ctl-U   删除光标到行首的所有字符 <code>$ 1111 222  --&gt; $</code><br>Ctl-W   删除光标到前边最近一个空格之间的字符 <code>$ 1111 222 --&gt; $ 1111</code></p>
+<h1 id="服务器双网卡配置"><a href="#服务器双网卡配置" class="headerlink" title="服务器双网卡配置"></a>服务器双网卡配置</h1><p>内网访问外网</p>
+<p>外网接在了校园网上, 不过我的路由器不支持Ipv6, 有没有多余的lan口 只能接在服务器的lan口上</p>
+<p>需要设置内网网卡开机启动 固定的Ip地址10.5.1.2 以及子网掩码255.255.255.0<br>然后路由器设置固定Ip地址10.5.1.3 子网掩码255.255.255.0 与内网网卡同网段</p>
+<p>然后使用<code>firewall-cmd --add-masquerade --permanent</code></p>
+<p>Masquerading is useful if the machine is a router and machines connected over an interface in another zone should be able to use the first connection.<br>通过另一个区域(zone)的接口 使用默认zone的接口上网</p>
+<p><a href="https://www.server-world.info/en/note?os=CentOS_7&amp;p=firewalld&amp;f=2" target="_blank" rel="noopener">https://www.server-world.info/en/note?os=CentOS_7&amp;p=firewalld&amp;f=2</a><br>配置完才发现的神网址…. 好吧 写得非常清楚</p>
+<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><p><code>drwxr-xr-x | 3 | root | root | 4096 | Mar  2 20:26 | .vs</code><br>档案权限类型<br>连接数<br>档案拥有者<br>档案所属群组<br>档案容量<br>档案最后被修改时间<br>档名</p>
+<p>文件类型和权限<br><code>drwxr-xr-x</code></p>
+<p>第一位 d 表明档案类型是 目录</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>d</td>
+<td>目录</td>
+</tr>
+<tr>
+<td>-</td>
+<td>文件</td>
+</tr>
+<tr>
+<td>|</td>
+<td>链接文件</td>
+</tr>
+<tr>
+<td>b</td>
+<td>设备文件中可供存储的周边设备, 可随机读取设备</td>
+</tr>
+<tr>
+<td>c</td>
+<td>序列号设备, 如键盘鼠标, 一次性读取设备</td>
+</tr>
+</tbody></table>
+<p>后面每三位一组 为<code>rwx</code>的组合 分别代表 <code>读</code>, <code>写</code>, <code>执行</code><br>三组 第一组<code>文件拥有者权限</code> 第二组<code>群组中账号权限</code> 第三组<code>非本人且没有加入本群组的其他账号权限</code></p>
+<p>第三部分表示这个文件的<code>拥有者账号</code><br>第四部分表示这个文件<code>所属群组</code></p>
+<p>相关命令<br>-chgrp 改变文件所属群组<br>-chown 改变文件拥有者<br>-chmod 改变文件权限</p>
 ]]></content>
         
         <categories>
@@ -4947,60 +4671,6 @@
             
         </categories>
         
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[权限管理]]></title>
-        <url>http://blog.lsmg.xyz/2020/03/Linux-%25E6%259D%2583%25E9%2599%2590%25E7%259B%25B8%25E5%2585%25B3/</url>
-        <content type="html"><![CDATA[<p><code>drwxr-xr-x | 3 | root | root | 4096 | Mar  2 20:26 | .vs</code><br>档案权限类型<br>连接数<br>档案拥有者<br>档案所属群组<br>档案容量<br>档案最后被修改时间<br>档名</p>
-<p>文件类型和权限<br><code>drwxr-xr-x</code></p>
-<p>第一位 d 表明档案类型是 目录</p>
-<table>
-<thead>
-<tr>
-<th>字符</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>d</td>
-<td>目录</td>
-</tr>
-<tr>
-<td>-</td>
-<td>文件</td>
-</tr>
-<tr>
-<td>|</td>
-<td>链接文件</td>
-</tr>
-<tr>
-<td>b</td>
-<td>设备文件中可供存储的周边设备, 可随机读取设备</td>
-</tr>
-<tr>
-<td>c</td>
-<td>序列号设备, 如键盘鼠标, 一次性读取设备</td>
-</tr>
-</tbody></table>
-<p>后面每三位一组 为<code>rwx</code>的组合 分别代表 <code>读</code>, <code>写</code>, <code>执行</code><br>三组 第一组<code>文件拥有者权限</code> 第二组<code>群组中账号权限</code> 第三组<code>非本人且没有加入本群组的其他账号权限</code></p>
-<p>第三部分表示这个文件的<code>拥有者账号</code><br>第四部分表示这个文件<code>所属群组</code></p>
-<p>相关命令<br>-chgrp 改变文件所属群组<br>-chown 改变文件拥有者<br>-chmod 改变文件权限</p>
-]]></content>
-        
-        <categories>
-            
-            <category> Linux </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 权限管理 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -5520,44 +5190,6 @@
         <tags>
             
             <tag> 采坑记 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[球球]]></title>
-        <url>http://blog.lsmg.xyz/2020/03/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E8%2585%25BE%25E8%25AE%25AF%25E6%25B8%25B8%25E6%2588%258F%25E5%25AD%25A6%25E9%2599%25A2-%25E7%2590%2583%25E7%2590%2583/</url>
-        <content type="html"><![CDATA[<p><a href="https://gameinstitute.qq.com/course/detail/10110" target="_blank" rel="noopener">休闲: 球球</a></p>
-<p>P2P 模式…….. 好吧没有采用基本模式<br>采用了变种, 从客户端中选取主客户端 局域网游戏会采用</p>
-<p><strong>状态同步</strong><br>MMO用的多, 断线重连简单 直接返回状态</p>
-<p>收到命令集 计算后 返回结果 防作弊 服务器压力大 包量大</p>
-<p>预表现emm</p>
-<p><strong>帧同步</strong><br>服务器广播客户端发送的指令集, 断线重连需要补上丢失的帧</p>
-<p>预表现emm</p>
-<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/%E8%85%BE%E8%AE%AF%E6%B8%B8%E6%88%8F%E8%AF%BE%E5%A0%82/%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%B8%A7%E5%90%8C%E6%AD%A5%E5%AF%B9%E6%AF%94.png" alt=""></p>
-<p>航标<br>终于知道游戏瞬移是怎么回事了</p>
-<p>影子追随</p>
-<p>心跳包矫正时间 获取延迟等等</p>
-<p>王者 帧同步.</p>
-<p>守望先锋 16ms一个包</p>
-<p>RTT网络延迟</p>
-<p>预表现</p>
-<p>测试</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 游戏知识 </category>
-            
-            <category> 服务器 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 腾讯游戏学院 </tag>
             
         </tags>
         
@@ -6113,125 +5745,6 @@
     </entry>
     
     <entry>
-        <title><![CDATA[3DMAX快捷键及基础知识]]></title>
-        <url>http://blog.lsmg.xyz/2020/02/UE4&amp;3DMAX-3dmax%25E5%25BF%25AB%25E6%258D%25B7%25E9%2594%25AE%25E5%258F%258A%25E5%259F%25BA%25E7%25A1%2580%25E7%259F%25A5%25E8%25AF%2586/</url>
-        <content type="html"><![CDATA[<p>由于自己日后可能需要使用3d建模, 所以今天学习了下. 为了速成 看的B站的一个视频. 感觉效果还行吧.<br>基础的建模可以完成了, 后续需要的话 再继续学习</p>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>shift</td>
-<td>绘制直线</td>
-</tr>
-<tr>
-<td>删除键</td>
-<td>可以回退一次</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>W</td>
-<td>移动</td>
-</tr>
-<tr>
-<td>E</td>
-<td>旋转</td>
-</tr>
-<tr>
-<td>R</td>
-<td>缩放</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>F3</td>
-<td>线框显示模式</td>
-</tr>
-<tr>
-<td>F4</td>
-<td>实体+线框限时模式</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Shift</td>
-<td>按住可以复制</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Alt+T+A</td>
-<td>阵列</td>
-</tr>
-<tr>
-<td>Alt+T+M</td>
-<td>镜像</td>
-</tr>
-<tr>
-<td>Alt+A+对齐</td>
-<td></td>
-</tr>
-<tr>
-<td>Shitf+I</td>
-<td>间隔工具</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Ctrl+X</td>
-<td>专家模式, 隐藏所有多余的东西 获得最大的空间</td>
-</tr>
-<tr>
-<td>Alt+X</td>
-<td>半透明显示</td>
-</tr>
-<tr>
-<td>Ctrl+Shift+X</td>
-<td>变换虚拟体显示切换 可以看到变换虚拟体的明显变化</td>
-</tr>
-<tr>
-<td>O</td>
-<td>自适应降级</td>
-</tr>
-</tbody></table>
-<p><strong>编辑样条线-&gt;顶点</strong><br>优化 在线上添加点<br>焊接 连接两点<br>自动焊接 两点在距离之内自动焊接</p>
-<p><strong>车削修改器</strong><br>将二维图形 指定一个轴然后旋转 得到立体图形</p>
-<p><strong>可编辑多边形</strong><br><em>细分曲面</em><br>迭代次数2-3<br>无需子层级修改后 可以勾选 等值线显示(勾选后 显示真实的渲染线? 不勾选显得线条少 利于编辑子层面)<br><em>细分置换-经常使用置换网格WSM修改器</em><br>需要给立体图形 设置好材质球 材质球需要置换这个属性的贴图<br><em>绘制变形-未学-用于雕刻地形</em><br><strong>倒角剖面和扫描的区别</strong></p>
-<ol>
-<li>结合点不同</li>
-<li>倒角剖面不能用三维轮廓, 扫描可以使用三维轮廓</li>
-<li>倒角剖面不能将 图形包含图形(一个圆中再画一个圆) 的图形作为剖面,扫描可以.</li>
-</ol>
-]]></content>
-        
-        <categories>
-            
-            <category> UE4&amp;3DMAX </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
         <title><![CDATA[Git的基础使用]]></title>
         <url>http://blog.lsmg.xyz/2020/02/Git-%25E5%259F%25BA%25E7%25A1%2580%25E6%2593%258D%25E4%25BD%259C/</url>
         <content type="html"><![CDATA[<p>2020年8月9日23:06:10 删除已经熟记的部分命令 精简博客</p>
@@ -6669,73 +6182,6 @@
             
         </categories>
         
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[游戏知识-腾讯游戏学院-如何进入游戏开发行业]]></title>
-        <url>http://blog.lsmg.xyz/2019/12/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E8%2585%25BE%25E8%25AE%25AF%25E6%25B8%25B8%25E6%2588%258F%25E5%25AD%25A6%25E9%2599%25A2-%25E5%25A6%2582%25E4%25BD%2595%25E8%25BF%259B%25E5%2585%25A5%25E6%25B8%25B8%25E6%2588%258F%25E5%25BC%2580%25E5%258F%2591%25E8%25A1%258C%25E4%25B8%259A/</url>
-        <content type="html"><![CDATA[<p>由于自己了解的实在是不足, 所以来腾讯游戏课堂来学习一些架构之类的东西 来完善自己的知识面<br><a href="https://gameinstitute.qq.com/course/detail/10156" target="_blank" rel="noopener">想做游戏吗？如何开始我的游戏开发职业生涯</a></p>
-<a id="more"></a>
-<p>做游戏不会重复做同样的工作, 项目不同</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 游戏知识 </category>
-            
-            <category> 腾讯游戏学院 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 腾讯游戏学院 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-        <title><![CDATA[游戏知识-服务器-服务器通信]]></title>
-        <url>http://blog.lsmg.xyz/2019/12/%25E6%25B8%25B8%25E6%2588%258F%25E7%259F%25A5%25E8%25AF%2586-%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8-%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25E9%2580%259A%25E4%25BF%25A1/</url>
-        <content type="html"><![CDATA[<p>由于自己了解的实在是不足, 所以来腾讯游戏课堂来学习一些架构之类的东西 来完善自己的知识面<br><a href="https://gameinstitute.qq.com/course/detail/10096" target="_blank" rel="noopener">服务器通信</a></p>
-<a id="more"></a>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>作业型-单纯多个client对一个server .. 比如我开始写过的聊天室程序</p>
-<h1 id="CS通信"><a href="#CS通信" class="headerlink" title="CS通信"></a>CS通信</h1><p>DNS协议-基于UDP协议</p>
-<p>TCP<br>面向连接的可靠的有时序性的-流式协议<br>窗口管理<br>流量控制<br>数据确认<br>UDP<br>无连接不保证可靠性的无法保证时序-报文协议</p>
-<p>QQ-CS<br>网络状况较好-UDP????-好吧还是处理了<br>网络状况差-TCP<br>大文件-TCP-TCP适合大文件交互, 因为他保持连接流式协议~</p>
-<p>微信-CS<br>前台运行-TCP长连接<br>后台运行-TCP短连接<br>查看文章-HTTP(TCP短连接)</p>
-<p>QQ-早期产品, 花最少的前~榨干性能<br>微信-腾讯后期产品</p>
-<hr>
-<p>字符串<br>自定义<br>Protobuf</p>
-<p>序列化反序列化.</p>
-<p>UDP协议-不要让单个包的数据量超过1K, 否则会由于分片等 导致一个大包一旦一个分片失败就都失败</p>
-<p>存在的问题</p>
-<ol>
-<li>客户端和服务端数据一直对不上<br>可能是字节序的问题 - 字节序转换(网络字节数传送)</li>
-<li>服务器发送的数据延迟-小包<br>NAGLE算法-小包并不是立即发送-等存多了在一起发送-可以禁用掉~~</li>
-<li>数据较大或者网络波动<br>发送缓冲区慢了.. 适当加大发送缓冲区</li>
-</ol>
-<p>非阻塞IO<br>O_NONBLOCK<br>多路复用<br>select<br>poll<br>epoll</p>
-<h1 id="SS通信"><a href="#SS通信" class="headerlink" title="SS通信"></a>SS通信</h1><p>TCP-最常用<br>UDP-非关键数据-日志服务-内网通信网络状况好可以超过MTU<br>非SOCKET通信-进程间通信?-管道-信号-共享内存-信息队列-文件..</p>
-]]></content>
-        
-        <categories>
-            
-            <category> 游戏知识 </category>
-            
-            <category> 服务器 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 腾讯游戏学院 </tag>
-            
-        </tags>
         
     </entry>
     
