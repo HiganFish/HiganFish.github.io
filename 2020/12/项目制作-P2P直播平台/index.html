@@ -6,15 +6,15 @@
   <meta name="keywords" content="">
   <meta name="description" content="P2P直播平台 | Lsmg的大学之路">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="第十二章 TCP：传输控制协议（初步）ARQ和重传 直接处理分组丢失或者比特查错的方法：一直重发直到本分组被正常接收  接收方是否接收到了分组？ 接收方接收到的是不是和发送方发送的一样？  ACK  发送方应该等待一个ACK多长时间？ ACK丢失了怎么办？ 分组被接收到了，但是有错怎么办？  允许多个分组同时进入网络而不是发送一次确认一次存在的问题  什么时候注入一个分组？ 注入多少个分组？ 等待">
+<meta name="description" content="项目规划开发平台无关，可选择可靠机制的基于UDP的HgUDP协议 T1：初期没有必要100%可靠，因为100%可靠为什么不去用TCP？ T2：想在HgUDP协议中解决粘包问题，用于发送接收小包，需要根据UDP的数据载量决定小包的大小 T3：不打算实现拥塞控制，只实现流量控制 关键的回调函数提供的函数  项目中的发送函数（用于发送数据 将数据交付给HgUDP协议）  需要用户注册的函数  注册的回调">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TCP&#x2F;IP详解">
-<meta property="og:url" content="http://blog.lsmg.xyz/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95160-TCPIP%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:title" content="项目制作-HgUDP.md">
+<meta property="og:url" content="http://blog.lsmg.xyz/2021/04/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-HgUDP/index.html">
 <meta property="og:site_name" content="Lsmg的大学之路">
-<meta property="og:description" content="第十二章 TCP：传输控制协议（初步）ARQ和重传 直接处理分组丢失或者比特查错的方法：一直重发直到本分组被正常接收  接收方是否接收到了分组？ 接收方接收到的是不是和发送方发送的一样？  ACK  发送方应该等待一个ACK多长时间？ ACK丢失了怎么办？ 分组被接收到了，但是有错怎么办？  允许多个分组同时进入网络而不是发送一次确认一次存在的问题  什么时候注入一个分组？ 注入多少个分组？ 等待">
+<meta property="og:description" content="项目规划开发平台无关，可选择可靠机制的基于UDP的HgUDP协议 T1：初期没有必要100%可靠，因为100%可靠为什么不去用TCP？ T2：想在HgUDP协议中解决粘包问题，用于发送接收小包，需要根据UDP的数据载量决定小包的大小 T3：不打算实现拥塞控制，只实现流量控制 关键的回调函数提供的函数  项目中的发送函数（用于发送数据 将数据交付给HgUDP协议）  需要用户注册的函数  注册的回调">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-04-03T11:09:20.000Z">
-<meta property="article:modified_time" content="2021-04-03T15:42:13.248Z">
+<meta property="article:published_time" content="2021-04-08T14:57:00.000Z">
+<meta property="article:modified_time" content="2021-04-08T15:25:07.699Z">
 <meta property="article:author" content="Lsmg">
 <meta name="twitter:card" content="summary">
 
@@ -103,7 +103,7 @@
     <li>
         <div class="all active" data-rel="All">All
             
-                <small>(58)</small>
+                <small>(59)</small>
             
         </div>
     </li>
@@ -275,7 +275,7 @@
                     <div data-rel="项目制作">
                         
                         项目制作
-                        <small>(1)</small>
+                        <small>(2)</small>
                         
                     </div>
                     
@@ -302,7 +302,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="58">
+<input type="hidden" id="yelog_site_posts_number" value="59">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -493,6 +493,14 @@
            data-author="" >
             <span class="post-title" title="C++Primer学习">C++Primer学习</span>
             <span class="post-date" title="2019-08-16 19:13:22">2019/08/16</span>
+        </a>
+        
+        <a  class="All 项目制作 "
+           href="/2021/04/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-HgUDP/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="项目制作-HgUDP.md">项目制作-HgUDP.md</span>
+            <span class="post-date" title="2021-04-08 22:57:00">2021/04/08</span>
         </a>
         
         <a  class="All 计算机网络 "
@@ -893,7 +901,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2021-02-26 23:32:00'>2020-12-02 12:50</time>
+            Created At : <time class="date" title='Updated At: 2021-04-08 22:55:57'>2020-12-02 12:50</time>
         
     </div>
     <div class="article-meta">
@@ -931,23 +939,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h1><p><strong>使用C++20标准 Windows和Centos平台均使用gcc10.1编译通过正常使用</strong></p>
-<p><strong>最新代码暂未适配Windows v1.0.0 版本支持Windows</strong></p>
+        <h1 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h1><p><strong>使用C++17标准 Windows和Centos平台均使用gcc8.3编译通过正常使用</strong></p>
+<p><strong>仅v1.0.0 版本支持Windows</strong></p>
 <p><strong>运行后在两个推流者四个观看者情况下 占用内存6Mb CPU使用极低</strong></p>
 <p><strong>支持IPV4和IPV6</strong></p>
-<p>服务器端代码量 包含网络部分 5000余行</p>
+<p>服务器端代码量 4000余行</p>
 <p>HttpFlv拉流的播放器目前测试通过PotPlayer, VLC, flv.js</p>
 <p>RTMP推流播放器仅测试过Obs</p>
 <p>网络部分学习自 <a href="https://github.com/chenshuo/muduo" target="_blank" rel="noopener">https://github.com/chenshuo/muduo</a></p>
 <p>跨平台支持学习自 <a href="https://github.com/balloonwj/flamingo" target="_blank" rel="noopener">https://github.com/balloonwj/flamingo</a></p>
 <p>HTTP包装 RTMP解析 FLV解析 参考自网络相关文档</p>
-<h1 id="项目规划"><a href="#项目规划" class="headerlink" title="项目规划"></a>项目规划</h1><p>开发轻量级跨Windows和Linux的支持Rtmp推流HttpFlv拉流的服务端</p>
+<h1 id="项目规划"><a href="#项目规划" class="headerlink" title="项目规划"></a>项目规划</h1><p>开发轻量级Linux端的支持Rtmp推流HttpFlv拉流的服务端</p>
 <p>项目不打算开发UI方面的功能, 视频将使用第三方的支持HttpFlv拉流的播放器来播放(如PotPlayer, flv.js)</p>
 <h2 id="开发进度"><a href="#开发进度" class="headerlink" title="开发进度"></a>开发进度</h2><h3 id="服务器端"><a href="#服务器端" class="headerlink" title="服务器端"></a>服务器端</h3><p>支持多个RTMP推流者推流(已完成)</p>
 <p>支持多个HTTP-FLV拉流者拉取对应的流观看(已完成)</p>
 <p>推流者身份鉴定 Mysql查询账号密码(已完成)</p>
 <p>多线程支持(开发完成)</p>
-<p>完善的日志库(待开发)</p>
+<p>完善的日志库(开发完成)</p>
 <h1 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h1><p><strong>安装Mysql库</strong></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install mysql-devel</span><br></pre></td></tr></table></figure>
 
@@ -1009,7 +1017,8 @@
 <p>至于<code>Chunk Data</code>就是Flv的data部分</p>
 <p>Obs发送<code>@SetDataFrame()</code>其中Data为info_tag的data部分<br>Obs发送<code>Audio Data</code>其中Data为audio_tag的data部分  音频数据包<br>Obs发送<code>Video Data</code>其中Data为sps_pps_tag的data部分  视频数据包</p>
 <p>之后便是正常画面声音的Flv数据发送.</p>
-<h1 id="文件说明"><a href="#文件说明" class="headerlink" title="文件说明"></a>文件说明</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">├── CMakeLists.txt</span><br><span class="line">├── main.cpp</span><br><span class="line">├── mapper 包装mysql 提供用户验证</span><br><span class="line">│   ├── UserMapper.cpp</span><br><span class="line">│   └── UserMapper.h</span><br><span class="line">├── mysql   包装基础mysql api</span><br><span class="line">│   ├── DbMysql.cpp</span><br><span class="line">│   ├── DbMysql.h</span><br><span class="line">│   ├── Field.cpp</span><br><span class="line">│   ├── Field.h</span><br><span class="line">│   ├── QueryResult.cpp</span><br><span class="line">│   └── QueryResult.h</span><br><span class="line">├── network 网络相关</span><br><span class="line">│   ├── Acceptor.cpp</span><br><span class="line">│   ├── Acceptor.h</span><br><span class="line">│   ├── Callback.h</span><br><span class="line">│   ├── Channel.cpp</span><br><span class="line">│   ├── Channel.h</span><br><span class="line">│   ├── Connector.cpp</span><br><span class="line">│   ├── Connector.h</span><br><span class="line">│   ├── EventLoop.cpp</span><br><span class="line">│   ├── EventLoop.h</span><br><span class="line">│   ├── EventLoopThread.cpp</span><br><span class="line">│   ├── EventLoopThread.h</span><br><span class="line">│   ├── EventLoopThreadPool.cpp</span><br><span class="line">│   ├── EventLoopThreadPool.h</span><br><span class="line">│   ├── InetAddress.cpp</span><br><span class="line">│   ├── InetAddress.h</span><br><span class="line">│   ├── multiplexing 多路复用</span><br><span class="line">│   │   ├── Epoll.cpp</span><br><span class="line">│   │   ├── Epoll.h</span><br><span class="line">│   │   ├── MultiplexingBase.cpp</span><br><span class="line">│   │   ├── MultiplexingBase.h</span><br><span class="line">│   │   ├── Select.cpp</span><br><span class="line">│   │   └── Select.h</span><br><span class="line">│   ├── PlatformNetwork.cpp 跨平台相关</span><br><span class="line">│   ├── PlatformNetwork.h</span><br><span class="line">│   ├── protocol Rtmp和HttpFlv连接管理</span><br><span class="line">│   │   ├── RtmpClientConnection.cpp</span><br><span class="line">│   │   ├── RtmpClientConnection.h</span><br><span class="line">│   │   ├── RtmpServerConnection.cpp</span><br><span class="line">│   │   └── RtmpServerConnection.h</span><br><span class="line">│   ├── Socket.cpp</span><br><span class="line">│   ├── Socket.h</span><br><span class="line">│   ├── SocketOps.cpp</span><br><span class="line">│   ├── SocketOps.h</span><br><span class="line">│   ├── TcpClient.cpp</span><br><span class="line">│   ├── TcpClient.h</span><br><span class="line">│   ├── TcpConnection.cpp</span><br><span class="line">│   ├── TcpConnection.h</span><br><span class="line">│   ├── TcpServer.cpp</span><br><span class="line">│   └── TcpServer.h</span><br><span class="line">├── README.md</span><br><span class="line">├── test 测试文件</span><br><span class="line">│   ├── CMakeLists.txt</span><br><span class="line">│   ├── Connector</span><br><span class="line">│   │   └── ConnectorTest.cpp</span><br><span class="line">│   ├── DbMysql</span><br><span class="line">│   │   └── DbMysqlTest.cpp</span><br><span class="line">│   ├── EventLoopThread</span><br><span class="line">│   │   └── EventLoopThreadTest.cpp</span><br><span class="line">│   ├── Logger</span><br><span class="line">│   │   └── LoggerTest.cpp</span><br><span class="line">│   ├── Main</span><br><span class="line">│   │   ├── 2.data.back</span><br><span class="line">│   │   └── MainTest.cpp</span><br><span class="line">│   ├── TcpServer</span><br><span class="line">│   │   └── TcpServerTest.cpp</span><br><span class="line">│   ├── Thread</span><br><span class="line">│   │   └── ThreadTest.cpp</span><br><span class="line">│   └── UserMapper</span><br><span class="line">│       ├── live_user.sql</span><br><span class="line">│       └── UserMapperTest.cpp</span><br><span class="line">├── thread 线程库包装</span><br><span class="line">│   ├── Condition.cpp</span><br><span class="line">│   ├── Condition.h</span><br><span class="line">│   ├── CurrentThread.cpp</span><br><span class="line">│   ├── CurrentThread.h</span><br><span class="line">│   ├── Mutex.cpp</span><br><span class="line">│   ├── Mutex.h</span><br><span class="line">│   ├── Thread.cpp</span><br><span class="line">│   ├── Thread.h</span><br><span class="line">│   ├── ThreadPool.cpp</span><br><span class="line">│   └── ThreadPool.h</span><br><span class="line">└── utils</span><br><span class="line">├── Buffer.cpp</span><br><span class="line">├── Buffer.h</span><br><span class="line">├── codec Rtmp和Flv的编解码器</span><br><span class="line">│   ├── FlvCodec.cpp</span><br><span class="line">│   ├── FlvCodec.h</span><br><span class="line">│   ├── FlvManager.cpp</span><br><span class="line">│   ├── FlvManager.h</span><br><span class="line">│   ├── RtmpCodec.cpp</span><br><span class="line">│   ├── RtmpCodec.h</span><br><span class="line">│   ├── RtmpManager.cpp</span><br><span class="line">│   ├── RtmpManager.h</span><br><span class="line">│   └── test</span><br><span class="line">│       ├── FlvManagerTest.cpp</span><br><span class="line">│       └── RtmpManagerTest.cpp</span><br><span class="line">├── File.cpp</span><br><span class="line">├── File.h</span><br><span class="line">├── Format.cpp</span><br><span class="line">├── Format.h</span><br><span class="line">├── Logger.cpp</span><br><span class="line">├── Logger.h</span><br><span class="line">├── PlatformBase.cpp 基础跨平台相关</span><br><span class="line">├── PlatformBase.h 基础跨平台相关</span><br><span class="line">├── Timestamp.cpp</span><br><span class="line">└── Timestamp.h</span><br></pre></td></tr></table></figure>
+<h1 id="文件说明"><a href="#文件说明" class="headerlink" title="文件说明"></a>文件说明</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">├── CMakeLists.txt</span><br><span class="line">├── main.cpp</span><br><span class="line">├── mapper 包装mysql 提供用户验证</span><br><span class="line">│   ├── UserMapper.cpp</span><br><span class="line">│   └── UserMapper.h</span><br><span class="line">├── mysql   包装基础mysql api</span><br><span class="line">│   ├── DbMysql.cpp</span><br><span class="line">│   ├── DbMysql.h</span><br><span class="line">│   ├── Field.cpp</span><br><span class="line">│   ├── Field.h</span><br><span class="line">│   ├── QueryResult.cpp</span><br><span class="line">│   └── QueryResult.h</span><br><span class="line">├── network 网络相关</span><br><span class="line">│   ├── Acceptor.cpp</span><br><span class="line">│   ├── Acceptor.h</span><br><span class="line">│   ├── Callback.h</span><br><span class="line">│   ├── Channel.cpp</span><br><span class="line">│   ├── Channel.h</span><br><span class="line">│   ├── Connector.cpp</span><br><span class="line">│   ├── Connector.h</span><br><span class="line">│   ├── EventLoop.cpp</span><br><span class="line">│   ├── EventLoop.h</span><br><span class="line">│   ├── EventLoopThread.cpp</span><br><span class="line">│   ├── EventLoopThread.h</span><br><span class="line">│   ├── EventLoopThreadPool.cpp</span><br><span class="line">│   ├── EventLoopThreadPool.h</span><br><span class="line">│   ├── InetAddress.cpp</span><br><span class="line">│   ├── InetAddress.h</span><br><span class="line">│   ├── multiplexing 多路复用</span><br><span class="line">│   │   ├── Epoll.cpp</span><br><span class="line">│   │   ├── Epoll.h</span><br><span class="line">│   │   ├── MultiplexingBase.cpp</span><br><span class="line">│   │   ├── MultiplexingBase.h</span><br><span class="line">│   │   ├── Select.cpp</span><br><span class="line">│   │   └── Select.h</span><br><span class="line">│   ├── protocol Rtmp和HttpFlv连接管理</span><br><span class="line">│   │   ├── RtmpClientConnection.cpp</span><br><span class="line">│   │   ├── RtmpClientConnection.h</span><br><span class="line">│   │   ├── RtmpServerConnection.cpp</span><br><span class="line">│   │   └── RtmpServerConnection.h</span><br><span class="line">│   ├── Socket.cpp</span><br><span class="line">│   ├── Socket.h</span><br><span class="line">│   ├── SocketOps.cpp</span><br><span class="line">│   ├── SocketOps.h</span><br><span class="line">│   ├── TcpClient.cpp</span><br><span class="line">│   ├── TcpClient.h</span><br><span class="line">│   ├── TcpConnection.cpp</span><br><span class="line">│   ├── TcpConnection.h</span><br><span class="line">│   ├── TcpServer.cpp</span><br><span class="line">│   └── TcpServer.h</span><br><span class="line">├── README.md</span><br><span class="line">├── test 测试文件</span><br><span class="line">│   ├── CMakeLists.txt</span><br><span class="line">│   ├── Connector</span><br><span class="line">│   │   └── ConnectorTest.cpp</span><br><span class="line">│   ├── DbMysql</span><br><span class="line">│   │   └── DbMysqlTest.cpp</span><br><span class="line">│   ├── EventLoopThread</span><br><span class="line">│   │   └── EventLoopThreadTest.cpp</span><br><span class="line">│   ├── Logger</span><br><span class="line">│   │   └── LoggerTest.cpp</span><br><span class="line">│   ├── Main</span><br><span class="line">│   │   ├── 2.data.back</span><br><span class="line">│   │   └── MainTest.cpp</span><br><span class="line">│   ├── TcpServer</span><br><span class="line">│   │   └── TcpServerTest.cpp</span><br><span class="line">│   ├── Thread</span><br><span class="line">│   │   └── ThreadTest.cpp</span><br><span class="line">│   └── UserMapper</span><br><span class="line">│       ├── live_user.sql</span><br><span class="line">│       └── UserMapperTest.cpp</span><br><span class="line">├── thread 线程库包装</span><br><span class="line">│   ├── Condition.cpp</span><br><span class="line">│   ├── Condition.h</span><br><span class="line">│   ├── CurrentThread.cpp</span><br><span class="line">│   ├── CurrentThread.h</span><br><span class="line">│   ├── Mutex.cpp</span><br><span class="line">│   ├── Mutex.h</span><br><span class="line">│   ├── Thread.cpp</span><br><span class="line">│   ├── Thread.h</span><br><span class="line">│   ├── ThreadPool.cpp</span><br><span class="line">│   └── ThreadPool.h</span><br><span class="line">└── utils</span><br><span class="line">├── Buffer.cpp</span><br><span class="line">├── Buffer.h</span><br><span class="line">├── codec Rtmp和Flv的编解码器</span><br><span class="line">│   ├── FlvCodec.cpp</span><br><span class="line">│   ├── FlvCodec.h</span><br><span class="line">│   ├── FlvManager.cpp</span><br><span class="line">│   ├── FlvManager.h</span><br><span class="line">│   ├── RtmpCodec.cpp</span><br><span class="line">│   ├── RtmpCodec.h</span><br><span class="line">│   ├── RtmpManager.cpp</span><br><span class="line">│   ├── RtmpManager.h</span><br><span class="line">│   └── test</span><br><span class="line">│       ├── FlvManagerTest.cpp</span><br><span class="line">│       └── RtmpManagerTest.cpp</span><br><span class="line">├── File.cpp</span><br><span class="line">├── File.h</span><br><span class="line">├── Format.cpp</span><br><span class="line">├── Format.h</span><br><span class="line">├── Logger.cpp</span><br><span class="line">├── Logger.h</span><br><span class="line">├── Timestamp.cpp</span><br><span class="line">└── Timestamp.h</span><br></pre></td></tr></table></figure>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。 </span>
     </div>
