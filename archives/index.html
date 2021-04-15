@@ -884,7 +884,7 @@
         <article class="index">
             <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于"><span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于"><span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#项目"><span class="toc-text">项目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#higan网络框架"><span class="toc-text">higan网络框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#直播服务器"><span class="toc-text">直播服务器</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -897,16 +897,23 @@
     }
 </style>
 </div>
-            <h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
+            <p>LinuxC++爱好者</p>
+<h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
 <p>本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次</p>
-<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 生成，部署在 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>主题 <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank" rel="noopener">3-hexo</a> 已经在github上开源</p>
-<p><code>3-hexo</code> 主题使用交流可以加 Q群: <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=e8cf083cc097141eaf323396f1766809b8e90ff00c67bb441898f672892f6904"><img data-ignore border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="3-hexo使用交流" title="3-hexo使用交流"></a></p>
-<p>主要功能：</p>
-<ul>
-<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
-<li>pad/手机等移动端适配</li>
-<li>页面全局快捷键 <a href='http://yelog.org/2017/03/24/3-hexo-shortcuts/' target="_blank" rel="noopener">3-hexo快捷键说明</a></li>
-</ul>
+<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>博客的镜像站 部署于coding <a href="https://blog1.lsmg.xyz/" target="_blank" rel="noopener">https://blog1.lsmg.xyz/</a> （每天自动同步更新）</p>
+<p>博客的主站 部署于GitPage <a href="https://blog.lsmg.xyz/">https://blog.lsmg.xyz/</a> （实时更新）</p>
+<p>个人Github <a href="https://github.com/HiganFish" target="_blank" rel="noopener">https://github.com/HiganFish</a></p>
+<h1 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h1><p>目前主要是两个通用的后端项目。 </p>
+<h2 id="higan网络框架"><a href="#higan网络框架" class="headerlink" title="higan网络框架"></a>higan网络框架</h2><p><a href="https://github.com/HiganFish/higan" target="_blank" rel="noopener">https://github.com/HiganFish/higan</a></p>
+<p>Reactor事件分发模型</p>
+<p>One Loop On Thread线程模型</p>
+<p>同步非阻塞</p>
+<p>这个已经有段时间没有更新了。我后续的直播服务器是重新写了一次网络框架。</p>
+<p>但是主要的技术架构跟higan框架一致。</p>
+<h2 id="直播服务器"><a href="#直播服务器" class="headerlink" title="直播服务器"></a>直播服务器</h2><p><a href="https://github.com/HiganFish/LiveBroadcast" target="_blank" rel="noopener">https://github.com/HiganFish/LiveBroadcast</a></p>
+<p>这个项目中还包含着自己最新写的网络框架</p>
+<p>在网络框架之上自己实现了HTTP RTMP FLV HTTP-FLV。这四个主要的协议的解析和生成</p>
+<p>支持简单的推流身份鉴定 使用的mysql数据库。这也是本项目中唯一一个第三方库。</p>
 
         </article>
         
