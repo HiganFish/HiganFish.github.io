@@ -6,15 +6,15 @@
   <meta name="keywords" content="">
   <meta name="description" content="pthread&amp;thread | Lsmg的大学之路">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="项目规划开发平台无关，可选择可靠机制的基于UDP的HgUDP协议 T1：初期没有必要100%可靠，因为100%可靠为什么不去用TCP？ T2：想在HgUDP协议中解决粘包问题，用于发送接收小包，需要根据UDP的数据载量决定小包的大小 T3：不打算实现拥塞控制，只实现流量控制 T4：2021年4月11日22:35:12 不用实现超时重传这种长时间的操作，因为协议将会用在要求低延迟的环境，如果发生了0">
+<meta name="description" content="第十二章 TCP：传输控制协议（初步）ARQ和重传 直接处理分组丢失或者比特查错的方法：一直重发直到本分组被正常接收  接收方是否接收到了分组？ 接收方接收到的是不是和发送方发送的一样？  ACK  发送方应该等待一个ACK多长时间？ ACK丢失了怎么办？ 分组被接收到了，但是有错怎么办？  允许多个分组同时进入网络而不是发送一次确认一次存在的问题  什么时候注入一个分组？ 注入多少个分组？ 等待">
 <meta property="og:type" content="article">
-<meta property="og:title" content="项目制作-HgUDP.md">
-<meta property="og:url" content="http://blog.lsmg.xyz/2021/04/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-HgUDP/index.html">
+<meta property="og:title" content="TCP&#x2F;IP详解">
+<meta property="og:url" content="http://blog.lsmg.xyz/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95160-TCPIP%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Lsmg的大学之路">
-<meta property="og:description" content="项目规划开发平台无关，可选择可靠机制的基于UDP的HgUDP协议 T1：初期没有必要100%可靠，因为100%可靠为什么不去用TCP？ T2：想在HgUDP协议中解决粘包问题，用于发送接收小包，需要根据UDP的数据载量决定小包的大小 T3：不打算实现拥塞控制，只实现流量控制 T4：2021年4月11日22:35:12 不用实现超时重传这种长时间的操作，因为协议将会用在要求低延迟的环境，如果发生了0">
+<meta property="og:description" content="第十二章 TCP：传输控制协议（初步）ARQ和重传 直接处理分组丢失或者比特查错的方法：一直重发直到本分组被正常接收  接收方是否接收到了分组？ 接收方接收到的是不是和发送方发送的一样？  ACK  发送方应该等待一个ACK多长时间？ ACK丢失了怎么办？ 分组被接收到了，但是有错怎么办？  允许多个分组同时进入网络而不是发送一次确认一次存在的问题  什么时候注入一个分组？ 注入多少个分组？ 等待">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-04-08T14:57:00.000Z">
-<meta property="article:modified_time" content="2021-04-11T14:35:15.199Z">
+<meta property="article:published_time" content="2021-04-03T11:09:20.000Z">
+<meta property="article:modified_time" content="2021-04-03T15:42:13.248Z">
 <meta property="article:author" content="Lsmg">
 <meta name="twitter:card" content="summary">
 
