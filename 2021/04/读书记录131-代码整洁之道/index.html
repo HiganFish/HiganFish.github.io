@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CPP入门分享 | Lsmg的大学之路</title>
+  <title>代码整洁之道 | Lsmg的大学之路</title>
   <meta name="keywords" content="">
-  <meta name="description" content="CPP入门分享 | Lsmg的大学之路">
+  <meta name="description" content="代码整洁之道 | Lsmg的大学之路">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="第二章 有意义的命名若变量或代码可能在代码中多次被使用，应赋予其便于检索的名称  类名应该是名词或者名词短语不应该是动词，Customer、WikiPage、Account。避免使用Manager、Processor、Data或者Info这样的类名。  方法名应该是动词或者动词短语  不要抖机灵，使用whack（美国俚语，劈砍）代替kill言到意到 意到言到  每个概念对应一个词，DeviceMa">
 <meta property="og:type" content="article">
@@ -889,11 +889,13 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-分享学习会-抓取接口" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-读书记录131-代码整洁之道" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">CPP入门分享</h1>
+        <h1 class="article-title">代码整洁之道</h1>
     
     <div class="article-meta">
+        
+        <span class="top"><a>置顶</a></span>
         
         
         
@@ -901,7 +903,7 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="分享会">分享会</a>
+            <a  data-rel="读书记录">读书记录</a>
             
         </span>
         
@@ -909,7 +911,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2020-10-28 16:55:57'>2020-09-09 10:40</time>
+            Created At : <time class="date" title='Updated At: 2021-04-28 08:37:37'>2021-04-28 08:19</time>
         
     </div>
     <div class="article-meta">
@@ -931,7 +933,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置Fiddler"><span class="toc-text">配置Fiddler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置SwitchyOmega插件"><span class="toc-text">配置SwitchyOmega插件</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第二章-有意义的命名"><span class="toc-text">第二章 有意义的命名</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -947,13 +949,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><p>Fiddler 截获HTTP请求包<br>Postman 测试接口与生成代码<br>Chrome+SwitchyOmega插件</p>
-<p>安装见视频</p>
-<h1 id="配置Fiddler"><a href="#配置Fiddler" class="headerlink" title="配置Fiddler"></a>配置Fiddler</h1><p>Tools-&gt;Options-&gt;HTTPS 勾选Decrypt HTTPS traffic 确认安装证书</p>
-<p>Tools-&gt;Options-&gt;Connections 勾选Allow remote computer xxxx</p>
-<p>记下 Connections中的端口号 默认为8888</p>
-<h1 id="配置SwitchyOmega插件"><a href="#配置SwitchyOmega插件" class="headerlink" title="配置SwitchyOmega插件"></a>配置SwitchyOmega插件</h1><p>新增情景模式-&gt;选择代理服务器</p>
-<p>代理协议HTTP 代理服务器 127.0.0.1 端口 8888</p>
+        <h1 id="第二章-有意义的命名"><a href="#第二章-有意义的命名" class="headerlink" title="第二章 有意义的命名"></a>第二章 有意义的命名</h1><p>若变量或代码可能在代码中多次被使用，应赋予其便于检索的名称</p>
+<ol>
+<li><p>类名应该是名词或者名词短语不应该是动词，Customer、WikiPage、Account。避免使用Manager、Processor、Data或者Info这样的类名。</p>
+</li>
+<li><p>方法名应该是动词或者动词短语</p>
+</li>
+<li><p>不要抖机灵，使用whack（美国俚语，劈砍）代替kill言到意到 意到言到</p>
+</li>
+<li><p>每个概念对应一个词，DeviceManager和ProtocolController之间有什么区别？为什么不全用Manager或Controller</p>
+</li>
+<li><p>不要使用双关语，同一个方法命名即使在不同的类中应有相同的含义。</p>
+</li>
+</ol>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。 </span>
