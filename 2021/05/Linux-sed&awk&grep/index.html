@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>算法四 | Lsmg的大学之路</title>
+  <title>sed&amp;awk&amp;grep | Lsmg的大学之路</title>
   <meta name="keywords" content="">
-  <meta name="description" content="算法四 | Lsmg的大学之路">
+  <meta name="description" content="sed&amp;awk&amp;grep | Lsmg的大学之路">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="正则   表达式 含义    (?&#x3D;pattern) 正向肯定预查  常用于匹配到pattern 不包括pattern   (?&lt;&#x3D;pattern) 反向肯定预查 常用于从pattern之后匹配 不包括pattern   [root@fish ~]# cpu&#x3D;&quot;Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz&quot;[root@fish ~]# echo $cpu">
 <meta property="og:type" content="article">
@@ -897,9 +897,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-算法-算法四" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Linux-sed&amp;awk&amp;grep" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">算法四</h1>
+        <h1 class="article-title">sed&amp;awk&amp;grep</h1>
     
     <div class="article-meta">
         
@@ -909,7 +909,7 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="算法">算法</a>
+            <a  data-rel="Linux">Linux</a>
             
         </span>
         
@@ -917,7 +917,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2021-02-20 08:45:35'>2020-07-17 15:51</time>
+            Created At : <time class="date" title='Updated At: 2021-05-07 09:22:50'>2021-05-07 08:11</time>
         
     </div>
     <div class="article-meta">
@@ -939,7 +939,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第二章-排序"><span class="toc-text">第二章 排序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章-查找"><span class="toc-text">第三章 查找</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#红黑树"><span class="toc-text">红黑树</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#正则"><span class="toc-text">正则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#grep"><span class="toc-text">grep</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#匹配行常用命令"><span class="toc-text">匹配行常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正则-1"><span class="toc-text">正则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#awk"><span class="toc-text">awk</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sed"><span class="toc-text">sed</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -955,190 +955,60 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>来之不易的暑期留校, 一半献给算法.</p>
-<h1 id="第二章-排序"><a href="#第二章-排序" class="headerlink" title="第二章 排序"></a>第二章 排序</h1><p>选择排序</p>
-<ul>
-<li>运行时间和输入的数据无关, 仅和数量有关.<br>不会利用输入的初始状态</li>
-<li>数据移动是最少的<br>我们将研究的其他任何算法 都不具备这个特性…..</li>
-</ul>
-<p>插入排序</p>
-<ul>
-<li>适合小规模数组</li>
-<li>对于部分有序的数组, 处理起来很有效</li>
-<li>倒置的数量很少时, 插入排序很可能比其他算法还要快</li>
-</ul>
-<p>希尔排序</p>
-<ul>
-<li>插入排序对于大规模乱序数组很慢, 因为它只会交换相邻元素, 因此为了改进插入排序的局部性,提出了希尔排序</li>
-<li>希尔排序交换不相邻的元素以对数组的局部性进行排序, 最终用插入排序调整局部有序的数组</li>
-</ul>
-<p>归并排序</p>
-<ul>
-<li>原地归并排序</li>
-<li>自顶向下 递归实现 分治思想</li>
-<li>自底向上 从归并微型数组到整体归并</li>
-</ul>
-<p>快速排序</p>
-<ul>
-<li>分治排序算法</li>
-</ul>
-<p>堆排序</p>
-<ul>
-<li>只能说妙啊.. 这本书先讲的优先队列如何实现, 然后紧接着就用sink方法完成了堆排序</li>
-</ul>
-<p><strong>稳定性</strong></p>
-<p>某地在某时下雨 时间和地点存在对应关系.<br>按照时间排序后, 再按照地点排序 单个地点的时间排序就很可能被打乱</p>
-<p>稳定, 则时间排序没有被打乱. 不稳定, 很可能时间排序被打乱</p>
-<table>
+        <h1 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h1><table>
 <thead>
 <tr>
-<th>算法</th>
-<th>是否稳定</th>
-<th>是否为原地排序</th>
-<th>时间复杂度</th>
-<th>空间复杂度</th>
-<th>备注</th>
+<th>表达式</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>选择排序</td>
-<td>否</td>
-<td>是</td>
-<td>N^2</td>
-<td>1</td>
-<td>最简单粗暴的方式, 交换次数最少</td>
+<td>(?=pattern)</td>
+<td>正向肯定预查  常用于匹配到pattern 不包括pattern</td>
 </tr>
 <tr>
-<td>插入排序</td>
-<td>是</td>
-<td>是</td>
-<td>介于N与N^2</td>
-<td>1</td>
-<td>很大程度取决输入元素的排列情况, 如果倒置元素很少则性能可能超过快排</td>
-</tr>
-<tr>
-<td>希尔排序</td>
-<td>否</td>
-<td>是</td>
-<td></td>
-<td>1</td>
-<td>插入排序的改良版, 改善了插入排序过于局限</td>
-</tr>
-<tr>
-<td>快速排序</td>
-<td>否</td>
-<td>是</td>
-<td>NlogN</td>
-<td>lgN</td>
-<td>分治, 运行效率由概率保证</td>
-</tr>
-<tr>
-<td>归并排序</td>
-<td>是</td>
-<td>否</td>
-<td>NlogN</td>
-<td>N</td>
-<td>自顶向下(递归 分治)和自底向上(从局部到整体) 两种方法</td>
-</tr>
-<tr>
-<td>堆排序</td>
-<td>否</td>
-<td>是</td>
-<td>NlogN</td>
-<td>1</td>
-<td>学完后突然想到了如果在很多的数字中找到最大的多少个数这种问题</td>
+<td>(?&lt;=pattern)</td>
+<td>反向肯定预查 常用于从pattern之后匹配 不包括pattern</td>
 </tr>
 </tbody></table>
-<p><strong>2.4 优先队列</strong></p>
-<p>需要支持两种操作, 删除最大元素和插入元素  - 优先级队列</p>
-<ol>
-<li>数组实现(无序) - 插入快 删除慢</li>
-</ol>
-<p>Insert方法 直接将元素插入尾部, 类似栈的push方法</p>
-<p>DelMax方法 使用一个内部循环找出最大的元素和边界元素交换 然后删除边界元素, 删除的时候类似pop方法</p>
-<ol start="2">
-<li>数组实现(有序) - 插入慢 删除快</li>
-</ol>
-<p>Insert方法 中进行排序, 插入新的元素的时候将较大元素向右移动一格位置, 然后插入新的元素</p>
-<p>DelMax方法 直接删除右侧元素, 类似栈的pop方法</p>
-<ol start="3">
-<li>链表表示法</li>
-</ol>
-<p>无序序列是解决问题的惰性方法, 仅在必要的时候才会采取行动 找出最大元素</p>
-<p>有序序列是解决问题的积极方法, 尽可能的未雨绸缪, 使得找出最大元素高效</p>
-<ol start="4">
-<li><code>二叉堆</code>表示法 - 插入和删除都为线性对数级别</li>
-</ol>
-<p>Insert方法 将新元素添加到数组末端, 增加了堆的大小 将新元素<code>上浮</code>到合适的位置</p>
-<p>DelMax方法 删除顶部元素 将数组的最后一个元素放到顶部 将其<code>下沉</code>到合适的位置 减小了堆的大小 将</p>
-<p><strong>堆</strong></p>
-<p>二叉堆: 每个元素都要保证小于等于(大于等于)另外两个特定位置的元素. 其根节点是最小(最大)元素</p>
-<ol>
-<li>二叉堆的指针表示法</li>
-</ol>
-<p>需要使用三个指针, 指向父节点和两个子节点</p>
-<ol start="2">
-<li>使用数组</li>
-</ol>
-<p>完全二叉树可以使用数组表示 不使用数组的0位置元素 从1开始 k的子节点分别在2k和2k+1</p>
-<p><strong>堆的有序化</strong></p>
-<p>以最大堆为例</p>
-<ol>
-<li>由下至上的堆有序化 <code>上浮</code></li>
-</ol>
-<p>堆的有序状态因为 某个节点比他的父节点更大 被打破.</p>
-<p>需要与父节点交换, 不断向上直到遇到一个更大的父节点 或者到了顶部</p>
-<ol start="2">
-<li>由上至下的堆有序化 <code>下浮</code></li>
-</ol>
-<p>堆的有序状态因为 某个父节点比 他的两个子节点或其中之一子节点 小 被打破.</p>
-<p>将父节点与子节点中较大的一个进行交换直到它的子节点都比它小 获得到了底部</p>
-<h1 id="第三章-查找"><a href="#第三章-查找" class="headerlink" title="第三章 查找"></a>第三章 查找</h1><p>符号表: 最主要的目的是是将<code>one key</code>和<code>one value</code>联系起来, 是一种存储键值对的数据结构, 支持插入和查找</p>
-<table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@fish ~]# cpu="Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz"</span><br><span class="line">[root@fish ~]# echo $cpu</span><br><span class="line">Intel(R) Celeron(R) CPU J1900 @ 1.99GHz</span><br><span class="line"></span><br><span class="line">[root@fish ~]# echo $cpu | grep -Po '.*(?&lt;=CPU)'</span><br><span class="line">Intel(R) Celeron(R) CPU # 包括CPU</span><br><span class="line">[root@fish ~]# echo $cpu | grep -Po '(?&lt;=CPU).*'</span><br><span class="line"> J1900 @ 1.99GHz # 不包括CPU</span><br><span class="line"> </span><br><span class="line">[root@fish ~]# echo $cpu | grep -Po '.*(?=CPU)'</span><br><span class="line">Intel(R) Celeron(R) # 不包括CPU</span><br><span class="line">[root@fish ~]# echo $cpu | grep -Po '(?=CPU).*'</span><br><span class="line">CPU J1900 @ 1.99GHz  # 包括CPU</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h1><p>grep我之前只是用来匹配结果中的行，也可以通过正则表达式匹配更加具体的内容</p>
+<h2 id="匹配行常用命令"><a href="#匹配行常用命令" class="headerlink" title="匹配行常用命令"></a>匹配行常用命令</h2><table>
 <thead>
 <tr>
-<th>使用的数据结构</th>
-<th>实现</th>
-<th>优点</th>
-<th>缺点</th>
+<th>命令参数</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>链表(顺序查找)</td>
-<td>SequentialSearchST</td>
-<td>适用于小型问题</td>
-<td>对于大型表很慢</td>
-</tr>
-<tr>
-<td>有序数组(二分)</td>
-<td>BinarySearchST</td>
-<td>最优的查找和空间需求, 能够进行有序性相关的操作</td>
-<td>插入操作很慢</td>
-</tr>
-<tr>
-<td>二叉查找树</td>
-<td>BST</td>
-<td>实现简单, 能够进行有序性相关的操作</td>
-<td>没有性能上界的保证, 链接需要额外的空间</td>
-</tr>
-<tr>
-<td>平衡二叉树</td>
-<td>RedBlackBST</td>
-<td>最优的查找和插入效率, 能够进行有序性相关的操作</td>
-<td>链接需要额外的空间</td>
-</tr>
-<tr>
-<td>散列表</td>
-<td>SeparateChainHashST LinearProbingHashST</td>
-<td>能够快速的查找和插入常见的数据类型</td>
-<td>需要计算散列, 无法进行有序性相关操作, 链接和空节点需要额外的空间</td>
+<td>-o, –only-matching</td>
+<td>只打印匹配的非空内容（默认显示带匹配内容的行）</td>
 </tr>
 </tbody></table>
-<h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><p>介绍红黑树之前书中先介绍了2-3树先说明2-3树的基本理想操作和优点. 然后说出其缺点(编码实现和维护较复杂), 引出了红黑树</p>
-<p>红黑树中的红: 红色链接将两个2-结点连接起来构成一个3-结点, 且这条连接是左斜的两个节点之一是另一个节点的左子节点. 同时不存在一个节点同时有两条红色链接<br>红黑树中的黑: 普通的结点</p>
-<p>将红黑树中的红色链接画平行, 这样所有的空节点到根节点的路径都是相同的</p>
-<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/algorithm4/red-black-tree.png" alt=""></p>
-<p>红黑树需要通过左旋转和右旋转以及颜色转换保证插入后不会存在右斜红色链接和同时有两个红色链接的连接</p>
+<h2 id="正则-1"><a href="#正则-1" class="headerlink" title="正则"></a>正则</h2><p>grep支持三种不同版本的正则表达式</p>
+<p><strong>basic(BRE)</strong></p>
+<p><strong>extended(ERE)</strong></p>
+<p><strong>perl(PCRE)</strong></p>
+<p>在GUN实现中前两种相同，而其他版本中basic要轻量一些</p>
+<p>而常用的断言匹配则在perl实现中可以使用</p>
+<h1 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h1><p>awk会针对每一行数据运行脚本命令  脚本格式一般为<code>&#39;{command}&#39;</code></p>
+<p>通过<code>-F</code>命令可以指定分隔符 默认为任意空白字符 制表符或者空格</p>
+<p>之后awk每次读取一行数据，使用分隔符对其进行分割。</p>
+<p>$0整行数据</p>
+<p>$1第一个字段</p>
+<p>$2第二个字段</p>
+<p>$n第n个字段</p>
+<p>awk还可以指定<code>BEGIN</code>和<code>END</code>脚本。 在运行命令开始前执行BEGIN脚本运行结束后执行END脚本</p>
+<p><code>awk &#39;BEGIN{}{}END{}&#39;</code></p>
+<h1 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h1><p>流式文本处理</p>
+<p>s替换命令 使用e和分号指定多个替换</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@fish ~]# echo &quot;This is a test&quot; | sed &#39;s&#x2F;test&#x2F;big test&#x2F;&#39;</span><br><span class="line">This is a big test</span><br><span class="line"></span><br><span class="line">[root@fish ~]# echo &quot;This is a test&quot; | sed -e &#39;s&#x2F;test&#x2F;big test&#x2F;;s&#x2F;a&#x2F;aa&#x2F;&#39;</span><br><span class="line">This is aa big test</span><br></pre></td></tr></table></figure>
+
+
+
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。 </span>
