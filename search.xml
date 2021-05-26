@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>ModernCpp.md</title>
+      <link href="/2021/05/CPP-ModernCpp/"/>
+      <url>/2021/05/CPP-ModernCpp/</url>
+      
+        <content type="html"><![CDATA[<h2 id="POD类型"><a href="#POD类型" class="headerlink" title="POD类型"></a>POD类型</h2><p><a href="https://zh.wikipedia.org/wiki/POD_(%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1)" target="_blank" rel="noopener">POD (程序设计)</a></p><p>包括标量类型和POD类类型</p><p><strong>标量类型</strong></p><ul><li>算数类型<ul><li>整数类型<ul><li>有符号整数类型（signed char, short, int, long）</li><li>无符号整数类型(unsigned char, unsigned short, unsigned int, unsigned long)</li><li>字符类型char（char默认既不是有符号 也不是无符号）和宽字符类型wchar_t</li><li>布尔类型</li></ul></li><li>浮点类型<ul><li>float    double    long double</li></ul></li></ul></li><li>枚举类型</li><li>指针类型<ul><li>void*</li><li>T*</li><li>T(*)(….) T为返回类型</li></ul></li><li>指针到成员类型<ul><li>指针到非静态成员变量</li><li>指针到非静态成员函数</li></ul></li></ul><p><strong>POD类类型</strong></p><p>无用户定义的构造    析构    拷贝    赋值运算符。</p><p>无继承关系（无基类）</p><p>无虚函数（没有虚表）</p><h2 id="左值-右值"><a href="#左值-右值" class="headerlink" title="左值 右值"></a>左值 右值</h2><p><a href="https://en.cppreference.com/w/cpp/language/value_category" target="_blank" rel="noopener">Value categories</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CPP </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>计算机网络笔记</title>
       <link href="/2021/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86/"/>
       <url>/2021/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86/</url>
