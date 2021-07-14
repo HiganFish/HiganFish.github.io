@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>HTTPS的基本流程和原理 | Lsmg的大学之路</title>
-  <meta name="keywords" content=" HTTPS ">
-  <meta name="description" content="HTTPS的基本流程和原理 | Lsmg的大学之路">
+  <title>.*_case | Lsmg的大学之路</title>
+  <meta name="keywords" content="">
+  <meta name="description" content=".*_case | Lsmg的大学之路">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta property="og:type" content="article">
 <meta property="og:title" content=".*_case">
@@ -919,9 +919,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-计算机网络-HTTPS" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-CPP-alias" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">HTTPS的基本流程和原理</h1>
+        <h1 class="article-title">.*_case</h1>
     
     <div class="article-meta">
         
@@ -931,22 +931,15 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="计算机网络">计算机网络</a>
+            <a  data-rel="CPP">CPP</a>
             
         </span>
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color1">HTTPS</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2021-03-01 17:30:02'>2021-03-01 16:50</time>
+            Created At : <time class="date" title='Updated At: 2021-07-14 08:57:03'>2021-07-14 21:27</time>
         
     </div>
     <div class="article-meta">
@@ -968,7 +961,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对称加密-or-非对称加密"><span class="toc-text">对称加密 or 非对称加密</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数字证书合法性校验"><span class="toc-text">数字证书合法性校验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#证书有了加密的一些简单细节是什么"><span class="toc-text">证书有了加密的一些简单细节是什么</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -984,21 +977,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="对称加密-or-非对称加密"><a href="#对称加密-or-非对称加密" class="headerlink" title="对称加密 or 非对称加密"></a>对称加密 or 非对称加密</h1><p>加密分为对称加密和非对称加密, 对称加密速度快但是涉及到了key的明文传输 非对称加密速度慢但是可以加密内容</p>
-<p>如果仅使用对称加密, 虽然传输过程中数据不会被解密 但是双方在交换密钥的时候 是明文进行交换的</p>
-<p>如果仅使用非对称加密, 虽然安全性好 但是会消耗很多的资源</p>
-<p>所以使用非对称加密来保护<code>对称加密key</code> 后续再使用对称加密进行通信 这样兼顾安全性和效率</p>
-<h1 id="数字证书合法性校验"><a href="#数字证书合法性校验" class="headerlink" title="数字证书合法性校验"></a>数字证书合法性校验</h1><p>通过上面分析知道了会使用非对称加密加密<code>对称加密key</code>, 但是如何防止<code>公钥</code>被掉包? 也就是说如何确认<code>公钥</code>是服务器发送来的而不是中间人发送来的?</p>
-<p><strong>使用数字证书</strong></p>
-<p>服务器向CA申请证书后 得到了一份<code>证书</code>以及CA在hash证书后使用CA私钥对其加密得到的<code>数字签名</code>两个东西组成<code>数字证书</code></p>
-<p>当浏览器得到<code>数字证书</code>后可以从中得到<code>证书</code>和<code>数字签名</code> 使用CA的公钥对数字签名解密得到<code>T1</code>. 然后使用证书中的算法对<code>证书</code>hash得到<code>T2</code> 比较<code>T1</code>和<code>T2</code></p>
-<p>二者相等说明证书可信.</p>
-<p>如果有人篡改了<code>证书</code>, 但是由于没有CA的私钥无法生成加密后的<code>数字签名</code>, 所以浏览器比较的时候<code>T1和T2</code>不相等</p>
-<p>如果掉包整个<code>证书</code>, 由于<code>证书</code>中包含了域名, 直接比对域名就知道有没有被掉包了</p>
-<h1 id="证书有了加密的一些简单细节是什么"><a href="#证书有了加密的一些简单细节是什么" class="headerlink" title="证书有了加密的一些简单细节是什么"></a>证书有了加密的一些简单细节是什么</h1><p>HTTP的默认端口从80改到了443端口 浏览器放服务器发起TCP连接</p>
-<p>浏览器首先生成随机串CLIENT1, 服务器接收到后回复证书和SERVER1, 浏览器验证证书后生成随机串CLIENT2并使用公钥加密, 服务器收到后解密出CLENT2</p>
-<p>然后浏览器和服务器根据上面的三个随机串使用相同的算法生成最终的<code>对称加密key</code>. 后续就可以使用<code>对称机密key</code>来进行加密通信了</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。 </span>
     </div>
