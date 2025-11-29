@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>个人UP | Lsmg的大学之路</title>
+  <meta name="keywords" content=" UP ">
+  <meta name="description" content="个人UP | Lsmg的大学之路">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S-istio">
+<meta property="og:url" content="http://blog.lsmg.xyz/2025/11/%E4%BA%91-istio/index.html">
+<meta property="og:site_name" content="Lsmg的大学之路">
+<meta property="og:description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-15T10:38:08.000Z">
+<meta property="article:modified_time" content="2025-11-29T09:26:42.707Z">
+<meta property="article:author" content="Lsmg">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Lsmg的大学之路" type="application/atom+xml">
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Lsmg</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(91)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CPP">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        CPP
+                        <small>(14)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="CPP<--->源码学习">
+                                        
+                                        源码学习
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Linux">
+                        
+                        Linux
+                        <small>(9)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="NAS">
+                        
+                        NAS
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="UE5">
+                        
+                        UE5
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="个人记录">
+                        
+                        个人记录
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="云">
+                        
+                        云
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="优化">
+                        
+                        优化
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="分享会">
+                        
+                        分享会
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="学习记录">
+                        
+                        学习记录
+                        <small>(11)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="工具使用">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        工具使用
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="工具使用<--->Git操作">
+                                        
+                                        Git操作
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="日语">
+                        
+                        日语
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="模块设计">
+                        
+                        模块设计
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="算法">
+                        
+                        算法
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="网络编程">
+                        
+                        网络编程
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="计算机网络">
+                        
+                        计算机网络
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="读书记录">
+                        
+                        读书记录
+                        <small>(20)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="采坑记">
+                        
+                        采坑记
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="项目制作">
+                        
+                        项目制作
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">About</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">Friends</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="91">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>docker</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ebpf</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>GDB调试</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Git操作</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>HTTPS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Linux</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>NAS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Shell</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>spf-13</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>UP</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>常用命令</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>方向选择</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>时间触发器</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>编译加速</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>采坑记</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-GPT%E7%AD%94%E7%96%91%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="GPT答疑记录">GPT答疑记录</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-%E4%BA%94%E5%A4%A7%E6%80%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="五大态">五大态</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2023/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95180-%E6%80%A7%E8%83%BD%E4%B9%8B%E5%B7%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="性能之巅">性能之巅</span>
+            <span class="post-date" title="2023-03-21 23:37:20">2023/03/21</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95170-%E6%88%91%E6%98%AF%E4%B8%80%E5%8F%AAIT%E5%B0%8F%E5%B0%8F%E9%B8%9F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="我是一只IT小小鸟">我是一只IT小小鸟</span>
+            <span class="post-date" title="2022-05-30 19:09:20">2022/05/30</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95161-%E7%8E%B0%E4%BB%A3C++%E6%95%99%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="现代C++教程">现代C++教程</span>
+            <span class="post-date" title="2022-05-31 19:09:20">2022/05/31</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95160-TCPIP%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP/IP详解">TCP/IP详解</span>
+            <span class="post-date" title="2021-04-03 19:09:20">2021/04/03</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95150-Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E7%B2%BE%E9%AB%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux内核设计精髓">Linux内核设计精髓</span>
+            <span class="post-date" title="2021-03-28 19:09:20">2021/03/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95140-%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="程序员的自我修养">程序员的自我修养</span>
+            <span class="post-date" title="2021-03-17 19:09:20">2021/03/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/09/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95135-%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="深度探索C++对象模型">深度探索C++对象模型</span>
+            <span class="post-date" title="2020-09-15 15:17:39">2020/09/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95131-%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码整洁之道">代码整洁之道</span>
+            <span class="post-date" title="2021-04-28 08:19:39">2021/04/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95130-%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码大全">代码大全</span>
+            <span class="post-date" title="2020-05-13 21:19:39">2020/05/13</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95120-Linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux多线程服务器端编程">Linux多线程服务器端编程</span>
+            <span class="post-date" title="2022-02-15 17:19:39">2022/02/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95110-Effective%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EffectiveCpp读书记录">EffectiveCpp读书记录</span>
+            <span class="post-date" title="2020-02-26 21:43:46">2020/02/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95102-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-进程线程">Linux高性能服务器-进程线程</span>
+            <span class="post-date" title="2020-02-25 22:34:39">2020/02/25</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95101-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E9%AB%98%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-高级部分">Linux高性能服务器-高级部分</span>
+            <span class="post-date" title="2019-08-18 20:34:39">2019/08/18</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95100-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E5%88%9D%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-初级部分">Linux高性能服务器-初级部分</span>
+            <span class="post-date" title="2019-08-17 20:34:39">2019/08/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9599-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E7%90%86%E8%AE%BA%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-理论部分">Linux高性能服务器-理论部分</span>
+            <span class="post-date" title="2020-03-06 22:53:00">2020/03/06</span>
+        </a>
+        
+        
+        <a id="top" class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%9590-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="数据结构和STL">数据结构和STL</span>
+            <span class="post-date" title="2021-02-05 10:38:28">2021/02/05</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9580-CPPPrimer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++Primer学习">C++Primer学习</span>
+            <span class="post-date" title="2019-08-16 19:13:22">2019/08/16</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-istio/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S-istio">K8S-istio</span>
+            <span class="post-date" title="2025-11-15 10:38:08">2025/11/15</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-K8S/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S基础概念">K8S基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-HELM/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HELM基础概念">HELM基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All NAS "
+           href="/2025/09/NAS-bt/"
+           data-tag="NAS"
+           data-author="" >
+            <span class="post-title" title="BT内网穿透">BT内网穿透</span>
+            <span class="post-date" title="2025-09-23 19:48:22">2025/09/23</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-Windows%E4%B8%8BUnity%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Windows下Unity内存泄露排查">Windows下Unity内存泄露排查</span>
+            <span class="post-date" title="2024-11-14 19:48:22">2024/11/14</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2024/11/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F2/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="CMake项目常见的编译加速方式汇总">CMake项目常见的编译加速方式汇总</span>
+            <span class="post-date" title="2024-11-13 14:48:22">2024/11/13</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2024/07/CPP-CMAKE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CMAKE&amp;Make">CMAKE&amp;Make</span>
+            <span class="post-date" title="2024-07-02 17:07:45">2024/07/02</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/06/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%882/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦2">如何更好的添砖加瓦2</span>
+            <span class="post-date" title="2024-06-24 09:48:22">2024/06/24</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/04/Linux-massif/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="massif使用">massif使用</span>
+            <span class="post-date" title="2024-04-13 16:31:22">2024/04/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/03/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E4%BA%8BUP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="常事UP">常事UP</span>
+            <span class="post-date" title="2024-03-23 14:48:22">2024/03/23</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2024/01/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%8E%92%E8%A1%8C%E6%A6%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="排行榜">排行榜</span>
+            <span class="post-date" title="2024-01-25 14:38:08">2024/01/25</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2023/12/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="编译加速">编译加速</span>
+            <span class="post-date" title="2023-12-13 14:48:22">2023/12/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/12/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E6%96%B9%E5%90%91%E9%80%89%E6%8B%A9/"
+           data-tag="方向选择"
+           data-author="" >
+            <span class="post-title" title="方向选择">方向选择</span>
+            <span class="post-date" title="2023-12-11 19:48:22">2023/12/11</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%88/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦">如何更好的添砖加瓦</span>
+            <span class="post-date" title="2023-11-25 09:48:22">2023/11/25</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2023/11/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-PrometheusX%E7%81%AB%E7%84%B0%E5%9B%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="如何实现火焰图半自由">如何实现火焰图半自由</span>
+            <span class="post-date" title="2023-11-18 12:50:02">2023/11/18</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/11/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%86%99%E5%8D%9A%E5%AE%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="写博客技巧">写博客技巧</span>
+            <span class="post-date" title="2023-11-15 10:38:08">2023/11/15</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E6%9C%88%E8%AE%B0%E5%BD%95/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="UP月记录">UP月记录</span>
+            <span class="post-date" title="2023-10-27 09:48:22">2023/10/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="游戏设计">游戏设计</span>
+            <span class="post-date" title="2023-10-24 10:38:08">2023/10/24</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2023-10-20 18:38:08">2023/10/20</span>
+        </a>
+        
+        
+        <a  class="All 模块设计 "
+           href="/2023/10/%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1-%E6%97%B6%E9%97%B4%E8%A7%A6%E5%8F%91%E5%99%A8/"
+           data-tag="时间触发器"
+           data-author="" >
+            <span class="post-title" title="时间触发器">时间触发器</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="个人UP">个人UP</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag="常用命令"
+           data-author="" >
+            <span class="post-title" title="常用命令">常用命令</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2023/10/Linux-ebpf/"
+           data-tag="ebpf"
+           data-author="" >
+            <span class="post-title" title="bpf">bpf</span>
+            <span class="post-date" title="2023-10-11 17:00:22">2023/10/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%9E%B6%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="架构">架构</span>
+            <span class="post-date" title="2023-04-17 10:38:08">2023/04/17</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-Wireshark%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Wireshark插件开发">Wireshark插件开发</span>
+            <span class="post-date" title="2023-04-11 19:00:00">2023/04/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E9%80%9A%E8%AF%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="通识">通识</span>
+            <span class="post-date" title="2023-04-07 10:38:08">2023/04/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%B8%A7%E5%90%8C%E6%AD%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="帧同步">帧同步</span>
+            <span class="post-date" title="2022-05-27 10:38:08">2022/05/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-SDL2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="SDL学习">SDL学习</span>
+            <span class="post-date" title="2022-05-25 10:38:08">2022/05/25</span>
+        </a>
+        
+        
+        <a  class="All UE5 "
+           href="/2022/05/UE5-%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UE5学习">UE5学习</span>
+            <span class="post-date" title="2022-05-12 20:31:22">2022/05/12</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2022/05/CPP-%E5%8D%8F%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="协程">协程</span>
+            <span class="post-date" title="2022-05-07 10:38:08">2022/05/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-6.s081/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="6.s081学习 &amp;&amp; tmux">6.s081学习 &amp;&amp; tmux</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-asio%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E7%AC%94%E8%AE%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="asio官方文档笔记">asio官方文档笔记</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/07/CPP-alias/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-07-14 21:27:27">2021/07/14</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/05/CPP-ModernCpp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="ModernCpp.md">ModernCpp.md</span>
+            <span class="post-date" title="2021-05-25 23:27:27">2021/05/25</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/05/Linux-sed&awk&grep/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sed&amp;awk&amp;grep">sed&amp;awk&amp;grep</span>
+            <span class="post-date" title="2021-05-07 08:11:22">2021/05/07</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-HTTPS/"
+           data-tag="HTTPS"
+           data-author="" >
+            <span class="post-title" title="HTTPS的基本流程和原理">HTTPS的基本流程和原理</span>
+            <span class="post-date" title="2021-03-01 16:50:22">2021/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-class%20struct%20typename/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="class struct typename">class struct typename</span>
+            <span class="post-date" title="2021-02-24 10:54:08">2021/02/24</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-%E5%89%91%E6%8C%87Offer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="剑指Offer">剑指Offer</span>
+            <span class="post-date" title="2021-02-10 00:08:28">2021/02/10</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-stdany,%20How%20when%20and%20why/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="void*|function|any|optional|variant, How when and why">void*|function|any|optional|variant, How when and why</span>
+            <span class="post-date" title="2021-02-06 18:56:27">2021/02/06</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-leetcode/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="leetcode">leetcode</span>
+            <span class="post-date" title="2021-02-05 12:10:02">2021/02/05</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AEURL%E5%88%B0%E6%98%BE%E7%A4%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="浏览器访问URL到显示">浏览器访问URL到显示</span>
+            <span class="post-date" title="2021-02-01 16:55:22">2021/02/01</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-docker/"
+           data-tag="docker"
+           data-author="" >
+            <span class="post-title" title="Docker使用">Docker使用</span>
+            <span class="post-date" title="2021-01-31 23:34:22">2021/01/31</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-cast/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-01-14 21:27:27">2021/01/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-%E8%B0%83%E8%AF%95%E5%B8%B8%E7%94%A8Linux%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux-调试常用命令">Linux-调试常用命令</span>
+            <span class="post-date" title="2021-01-09 18:53:22">2021/01/09</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-pthread&thread/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread&amp;thread">pthread&amp;thread</span>
+            <span class="post-date" title="2021-01-03 11:27:27">2021/01/03</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-shell%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99/"
+           data-tag="Shell"
+           data-author="" >
+            <span class="post-title" title="Shell脚本编写">Shell脚本编写</span>
+            <span class="post-date" title="2021-01-02 22:00:22">2021/01/02</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2020/12/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-%E7%9B%B4%E6%92%AD%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="直播服务器">直播服务器</span>
+            <span class="post-date" title="2020-12-02 12:50:02">2020/12/02</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/11/%E9%87%87%E5%9D%91%E8%AE%B0-delete%20this/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="由muduo tie引出的 delete this">由muduo tie引出的 delete this</span>
+            <span class="post-date" title="2020-11-26 17:37:08">2020/11/26</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/11/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-HTTP%E6%A1%86%E6%9E%B6%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HTTP框架底层原理实现">HTTP框架底层原理实现</span>
+            <span class="post-date" title="2020-11-01 22:45:39">2020/11/01</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/10/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%AE%BF%E8%88%8D%E7%94%B5%E8%84%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="远程连接宿舍电脑">远程连接宿舍电脑</span>
+            <span class="post-date" title="2020-10-29 16:40:39">2020/10/29</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP记录">UNP记录</span>
+            <span class="post-date" title="2020-10-06 12:17:39">2020/10/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/08/%E9%87%87%E5%9D%91%E8%AE%B0-EPOLLET%E4%B8%A2%E5%A4%B1%E6%96%B0%E8%BF%9E%E6%8E%A5%E4%BA%8B%E4%BB%B6/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="EPOLLET丢失新连接事件">EPOLLET丢失新连接事件</span>
+            <span class="post-date" title="2020-08-03 23:03:08">2020/08/03</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2020/07/%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9B%9B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="算法四">算法四</span>
+            <span class="post-date" title="2020-07-17 15:51:28">2020/07/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/07/Linux-VIM/"
+           data-tag="spf-13"
+           data-author="" >
+            <span class="post-title" title="VIM使用">VIM使用</span>
+            <span class="post-date" title="2020-07-05 20:31:22">2020/07/05</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/06/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-csapp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="csapp笔记">csapp笔记</span>
+            <span class="post-date" title="2020-06-07 09:09:20">2020/06/07</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-EPOLL%E6%9C%AC%E8%B4%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EPOLL本质">EPOLL本质</span>
+            <span class="post-date" title="2020-03-25 17:35:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2020/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-TCP%E7%8A%B6%E6%80%81%E6%9C%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP状态机">TCP状态机</span>
+            <span class="post-date" title="2020-03-25 12:55:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-Send%E8%BF%94%E5%9B%9E%E5%80%BC%E6%8E%A2%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Send返回值引出的(非)阻塞IO">Send返回值引出的(非)阻塞IO</span>
+            <span class="post-date" title="2020-03-20 11:14:20">2020/03/20</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-Linux%E4%BD%BF%E7%94%A8/"
+           data-tag="Linux"
+           data-author="" >
+            <span class="post-title" title="Linux的使用">Linux的使用</span>
+            <span class="post-date" title="2020-03-17 12:29:20">2020/03/17</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP%E5%8D%B7%E4%BA%8C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP卷二读书记录">UNP卷二读书记录</span>
+            <span class="post-date" title="2020-03-15 11:16:20">2020/03/15</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-GDB%E8%B0%83%E8%AF%95/"
+           data-tag="GDB调试"
+           data-author="" >
+            <span class="post-title" title="GDB调试">GDB调试</span>
+            <span class="post-date" title="2020-03-14 15:09:20">2020/03/14</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/03/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%92%8C%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%8F%8Acommit%E8%A7%84%E8%8C%83/"
+           data-tag="Git操作"
+           data-author="" >
+            <span class="post-title" title="分支管理和实际应用及commit规范">分支管理和实际应用及commit规范</span>
+            <span class="post-date" title="2020-03-06 19:34:25">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/03/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%BE%AA%E7%8E%AF%E5%88%A4%E6%96%AD%E4%B9%8B%E6%97%A0%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="循环判断中使用无符号类型">循环判断中使用无符号类型</span>
+            <span class="post-date" title="2020-03-06 17:37:08">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/03/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Jsoncpp%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Jsoncpp代码阅读">Jsoncpp代码阅读</span>
+            <span class="post-date" title="2020-03-01 10:26:55">2020/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%A3%B0%E6%98%8E%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="定义与声明详解">定义与声明详解</span>
+            <span class="post-date" title="2020-02-27 10:38:08">2020/02/27</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-CPP%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CPP11及以后的常用特性">CPP11及以后的常用特性</span>
+            <span class="post-date" title="2020-02-19 17:41:27">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/02/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Libevent%E4%BB%A3%E7%A0%81%E5%88%9D%E6%9C%9F%E4%BA%86%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Libevent代码初期了解">Libevent代码初期了解</span>
+            <span class="post-date" title="2020-02-19 14:56:55">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/02/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Git的基础使用">Git的基础使用</span>
+            <span class="post-date" title="2020-02-07 18:24:42">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/02/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%A4%B4%E6%96%87%E4%BB%B6%E4%BA%92%E7%9B%B8%E5%BC%95%E7%94%A8/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="头文件互相引用">头文件互相引用</span>
+            <span class="post-date" title="2020-02-07 16:37:08">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="字节对齐">字节对齐</span>
+            <span class="post-date" title="2020-02-06 11:38:08">2020/02/06</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2019/11/CPP-%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="指针">指针</span>
+            <span class="post-date" title="2019-11-07 22:26:22">2019/11/07</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2019/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++薄书整理">C++薄书整理</span>
+            <span class="post-date" title="2019-10-20 19:13:22">2019/10/20</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-个人记录-UP" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">个人UP</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="个人记录">个人记录</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">UP</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2025-11-29 09:26:42'>2023-10-16 09:48</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#规范"><span class="toc-text">规范</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#命名"><span class="toc-text">命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数-写故事-反复打磨"><span class="toc-text">函数-写故事-反复打磨</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#book"><span class="toc-text">book</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#经验"><span class="toc-text">经验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注释"><span class="toc-text">注释</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#book-1"><span class="toc-text">book</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#经验-1"><span class="toc-text">经验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#杂项"><span class="toc-text">杂项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#记录总结"><span class="toc-text">记录总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#屎山"><span class="toc-text">屎山</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#指针判空"><span class="toc-text">指针判空</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#break"><span class="toc-text">break</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全新屎山-设计"><span class="toc-text">全新屎山-设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#需求设计"><span class="toc-text">需求设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间评估"><span class="toc-text">时间评估</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全新屎山-制作"><span class="toc-text">全新屎山-制作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通用的机制应该尽可能能够复用"><span class="toc-text">通用的机制应该尽可能能够复用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一些临时的内容应该加足注释"><span class="toc-text">一些临时的内容应该加足注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底"><span class="toc-text">一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预估时间后无法完成-没有及时通知"><span class="toc-text">预估时间后无法完成 没有及时通知</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志加的不够"><span class="toc-text">日志加的不够</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#统一的工具仓库"><span class="toc-text">统一的工具仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需求中途变更"><span class="toc-text">需求中途变更</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方"><span class="toc-text">尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免设计无用的东西"><span class="toc-text">避免设计无用的东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数值类配置化or计算化"><span class="toc-text">数值类配置化or计算化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减少通用错误码的使用"><span class="toc-text">减少通用错误码的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端参数校验"><span class="toc-text">客户端参数校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态校验放错了位置-写的时候还是没考虑好运行路径"><span class="toc-text">状态校验放错了位置. 写的时候还是没考虑好运行路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全新屎山-装饰"><span class="toc-text">全新屎山-装饰</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GM工具"><span class="toc-text">GM工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#旧屎山-修改"><span class="toc-text">旧屎山-修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#确定修改后果-注意一个函数都有哪些作用"><span class="toc-text">确定修改后果, 注意一个函数都有哪些作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#把表现正确的当BUG修了"><span class="toc-text">把表现正确的当BUG修了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除代码时应该注意-删除原位置无用的内容"><span class="toc-text">删除代码时应该注意 删除原位置无用的内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查问题的时候-用物体的事件经过查问题挺方便的"><span class="toc-text">查问题的时候 用物体的事件经过查问题挺方便的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到BUG还是感觉留下现场，比重启解决问题更加重要"><span class="toc-text">遇到BUG还是感觉留下现场，比重启解决问题更加重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BUG修复关联BUG单"><span class="toc-text">BUG修复关联BUG单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抽取函数注意不要影响到原区域功能"><span class="toc-text">抽取函数注意不要影响到原区域功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单方式解决问题"><span class="toc-text">简单方式解决问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试好了再转单，可能确实把当前问题修了，但导致其他问题出现"><span class="toc-text">测试好了再转单，可能确实把当前问题修了，但导致其他问题出现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全面测试-不留空缺"><span class="toc-text">全面测试, 不留空缺</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A通过B通过不等于A-B通过"><span class="toc-text">A通过B通过不等于A+B通过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化测试"><span class="toc-text">自动化测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#心态"><span class="toc-text">心态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题的优先级安排"><span class="toc-text">问题的优先级安排</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#充分关注自己的工作"><span class="toc-text">充分关注自己的工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不懂就问"><span class="toc-text">不懂就问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重视不起眼的小问题，可能背后的原因是非常离谱的"><span class="toc-text">重视不起眼的小问题，可能背后的原因是非常离谱的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊处理"><span class="toc-text">特殊处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预期下当前所做是不是可以解决最终问题-而不是当前某一步"><span class="toc-text">预期下当前所做是不是可以解决最终问题, 而不是当前某一步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去看看别人负责的模块-不要只顾自己的模块"><span class="toc-text">去看看别人负责的模块, 不要只顾自己的模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到问题即使下意识感觉问题就是那里-也一定要确认下-可能并不是那样"><span class="toc-text">遇到问题即使下意识感觉问题就是那里, 也一定要确认下. 可能并不是那样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#沟通和协作"><span class="toc-text">沟通和协作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#他人回复的内容一定要仔细理解，不要含主观臆断"><span class="toc-text">他人回复的内容一定要仔细理解，不要含主观臆断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#后台开发代表全部后台-前台开发代表全部前台"><span class="toc-text">后台开发代表全部后台, 前台开发代表全部前台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不兼容变更时做好兜底"><span class="toc-text">不兼容变更时做好兜底</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#帮忙"><span class="toc-text">帮忙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱"><span class="toc-text">不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#该找运维的找运维-对应的时间给对应的人去做"><span class="toc-text">该找运维的找运维(对应的时间给对应的人去做)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有的功能大地图并不知道有没有-还是说下不知道之类的吧-最后接下来了发现是别人的工作"><span class="toc-text">有的功能大地图并不知道有没有, 还是说下不知道之类的吧, 最后接下来了发现是别人的工作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技巧"><span class="toc-text">技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CR发起前可以自己整一个临时CR看看代码"><span class="toc-text">CR发起前可以自己整一个临时CR看看代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试代码在最终CR的时候要及时去掉-使用TODO-名字方便检索"><span class="toc-text">测试代码在最终CR的时候要及时去掉 使用TODO 名字方便检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不建议手动操作自动化代码"><span class="toc-text">不建议手动操作自动化代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化操作没有监管人"><span class="toc-text">自动化操作没有监管人</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#压测和扩容"><span class="toc-text">压测和扩容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发现问题比解决问题更重要"><span class="toc-text">发现问题比解决问题更重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指定时间点触发的循环定时器-每轮都计算下时间相比固定时间的更加稳定"><span class="toc-text">指定时间点触发的循环定时器, 每轮都计算下时间相比固定时间的更加稳定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主城周围搜索物体-采用涡旋状搜索-类似蚊香"><span class="toc-text">主城周围搜索物体, 采用涡旋状搜索, 类似蚊香</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#尽量统一函数对统一内容进行清除-比如标志位-这样方便发现错误清理的地方"><span class="toc-text">尽量统一函数对统一内容进行清除, 比如标志位, 这样方便发现错误清理的地方</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试东西或者搞新东西的时候-注意不要影响到旧的东西-该开测试空间的开测试空间"><span class="toc-text">测试东西或者搞新东西的时候, 注意不要影响到旧的东西, 该开测试空间的开测试空间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#充电"><span class="toc-text">充电</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="规范"><a href="#规范" class="headerlink" title="规范"></a>规范</h1><h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><p>代码整洁之道中内容很多, 不过这里单单只有命名一节. 被提醒过几次命名不合适, 这部分就着重整理出来, 每次命名的时候都思考思考. 能立刻改善自然最好, 不能立刻也要逐步前进.</p>
+<p><strong>名副其实、避免误导、使用读的出来的名称、避免可爱（要实用）</strong><br>看到名字就知道这个变量是个什么东西，theList就不知道是个什么东西，studentList就好一些。<br>不能变量描述的是A，实际是B。比如给Map类型起名List</p>
+<p><strong>做有意义的区分</strong><br>a1，a2，a3这些就没啥意义，x，y，z就有了<br>book和theBook也没区别</p>
+<p><strong>使用可以搜索的名称</strong><br>找7就非常难找，但是找DAY_PEER_WEEK就好找了</p>
+<p><strong>避免思维映射</strong><br>不要起只有自己能理解的取巧的名称，其他人可能是理解不了的</p>
+<p><strong>方法名使用动词或者动词短语</strong><br>get、set、is</p>
+<p><strong>每个概念对应一个词</strong><br>tower是地图中编码里塔的名称，瞭望塔最好起名watchTower不要和其他冲突了。</p>
+<p><strong>添加有意义的语境</strong><br>name是名字的意思，petName？playerName？无法区分<br>firstName，lastName，street，city，state，这些放一起能看出来是地址，但是单单一个state就看不出来了，不如addrState，或者使用Address类</p>
+<p><strong>命名统一</strong><br>命名要统一，多个人合作的时候要提前商量好，复制粘贴代码后也要注意代码的命名。</p>
+<p><strong>可以直接用机制来命名</strong><br>比如模数余数这些名词</p>
+<p><strong>避免无意义修饰</strong><br>阶段是阶段 等级是等级，不要用阶段等级这种东西</p>
+<p><strong>GPT</strong><br>多用用GPT，这个起名字真的好用, 很有参考价值</p>
+<p><strong>break和nullptr</strong><br>switch-case丢失break, 指针没有判空, 写全新模块的时候基本遇不到, 重灾区是在原有位置加代码.</p>
+<p><strong>注释</strong><br>命名的章节混进来一点点注释, 我感觉问题不大.</p>
+<ol>
+<li>复杂的功能描述下, 不然只有天才能<strong>立刻</strong>知道这一坨代码是干啥的</li>
+<li>其他人或者连自己看起来都很怪的实现, 要说明下原因.</li>
+</ol>
+<h2 id="函数-写故事-反复打磨"><a href="#函数-写故事-反复打磨" class="headerlink" title="函数-写故事-反复打磨"></a>函数-写故事-反复打磨</h2><h3 id="book"><a href="#book" class="headerlink" title="book"></a>book</h3><p><strong>短小</strong><br>避免嵌套太多层</p>
+<p><strong>只做一件事情，做好一件事情</strong><br>编写函数是为了将大一些的概念（函数名称），拆分成另一个抽象层上的一系列步骤。</p>
+<ul>
+<li>函数名下都是同一个抽象层的步骤，实际还是做了一件事。</li>
+</ul>
+<p>检查函数是否只做了一件事，可以看看函数是否可以再拆出一个函数</p>
+<ul>
+<li>函数不仅仅是单纯的重新全是代码，必须<strong>要改变抽象层级</strong></li>
+</ul>
+<p><strong>使用描述性的名称</strong><br>长的具有描述性的名称，比短的令人费解的名称要好。<br>IDE中改名很容易，可以多次修改找到一个最具描述性的名称</p>
+<p><strong>函数参数</strong><br>限制传入bool参数，bool参数表明了，可能存在两个分支，为true一个为false一个，可以考虑拆成函数。<br>给函数取个名字，用来解释函数的意图、<strong>参数和顺序和意图</strong><br>assertEqual改成assertExpectedEqualsActual(Expected，actual)，能够<strong>减少记忆参数顺序的负担</strong>。</p>
+<p><strong>无副作用</strong><br>函数承诺只做一件事情（函数名描述），但是<strong>还会做其他被藏起来的事情（函数名没有描述的）</strong>，这个就是函数会有的副作用。有人轻信了函数的名称，就会有这些藏起来的事情导致的风险。</p>
+<p><strong>减少重复</strong></p>
+<p><strong>结构化编程</strong><br>尽量保证函数只有一个出口，break，continue等语句限制使用。这些在短小函数中影响不是很大，但是在<strong>长函数</strong>中影响很大。</p>
+<p><strong>反复打磨</strong><br>一步到位写出完美的代码是很难的，开始应该注重功能的实现，后面可以进行打磨（拆解函数、消除重复、修改名称）</p>
+<h3 id="经验"><a href="#经验" class="headerlink" title="经验"></a>经验</h3><ol>
+<li>向其他函数增加代码时，如果时独立代码，抽出函数</li>
+</ol>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><h3 id="book-1"><a href="#book-1" class="headerlink" title="book"></a>book</h3><p>最好是使用代码本身当作注释，当一行或者一块代码需要注释的时候，可以考虑简化这些代码。<br>注释不能美化代码<br>通过增加变量来进行注释</p>
+<p>错误的注释</p>
+<ul>
+<li>注释可能会误导使用者，错误的注释比起没有注释更麻烦。</li>
+<li>随着代码更新，只改代码不改注释，注释可能无法再与代码对应上</li>
+<li>真正起作用的是代码，不是注释。所以可能出现注释和功能对应不上的问题</li>
+</ul>
+<p>需要注释的地方</p>
+<ul>
+<li>反直觉的代码，这些代码由于某些特殊原因，以反直觉的方式出现</li>
+<li>TODO</li>
+<li>警示作用，某些代码可能具有破坏力</li>
+<li>针对复杂的返回值进行说明（更好的方式是简化返回值）</li>
+</ul>
+<h3 id="经验-1"><a href="#经验-1" class="headerlink" title="经验"></a>经验</h3><ol>
+<li>部分特殊的机制要加说明，不然就只有天才能<strong>立刻知道</strong>这里是什么意思了</li>
+</ol>
+<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><ol>
+<li>const能加的就加上吧</li>
+<li>代码还是统一一些<ol>
+<li>判断是不是0 用==0或者if统一一点</li>
+</ol>
+</li>
+<li><strong>空指针这种错误都犯了</strong><ol>
+<li>改一个位置的时候，尤其要注意使用的所有参数，这些参数可能在外面并没有校验</li>
+<li>改代码比新写代码更容易出现</li>
+</ol>
+</li>
+<li><strong>switch语句中丢失break</strong></li>
+<li>注意可能发生死循环代码的兜底<ol>
+<li>服务器更新脚本中就遇到了，重复的更新服务器。</li>
+</ol>
+</li>
+</ol>
+<h1 id="记录总结"><a href="#记录总结" class="headerlink" title="记录总结"></a>记录总结</h1><h2 id="屎山"><a href="#屎山" class="headerlink" title="屎山"></a>屎山</h2><h3 id="指针判空"><a href="#指针判空" class="headerlink" title="指针判空"></a>指针判空</h3><p>使用指针时，一定要注意进行判空</p>
+<h3 id="break"><a href="#break" class="headerlink" title="break"></a>break</h3><p>switch中增加case的时候, 注意补齐break</p>
+<h2 id="全新屎山-设计"><a href="#全新屎山-设计" class="headerlink" title="全新屎山-设计"></a>全新屎山-设计</h2><h3 id="需求设计"><a href="#需求设计" class="headerlink" title="需求设计"></a>需求设计</h3><ol>
+<li>看需求文档的时候 根据文档先定协议</li>
+<li>需求理解一定要正确, 仔仔细细逐句逐句的看需求点. 需求点找出来之后，判断好是哪个服务器来做。防止开发重复的事项。</li>
+<li>一些需要多个服务器共同实现的功能，要协商好处理方式。</li>
+<li>查看策划的文档的时候，还是有想当然的内容<ol>
+<li>次数每天1天，上限5次。第1天想当然为5次，结果跟策划确认了是1次，而不是5次。</li>
+</ol>
+</li>
+<li>写代码之前先在vscode进行下预期设计, 比直接撸起袖子写代码好很多.</li>
+<li>看看需求的特殊要求, 比如退盟之后是否重置, 这个影响到了数据记录到哪里.</li>
+<li>考虑下客户端或者其他模块是否能如自己预期提供支持<ol>
+<li>可能预期的内容, 客户端根本没法做, 还是得服务器来做.</li>
+</ol>
+</li>
+<li>考虑下实现的复杂程度, 可能预期很简单, 但是因为牵扯过多或者不支持导致变得复杂.</li>
+<li>A场景下不用处理, 不代表B场景下不用处理</li>
+<li>方案设计应该把框架性的描述到位<ol>
+<li>这次的跨天代码，文档中描述了，但是没有完整描述放到哪里。结果放到了Ext中，后面又改成了Role中。</li>
+</ol>
+</li>
+<li>反复想了很多次 感觉没有问题，然后就没有测试<ol>
+<li>结果还是出了问题，跟预期的一样，把leader和member的标记清掉了</li>
+</ol>
+</li>
+</ol>
+<p><strong>加了新的子类型后没有适配</strong></p>
+<ul>
+<li>看到报错后 也没有去看原因</li>
+<li>加了子类型也没看原有城郊BOSS的特殊处理</li>
+<li>加了子类型也没通知客户端，<strong>应该是更改协议之后都要通知</strong></li>
+</ul>
+<p><strong>方案可能可以用，但是对于目前还能用的代码，这种改动就需要考量下了。</strong><br>现有的敌我判断，只需要在IsEnemy中加几行代码就可以了，大刀阔斧的去改成方案中的设计，可能会遇到很多的问题。<br>改动的时候应该考虑下改动小的方式？而不是去整一套新的方案。<br>复杂的方案为了通用性，后面维护起来也是很麻烦的。</p>
+<h3 id="时间评估"><a href="#时间评估" class="headerlink" title="时间评估"></a>时间评估</h3><p>涉及增加Module + 协议 代码量200~300行 略微修改其他地方 1.5D</p>
+<ol>
+<li>需求拆解和方案评估<ol>
+<li>不能是单单的将需求点列出来，需要对应到具体的改动是啥，这样评估时间才准确。</li>
+<li>注意某些重要的异常情况处理和兜底处理</li>
+</ol>
+</li>
+</ol>
+<h2 id="全新屎山-制作"><a href="#全新屎山-制作" class="headerlink" title="全新屎山-制作"></a>全新屎山-制作</h2><h3 id="通用的机制应该尽可能能够复用"><a href="#通用的机制应该尽可能能够复用" class="headerlink" title="通用的机制应该尽可能能够复用"></a>通用的机制应该尽可能能够复用</h3><ol>
+<li>在ext中新加了一个跨天的功能，但是这个功能其他ext可能也要用，应该放到上一级方便所有ext使用</li>
+<li>终于把之前想过的时间触发器抽了个Module出来, 后面就可以复用了</li>
+</ol>
+<h3 id="一些临时的内容应该加足注释"><a href="#一些临时的内容应该加足注释" class="headerlink" title="一些临时的内容应该加足注释"></a>一些临时的内容应该加足注释</h3><p>比如明明可能有很多配置，按理来说应该是用参数索引，但是写死了，应该说明原因。</p>
+<pre><code class="cpp">// 目前只有1条配置，先写死id为1
+const auto *config = GetResFactory().FindResStrongpointRewardCfg(1);</code></pre>
+<h3 id="一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底"><a href="#一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底" class="headerlink" title="一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底"></a>一定要处理好不兼容变更的兜底，如果影响到太多人，容易出问题还是要加上兜底</h3><h3 id="预估时间后无法完成-没有及时通知"><a href="#预估时间后无法完成-没有及时通知" class="headerlink" title="预估时间后无法完成 没有及时通知"></a>预估时间后无法完成 没有及时通知</h3><p>应该及时通知，否则认为完成了，后面会出现各种问题。这次就是配置全换掉了 导致半成品的怪物组被启用了</p>
+<h3 id="日志加的不够"><a href="#日志加的不够" class="headerlink" title="日志加的不够"></a>日志加的不够</h3><ol>
+<li>查问题的时候比预期难太多了，后面补了两个主要位置的日志<ol>
+<li>选举队长的位置 增加了旧队长和新队长的状态</li>
+<li>创建怪物组的时候会打印 玩家ID 怪物组ID 怪物组的配置 这样发现问题的时候能够快速定位到创建位置，之后就能看到问题野怪的ID</li>
+</ol>
+</li>
+</ol>
+<h3 id="统一的工具仓库"><a href="#统一的工具仓库" class="headerlink" title="统一的工具仓库"></a>统一的工具仓库</h3><p>以后写工具应该注意，一个工具放两个代码库维护是容易出问题的，能统一尽量统一，统一不了应该只在一个里面修改.</p>
+<h3 id="需求中途变更"><a href="#需求中途变更" class="headerlink" title="需求中途变更"></a>需求中途变更</h3><p>代码设计初期一般会留有一些考虑能够应对需求变化，但是需求变化后可能会导致实现可以简化，这个时候继续服用复杂的代码还是简化代码就需要考虑了</p>
+<h3 id="尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方"><a href="#尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方" class="headerlink" title="尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方"></a>尽量一步成型代码，后续修改容易顾此失彼，修改了这里忘了其他敌方</h3><h3 id="避免设计无用的东西"><a href="#避免设计无用的东西" class="headerlink" title="避免设计无用的东西"></a>避免设计无用的东西</h3><p>给堡垒加了adaptor，然而是一个函数能搞定的判断，多余了</p>
+<h3 id="数值类配置化or计算化"><a href="#数值类配置化or计算化" class="headerlink" title="数值类配置化or计算化"></a>数值类配置化or计算化</h3><ol>
+<li>数值类的最好不要写死<ol>
+<li>如果是配置中的值，配置变了，写死的数值就会导致问题</li>
+<li>还可能导致本来热更就能搞定的，需要重新编译服务器</li>
+</ol>
+</li>
+<li>尽量不要写死参数, 配置或者计算得来, 否则后面还需要同步修改.</li>
+</ol>
+<h3 id="减少通用错误码的使用"><a href="#减少通用错误码的使用" class="headerlink" title="减少通用错误码的使用"></a>减少通用错误码的使用</h3><p>如果错误码一对一能够及时发现问题, 如果是多个地方使用的, 只能靠日志+看代码路径了.</p>
+<h3 id="客户端参数校验"><a href="#客户端参数校验" class="headerlink" title="客户端参数校验"></a>客户端参数校验</h3><p>没想到出现了非联盟成员拆联盟建筑的问题。</p>
+<h3 id="状态校验放错了位置-写的时候还是没考虑好运行路径"><a href="#状态校验放错了位置-写的时候还是没考虑好运行路径" class="headerlink" title="状态校验放错了位置. 写的时候还是没考虑好运行路径"></a>状态校验放错了位置. 写的时候还是没考虑好运行路径</h3><h2 id="全新屎山-装饰"><a href="#全新屎山-装饰" class="headerlink" title="全新屎山-装饰"></a>全新屎山-装饰</h2><h3 id="GM工具"><a href="#GM工具" class="headerlink" title="GM工具"></a>GM工具</h3><ol>
+<li>开发的时候可以考虑好后续可能用到的GM工具，虽然会略微增加开发时间，但是后续用到的时候是真的方便</li>
+<li>GM工具好多都是有使用场景的，非使用场景使用会出现问题，所以还是要标注清楚</li>
+</ol>
+<h2 id="旧屎山-修改"><a href="#旧屎山-修改" class="headerlink" title="旧屎山-修改"></a>旧屎山-修改</h2><h3 id="确定修改后果-注意一个函数都有哪些作用"><a href="#确定修改后果-注意一个函数都有哪些作用" class="headerlink" title="确定修改后果, 注意一个函数都有哪些作用"></a>确定修改后果, 注意一个函数都有哪些作用</h3><p>最大等级的BUG去掉InitModuleDependency中的广播后，确实去掉了开启时候的广播，但导致ClientConfig中的内容也没有被填写上。<br>且由于满阶段nextCheckInterval为0时添加的定时器 又掩盖了这个问题的及时发现 导致后面发现后改的挺急的</p>
+<p>没有调用OnIdle出现的问题，结果加上OnIdle调用后影响到了回城</p>
+<h3 id="把表现正确的当BUG修了"><a href="#把表现正确的当BUG修了" class="headerlink" title="把表现正确的当BUG修了"></a>把表现正确的当BUG修了</h3><p>这种还是要确认好，不然浪费双倍的时间</p>
+<h3 id="删除代码时应该注意-删除原位置无用的内容"><a href="#删除代码时应该注意-删除原位置无用的内容" class="headerlink" title="删除代码时应该注意 删除原位置无用的内容"></a>删除代码时应该注意 删除原位置无用的内容</h3><p>新位置因为需要保证运行，所以一般不会出现问题，但是原位置的多余内容，一般不影响运行，不便于发现。</p>
+<h3 id="查问题的时候-用物体的事件经过查问题挺方便的"><a href="#查问题的时候-用物体的事件经过查问题挺方便的" class="headerlink" title="查问题的时候 用物体的事件经过查问题挺方便的"></a>查问题的时候 用物体的事件经过查问题挺方便的</h3><h3 id="遇到BUG还是感觉留下现场，比重启解决问题更加重要"><a href="#遇到BUG还是感觉留下现场，比重启解决问题更加重要" class="headerlink" title="遇到BUG还是感觉留下现场，比重启解决问题更加重要"></a>遇到BUG还是感觉留下现场，比重启解决问题更加重要</h3><p>问题可以后面解决，复现问题可能再也没有机会了</p>
+<h3 id="BUG修复关联BUG单"><a href="#BUG修复关联BUG单" class="headerlink" title="BUG修复关联BUG单"></a>BUG修复关联BUG单</h3><p>之前删掉了一段代码，导致城郊出现问题，忘记为啥删除的了，后面修BUG还是带上BUG单的链接把</p>
+<h3 id="抽取函数注意不要影响到原区域功能"><a href="#抽取函数注意不要影响到原区域功能" class="headerlink" title="抽取函数注意不要影响到原区域功能"></a>抽取函数注意不要影响到原区域功能</h3><p>抽函数后加东西, 导致相对于原有增加了一些功能, 这种是很危险的抽函数.</p>
+<h3 id="简单方式解决问题"><a href="#简单方式解决问题" class="headerlink" title="简单方式解决问题"></a>简单方式解决问题</h3><p>如果解决一个小bug, 完美的方式改动很多的话, 感觉不如简单的处理下</p>
+<p>长久来说, 还是要考虑下解决这个问题, 算是一个优化点?</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><h3 id="测试好了再转单，可能确实把当前问题修了，但导致其他问题出现"><a href="#测试好了再转单，可能确实把当前问题修了，但导致其他问题出现" class="headerlink" title="测试好了再转单，可能确实把当前问题修了，但导致其他问题出现"></a>测试好了再转单，可能确实把当前问题修了，但导致其他问题出现</h3><p>改了BUG不好好验证, 而是急着去查下一个BUG.</p>
+<h3 id="全面测试-不留空缺"><a href="#全面测试-不留空缺" class="headerlink" title="全面测试, 不留空缺"></a>全面测试, 不留空缺</h3><p>战斗无法打起来</p>
+<p>因为战斗无法打起来，好多地方开发的时候都没有测试到，结果反而这里才是问题所在</p>
+<h3 id="A通过B通过不等于A-B通过"><a href="#A通过B通过不等于A-B通过" class="headerlink" title="A通过B通过不等于A+B通过"></a>A通过B通过不等于A+B通过</h3><p>一个功能还是完整的测试吧，A功能虽然等于B+C功能，但B和C功能分别正确 不一定B+C就是正确的</p>
+<h3 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h3><p>pyclient这个还是很方便的</p>
+<h2 id="心态"><a href="#心态" class="headerlink" title="心态"></a>心态</h2><h3 id="问题的优先级安排"><a href="#问题的优先级安排" class="headerlink" title="问题的优先级安排"></a>问题的优先级安排</h3><p>下午差城郊防守建筑的BUG查上头了，虽然查出来了但导致了开战距离BUG的延迟了，进而导致了赏金联调的滞后。下午的时候防守建筑的BUG实际可以延后的</p>
+<h3 id="充分关注自己的工作"><a href="#充分关注自己的工作" class="headerlink" title="充分关注自己的工作"></a>充分关注自己的工作</h3><p>赏金都开始联调了，我的功能还没发上去</p>
+<h3 id="不懂就问"><a href="#不懂就问" class="headerlink" title="不懂就问"></a>不懂就问</h3><ol>
+<li>之前一直不知道转测时候填的内容有什么用，导致填的比较随意，导致后面还有同学来提醒，最开始填的时候也确实没有问过。</li>
+<li>还是多问问那个sql语句是啥，原来是描述用的。。。</li>
+</ol>
+<h3 id="重视不起眼的小问题，可能背后的原因是非常离谱的"><a href="#重视不起眼的小问题，可能背后的原因是非常离谱的" class="headerlink" title="重视不起眼的小问题，可能背后的原因是非常离谱的"></a>重视不起眼的小问题，可能背后的原因是非常离谱的</h3><ol>
+<li>dev环境选州Logic崩溃，竟然是由于Logic代码写错的原因（为啥外网没有遇到呢？）</li>
+<li>测试反馈添加的主城全部报错30000，结果是因为roleId循环的，已经添加主城的roleId再次添加主城，由于兜底机制+指定roleId主城存在就会将roleId顺延，顺延之后的就是空roleid，后面就拿不到离线时间的数据</li>
+<li>转表提交报错, 原因是空白行没有被标记占用, 导致新加字段写到了注释行上.</li>
+</ol>
+<h3 id="特殊处理"><a href="#特殊处理" class="headerlink" title="特殊处理"></a>特殊处理</h3><ol>
+<li>野怪最大等级改了获取位置，写代码的将等级为0认为是错误，直接返回了<ol>
+<li>然而赏金这里有特殊处理，等级是0则按1级</li>
+</ol>
+</li>
+</ol>
+<h3 id="预期下当前所做是不是可以解决最终问题-而不是当前某一步"><a href="#预期下当前所做是不是可以解决最终问题-而不是当前某一步" class="headerlink" title="预期下当前所做是不是可以解决最终问题, 而不是当前某一步"></a>预期下当前所做是不是可以解决最终问题, 而不是当前某一步</h3><ol>
+<li>压缩了个超大包, 确实解决了压缩的问题, 但是传输麻烦死了</li>
+</ol>
+<h3 id="去看看别人负责的模块-不要只顾自己的模块"><a href="#去看看别人负责的模块-不要只顾自己的模块" class="headerlink" title="去看看别人负责的模块, 不要只顾自己的模块"></a>去看看别人负责的模块, 不要只顾自己的模块</h3><ol>
+<li>接触了下战斗服和逻辑服的代码, 把相关环境也搭建好了, 后续也确实看过几次对应的代码.</li>
+</ol>
+<h3 id="遇到问题即使下意识感觉问题就是那里-也一定要确认下-可能并不是那样"><a href="#遇到问题即使下意识感觉问题就是那里-也一定要确认下-可能并不是那样" class="headerlink" title="遇到问题即使下意识感觉问题就是那里, 也一定要确认下. 可能并不是那样"></a>遇到问题即使下意识感觉问题就是那里, 也一定要确认下. 可能并不是那样</h3><h2 id="沟通和协作"><a href="#沟通和协作" class="headerlink" title="沟通和协作"></a>沟通和协作</h2><h3 id="他人回复的内容一定要仔细理解，不要含主观臆断"><a href="#他人回复的内容一定要仔细理解，不要含主观臆断" class="headerlink" title="他人回复的内容一定要仔细理解，不要含主观臆断"></a>他人回复的内容一定要仔细理解，不要含主观臆断</h3><ol>
+<li>X场景下，……………………………（省略），这个功能就不需要了。（非X场景是需要的，不能直接删掉这个功能）</li>
+<li>今天晚上就合入版本了（几点？能不能在全量发布服务器前完成，而不是晚上这种模糊时间）</li>
+</ol>
+<h3 id="后台开发代表全部后台-前台开发代表全部前台"><a href="#后台开发代表全部后台-前台开发代表全部前台" class="headerlink" title="后台开发代表全部后台, 前台开发代表全部前台"></a>后台开发代表全部后台, 前台开发代表全部前台</h3><ol>
+<li>后台有多个服务器，每个服务器不同的人负责，前台可能认为后台是一个整体，所以找你沟通的时候最好不要只考虑本服务器的事情。<ol>
+<li>我这里完成了 前台认为所有服务器完成了</li>
+</ol>
+</li>
+<li>对方代码还没合入的时候，你说对面完成了，结果实际没完成</li>
+</ol>
+<h3 id="不兼容变更时做好兜底"><a href="#不兼容变更时做好兜底" class="headerlink" title="不兼容变更时做好兜底"></a>不兼容变更时做好兜底</h3><ol>
+<li>当时在众多人说自己无法进入游戏的时候，都没有去考虑补上兜底方案<ol>
+<li>因为当时考虑到这些都是异常情况，正常情况玩家地图上是不会有自己的主城，只要是正常环境就没有问题</li>
+<li>然而遇到了Logic崩溃了，Logic没有记录选州成功，此时大地图已经选州了，玩家游戏直接卡死，之后才把兜底补上。这次就不是异常情况了，是正常情况下可能会出现的问题了。</li>
+</ol>
+</li>
+<li>重新编译的问题，没想到还学到了不少。<ol>
+<li>tars文件重新生成的问题<ol>
+<li>先用md5比对写了一版</li>
+<li>结果还是直接用CMake写最好，几行的事情</li>
+</ol>
+</li>
+<li>CMake和Make的基本原理</li>
+<li>依赖分析，编译加速？</li>
+</ol>
+</li>
+</ol>
+<h3 id="帮忙"><a href="#帮忙" class="headerlink" title="帮忙"></a>帮忙</h3><p>帮忙处理东西的时候，一定要搞清楚，问清楚。自己也要看清楚，不能只是不带脑子的执行</p>
+<h3 id="不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱"><a href="#不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱" class="headerlink" title="不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱"></a>不要将问题带到线上，这样处理起来非常的麻烦，而且会增加不靠谱</h3><ol>
+<li>异常情况处理</li>
+<li>兜底</li>
+</ol>
+<h3 id="该找运维的找运维-对应的时间给对应的人去做"><a href="#该找运维的找运维-对应的时间给对应的人去做" class="headerlink" title="该找运维的找运维(对应的时间给对应的人去做)"></a>该找运维的找运维(对应的时间给对应的人去做)</h3><ol>
+<li>最后日志传输工作给了运维来搞</li>
+</ol>
+<h3 id="有的功能大地图并不知道有没有-还是说下不知道之类的吧-最后接下来了发现是别人的工作"><a href="#有的功能大地图并不知道有没有-还是说下不知道之类的吧-最后接下来了发现是别人的工作" class="headerlink" title="有的功能大地图并不知道有没有, 还是说下不知道之类的吧, 最后接下来了发现是别人的工作"></a>有的功能大地图并不知道有没有, 还是说下不知道之类的吧, 最后接下来了发现是别人的工作</h3><h2 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h2><h3 id="CR发起前可以自己整一个临时CR看看代码"><a href="#CR发起前可以自己整一个临时CR看看代码" class="headerlink" title="CR发起前可以自己整一个临时CR看看代码"></a>CR发起前可以自己整一个临时CR看看代码</h3><h3 id="测试代码在最终CR的时候要及时去掉-使用TODO-名字方便检索"><a href="#测试代码在最终CR的时候要及时去掉-使用TODO-名字方便检索" class="headerlink" title="测试代码在最终CR的时候要及时去掉 使用TODO 名字方便检索"></a>测试代码在最终CR的时候要及时去掉 使用TODO 名字方便检索</h3><h3 id="不建议手动操作自动化代码"><a href="#不建议手动操作自动化代码" class="headerlink" title="不建议手动操作自动化代码"></a>不建议手动操作自动化代码</h3><ol>
+<li>流水线异常的时候手动操作了报错部分，然而报错导致后续操作也被中断了，但是忘记了操作后续部分，只操作了报错部分<ol>
+<li>流水线都现成的了 直接用吧 别手动操作了</li>
+</ol>
+</li>
+</ol>
+<h3 id="自动化操作没有监管人"><a href="#自动化操作没有监管人" class="headerlink" title="自动化操作没有监管人"></a>自动化操作没有监管人</h3><p>新版服务器未更新到目标服务器 出了N个乌龙BUG单</p>
+<h3 id="压测和扩容"><a href="#压测和扩容" class="headerlink" title="压测和扩容"></a>压测和扩容</h3><ol>
+<li>压测<ol>
+<li>压测场景和实际场景不匹配<ol>
+<li>出现问题之后，都能发现问题，关键是出现问题前发现限制点</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>扩容<ol>
+<li>寻路服爆炸了，然而没有办法扩容，没有机器。</li>
+</ol>
+</li>
+</ol>
+<h3 id="发现问题比解决问题更重要"><a href="#发现问题比解决问题更重要" class="headerlink" title="发现问题比解决问题更重要"></a>发现问题比解决问题更重要</h3><ol>
+<li>性能优化感觉难点是发现性能问题, 包括编译加速. (20%的问题造成了80%的负面影响, 如果去处理另外80%的问题收益就很低)</li>
+</ol>
+<h3 id="指定时间点触发的循环定时器-每轮都计算下时间相比固定时间的更加稳定"><a href="#指定时间点触发的循环定时器-每轮都计算下时间相比固定时间的更加稳定" class="headerlink" title="指定时间点触发的循环定时器, 每轮都计算下时间相比固定时间的更加稳定"></a>指定时间点触发的循环定时器, 每轮都计算下时间相比固定时间的更加稳定</h3><h3 id="主城周围搜索物体-采用涡旋状搜索-类似蚊香"><a href="#主城周围搜索物体-采用涡旋状搜索-类似蚊香" class="headerlink" title="主城周围搜索物体, 采用涡旋状搜索, 类似蚊香"></a>主城周围搜索物体, 采用涡旋状搜索, 类似蚊香</h3><h3 id="尽量统一函数对统一内容进行清除-比如标志位-这样方便发现错误清理的地方"><a href="#尽量统一函数对统一内容进行清除-比如标志位-这样方便发现错误清理的地方" class="headerlink" title="尽量统一函数对统一内容进行清除, 比如标志位, 这样方便发现错误清理的地方"></a>尽量统一函数对统一内容进行清除, 比如标志位, 这样方便发现错误清理的地方</h3><h3 id="测试东西或者搞新东西的时候-注意不要影响到旧的东西-该开测试空间的开测试空间"><a href="#测试东西或者搞新东西的时候-注意不要影响到旧的东西-该开测试空间的开测试空间" class="headerlink" title="测试东西或者搞新东西的时候, 注意不要影响到旧的东西, 该开测试空间的开测试空间"></a>测试东西或者搞新东西的时候, 注意不要影响到旧的东西, 该开测试空间的开测试空间</h3><p>这次自动提单提了2K+, 如果不是提到了临时空间 估计直接爆炸了.</p>
+<h2 id="充电"><a href="#充电" class="headerlink" title="充电"></a>充电</h2><ol>
+<li>输入<ol>
+<li>代码</li>
+<li>CR</li>
+<li>方案拆解和评估</li>
+<li>KM文章</li>
+<li>开源项目</li>
+</ol>
+</li>
+</ol>
+<p><strong>123</strong></p>
+<ol>
+<li>有输入相比自己死磕能够成长的更快<ol>
+<li>看看其他人的方案拆解<ol>
+<li>不能同一帧将所有点位检查这种情况，才想到要延时进行刷新。</li>
+<li>不能是单单的将需求点列出来，需要对应到具体的改动是啥，这样评估时间才准确。</li>
+<li>注意下时间评估这里，目前我评估的时间还是非常的不准确的</li>
+</ol>
+</li>
+<li>看看其他人的cr，不然自己没有负责过的模块 是一点都不清楚<ol>
+<li>同时看了之后还有和其他人PK的机会</li>
+<li>看看其他人的设计，学一学自己将来才可能遇到，不然都是在自己思维下兜圈子</li>
+<li>看看别人的CR和方案，这里为什么这么设计，自己想的话如何设计，一下对比就出来了。进行后续沟通还能了解到更多。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>之前看到帝国觉醒只是想到了战斗服需要在压力场景下减少发包<ol>
+<li>但是大地图是不是需要呢？完全没有考虑过，大地图是否需要<ol>
+<li>大地图实际是不需要的，至少目前的同步机制是够用的</li>
+<li>战斗服可能是需要的，不过后面就没跟进了解了</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>千人测试的时候，重启城郊会导致战斗服也需要重启的问题</li>
+<li>千人测试的时候，Logic崩溃导致事件完成了任务没有完成</li>
+</ol>
+
+      
+       
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2023 lsmg
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

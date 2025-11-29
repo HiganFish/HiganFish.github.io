@@ -1,0 +1,3068 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>K8S基础概念 | Lsmg的大学之路</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="K8S基础概念 | Lsmg的大学之路">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S-istio">
+<meta property="og:url" content="http://blog.lsmg.xyz/2025/11/%E4%BA%91-istio/index.html">
+<meta property="og:site_name" content="Lsmg的大学之路">
+<meta property="og:description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-15T10:38:08.000Z">
+<meta property="article:modified_time" content="2025-11-29T09:26:42.707Z">
+<meta property="article:author" content="Lsmg">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Lsmg的大学之路" type="application/atom+xml">
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Lsmg</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(91)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CPP">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        CPP
+                        <small>(14)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="CPP<--->源码学习">
+                                        
+                                        源码学习
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Linux">
+                        
+                        Linux
+                        <small>(9)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="NAS">
+                        
+                        NAS
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="UE5">
+                        
+                        UE5
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="个人记录">
+                        
+                        个人记录
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="云">
+                        
+                        云
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="优化">
+                        
+                        优化
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="分享会">
+                        
+                        分享会
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="学习记录">
+                        
+                        学习记录
+                        <small>(11)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="工具使用">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        工具使用
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="工具使用<--->Git操作">
+                                        
+                                        Git操作
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="日语">
+                        
+                        日语
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="模块设计">
+                        
+                        模块设计
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="算法">
+                        
+                        算法
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="网络编程">
+                        
+                        网络编程
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="计算机网络">
+                        
+                        计算机网络
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="读书记录">
+                        
+                        读书记录
+                        <small>(20)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="采坑记">
+                        
+                        采坑记
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="项目制作">
+                        
+                        项目制作
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">About</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">Friends</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="91">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>docker</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ebpf</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>GDB调试</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Git操作</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>HTTPS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Linux</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>NAS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Shell</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>spf-13</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>UP</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>常用命令</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>方向选择</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>时间触发器</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>编译加速</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>采坑记</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-GPT%E7%AD%94%E7%96%91%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="GPT答疑记录">GPT答疑记录</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-%E4%BA%94%E5%A4%A7%E6%80%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="五大态">五大态</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2023/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95180-%E6%80%A7%E8%83%BD%E4%B9%8B%E5%B7%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="性能之巅">性能之巅</span>
+            <span class="post-date" title="2023-03-21 23:37:20">2023/03/21</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95170-%E6%88%91%E6%98%AF%E4%B8%80%E5%8F%AAIT%E5%B0%8F%E5%B0%8F%E9%B8%9F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="我是一只IT小小鸟">我是一只IT小小鸟</span>
+            <span class="post-date" title="2022-05-30 19:09:20">2022/05/30</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95161-%E7%8E%B0%E4%BB%A3C++%E6%95%99%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="现代C++教程">现代C++教程</span>
+            <span class="post-date" title="2022-05-31 19:09:20">2022/05/31</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95160-TCPIP%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP/IP详解">TCP/IP详解</span>
+            <span class="post-date" title="2021-04-03 19:09:20">2021/04/03</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95150-Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E7%B2%BE%E9%AB%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux内核设计精髓">Linux内核设计精髓</span>
+            <span class="post-date" title="2021-03-28 19:09:20">2021/03/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95140-%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="程序员的自我修养">程序员的自我修养</span>
+            <span class="post-date" title="2021-03-17 19:09:20">2021/03/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/09/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95135-%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="深度探索C++对象模型">深度探索C++对象模型</span>
+            <span class="post-date" title="2020-09-15 15:17:39">2020/09/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95131-%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码整洁之道">代码整洁之道</span>
+            <span class="post-date" title="2021-04-28 08:19:39">2021/04/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95130-%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码大全">代码大全</span>
+            <span class="post-date" title="2020-05-13 21:19:39">2020/05/13</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95120-Linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux多线程服务器端编程">Linux多线程服务器端编程</span>
+            <span class="post-date" title="2022-02-15 17:19:39">2022/02/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95110-Effective%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EffectiveCpp读书记录">EffectiveCpp读书记录</span>
+            <span class="post-date" title="2020-02-26 21:43:46">2020/02/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95102-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-进程线程">Linux高性能服务器-进程线程</span>
+            <span class="post-date" title="2020-02-25 22:34:39">2020/02/25</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95101-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E9%AB%98%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-高级部分">Linux高性能服务器-高级部分</span>
+            <span class="post-date" title="2019-08-18 20:34:39">2019/08/18</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95100-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E5%88%9D%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-初级部分">Linux高性能服务器-初级部分</span>
+            <span class="post-date" title="2019-08-17 20:34:39">2019/08/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9599-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E7%90%86%E8%AE%BA%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-理论部分">Linux高性能服务器-理论部分</span>
+            <span class="post-date" title="2020-03-06 22:53:00">2020/03/06</span>
+        </a>
+        
+        
+        <a id="top" class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%9590-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="数据结构和STL">数据结构和STL</span>
+            <span class="post-date" title="2021-02-05 10:38:28">2021/02/05</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9580-CPPPrimer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++Primer学习">C++Primer学习</span>
+            <span class="post-date" title="2019-08-16 19:13:22">2019/08/16</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-istio/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S-istio">K8S-istio</span>
+            <span class="post-date" title="2025-11-15 10:38:08">2025/11/15</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-K8S/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S基础概念">K8S基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-HELM/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HELM基础概念">HELM基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All NAS "
+           href="/2025/09/NAS-bt/"
+           data-tag="NAS"
+           data-author="" >
+            <span class="post-title" title="BT内网穿透">BT内网穿透</span>
+            <span class="post-date" title="2025-09-23 19:48:22">2025/09/23</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-Windows%E4%B8%8BUnity%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Windows下Unity内存泄露排查">Windows下Unity内存泄露排查</span>
+            <span class="post-date" title="2024-11-14 19:48:22">2024/11/14</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2024/11/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F2/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="CMake项目常见的编译加速方式汇总">CMake项目常见的编译加速方式汇总</span>
+            <span class="post-date" title="2024-11-13 14:48:22">2024/11/13</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2024/07/CPP-CMAKE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CMAKE&amp;Make">CMAKE&amp;Make</span>
+            <span class="post-date" title="2024-07-02 17:07:45">2024/07/02</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/06/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%882/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦2">如何更好的添砖加瓦2</span>
+            <span class="post-date" title="2024-06-24 09:48:22">2024/06/24</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/04/Linux-massif/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="massif使用">massif使用</span>
+            <span class="post-date" title="2024-04-13 16:31:22">2024/04/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/03/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E4%BA%8BUP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="常事UP">常事UP</span>
+            <span class="post-date" title="2024-03-23 14:48:22">2024/03/23</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2024/01/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%8E%92%E8%A1%8C%E6%A6%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="排行榜">排行榜</span>
+            <span class="post-date" title="2024-01-25 14:38:08">2024/01/25</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2023/12/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="编译加速">编译加速</span>
+            <span class="post-date" title="2023-12-13 14:48:22">2023/12/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/12/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E6%96%B9%E5%90%91%E9%80%89%E6%8B%A9/"
+           data-tag="方向选择"
+           data-author="" >
+            <span class="post-title" title="方向选择">方向选择</span>
+            <span class="post-date" title="2023-12-11 19:48:22">2023/12/11</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%88/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦">如何更好的添砖加瓦</span>
+            <span class="post-date" title="2023-11-25 09:48:22">2023/11/25</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2023/11/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-PrometheusX%E7%81%AB%E7%84%B0%E5%9B%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="如何实现火焰图半自由">如何实现火焰图半自由</span>
+            <span class="post-date" title="2023-11-18 12:50:02">2023/11/18</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/11/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%86%99%E5%8D%9A%E5%AE%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="写博客技巧">写博客技巧</span>
+            <span class="post-date" title="2023-11-15 10:38:08">2023/11/15</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E6%9C%88%E8%AE%B0%E5%BD%95/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="UP月记录">UP月记录</span>
+            <span class="post-date" title="2023-10-27 09:48:22">2023/10/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="游戏设计">游戏设计</span>
+            <span class="post-date" title="2023-10-24 10:38:08">2023/10/24</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2023-10-20 18:38:08">2023/10/20</span>
+        </a>
+        
+        
+        <a  class="All 模块设计 "
+           href="/2023/10/%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1-%E6%97%B6%E9%97%B4%E8%A7%A6%E5%8F%91%E5%99%A8/"
+           data-tag="时间触发器"
+           data-author="" >
+            <span class="post-title" title="时间触发器">时间触发器</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="个人UP">个人UP</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag="常用命令"
+           data-author="" >
+            <span class="post-title" title="常用命令">常用命令</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2023/10/Linux-ebpf/"
+           data-tag="ebpf"
+           data-author="" >
+            <span class="post-title" title="bpf">bpf</span>
+            <span class="post-date" title="2023-10-11 17:00:22">2023/10/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%9E%B6%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="架构">架构</span>
+            <span class="post-date" title="2023-04-17 10:38:08">2023/04/17</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-Wireshark%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Wireshark插件开发">Wireshark插件开发</span>
+            <span class="post-date" title="2023-04-11 19:00:00">2023/04/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E9%80%9A%E8%AF%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="通识">通识</span>
+            <span class="post-date" title="2023-04-07 10:38:08">2023/04/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%B8%A7%E5%90%8C%E6%AD%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="帧同步">帧同步</span>
+            <span class="post-date" title="2022-05-27 10:38:08">2022/05/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-SDL2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="SDL学习">SDL学习</span>
+            <span class="post-date" title="2022-05-25 10:38:08">2022/05/25</span>
+        </a>
+        
+        
+        <a  class="All UE5 "
+           href="/2022/05/UE5-%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UE5学习">UE5学习</span>
+            <span class="post-date" title="2022-05-12 20:31:22">2022/05/12</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2022/05/CPP-%E5%8D%8F%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="协程">协程</span>
+            <span class="post-date" title="2022-05-07 10:38:08">2022/05/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-6.s081/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="6.s081学习 &amp;&amp; tmux">6.s081学习 &amp;&amp; tmux</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-asio%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E7%AC%94%E8%AE%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="asio官方文档笔记">asio官方文档笔记</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/07/CPP-alias/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-07-14 21:27:27">2021/07/14</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/05/CPP-ModernCpp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="ModernCpp.md">ModernCpp.md</span>
+            <span class="post-date" title="2021-05-25 23:27:27">2021/05/25</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/05/Linux-sed&awk&grep/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sed&amp;awk&amp;grep">sed&amp;awk&amp;grep</span>
+            <span class="post-date" title="2021-05-07 08:11:22">2021/05/07</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-HTTPS/"
+           data-tag="HTTPS"
+           data-author="" >
+            <span class="post-title" title="HTTPS的基本流程和原理">HTTPS的基本流程和原理</span>
+            <span class="post-date" title="2021-03-01 16:50:22">2021/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-class%20struct%20typename/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="class struct typename">class struct typename</span>
+            <span class="post-date" title="2021-02-24 10:54:08">2021/02/24</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-%E5%89%91%E6%8C%87Offer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="剑指Offer">剑指Offer</span>
+            <span class="post-date" title="2021-02-10 00:08:28">2021/02/10</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-stdany,%20How%20when%20and%20why/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="void*|function|any|optional|variant, How when and why">void*|function|any|optional|variant, How when and why</span>
+            <span class="post-date" title="2021-02-06 18:56:27">2021/02/06</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-leetcode/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="leetcode">leetcode</span>
+            <span class="post-date" title="2021-02-05 12:10:02">2021/02/05</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AEURL%E5%88%B0%E6%98%BE%E7%A4%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="浏览器访问URL到显示">浏览器访问URL到显示</span>
+            <span class="post-date" title="2021-02-01 16:55:22">2021/02/01</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-docker/"
+           data-tag="docker"
+           data-author="" >
+            <span class="post-title" title="Docker使用">Docker使用</span>
+            <span class="post-date" title="2021-01-31 23:34:22">2021/01/31</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-cast/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-01-14 21:27:27">2021/01/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-%E8%B0%83%E8%AF%95%E5%B8%B8%E7%94%A8Linux%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux-调试常用命令">Linux-调试常用命令</span>
+            <span class="post-date" title="2021-01-09 18:53:22">2021/01/09</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-pthread&thread/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread&amp;thread">pthread&amp;thread</span>
+            <span class="post-date" title="2021-01-03 11:27:27">2021/01/03</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-shell%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99/"
+           data-tag="Shell"
+           data-author="" >
+            <span class="post-title" title="Shell脚本编写">Shell脚本编写</span>
+            <span class="post-date" title="2021-01-02 22:00:22">2021/01/02</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2020/12/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-%E7%9B%B4%E6%92%AD%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="直播服务器">直播服务器</span>
+            <span class="post-date" title="2020-12-02 12:50:02">2020/12/02</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/11/%E9%87%87%E5%9D%91%E8%AE%B0-delete%20this/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="由muduo tie引出的 delete this">由muduo tie引出的 delete this</span>
+            <span class="post-date" title="2020-11-26 17:37:08">2020/11/26</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/11/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-HTTP%E6%A1%86%E6%9E%B6%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HTTP框架底层原理实现">HTTP框架底层原理实现</span>
+            <span class="post-date" title="2020-11-01 22:45:39">2020/11/01</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/10/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%AE%BF%E8%88%8D%E7%94%B5%E8%84%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="远程连接宿舍电脑">远程连接宿舍电脑</span>
+            <span class="post-date" title="2020-10-29 16:40:39">2020/10/29</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP记录">UNP记录</span>
+            <span class="post-date" title="2020-10-06 12:17:39">2020/10/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/08/%E9%87%87%E5%9D%91%E8%AE%B0-EPOLLET%E4%B8%A2%E5%A4%B1%E6%96%B0%E8%BF%9E%E6%8E%A5%E4%BA%8B%E4%BB%B6/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="EPOLLET丢失新连接事件">EPOLLET丢失新连接事件</span>
+            <span class="post-date" title="2020-08-03 23:03:08">2020/08/03</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2020/07/%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9B%9B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="算法四">算法四</span>
+            <span class="post-date" title="2020-07-17 15:51:28">2020/07/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/07/Linux-VIM/"
+           data-tag="spf-13"
+           data-author="" >
+            <span class="post-title" title="VIM使用">VIM使用</span>
+            <span class="post-date" title="2020-07-05 20:31:22">2020/07/05</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/06/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-csapp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="csapp笔记">csapp笔记</span>
+            <span class="post-date" title="2020-06-07 09:09:20">2020/06/07</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-EPOLL%E6%9C%AC%E8%B4%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EPOLL本质">EPOLL本质</span>
+            <span class="post-date" title="2020-03-25 17:35:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2020/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-TCP%E7%8A%B6%E6%80%81%E6%9C%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP状态机">TCP状态机</span>
+            <span class="post-date" title="2020-03-25 12:55:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-Send%E8%BF%94%E5%9B%9E%E5%80%BC%E6%8E%A2%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Send返回值引出的(非)阻塞IO">Send返回值引出的(非)阻塞IO</span>
+            <span class="post-date" title="2020-03-20 11:14:20">2020/03/20</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-Linux%E4%BD%BF%E7%94%A8/"
+           data-tag="Linux"
+           data-author="" >
+            <span class="post-title" title="Linux的使用">Linux的使用</span>
+            <span class="post-date" title="2020-03-17 12:29:20">2020/03/17</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP%E5%8D%B7%E4%BA%8C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP卷二读书记录">UNP卷二读书记录</span>
+            <span class="post-date" title="2020-03-15 11:16:20">2020/03/15</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-GDB%E8%B0%83%E8%AF%95/"
+           data-tag="GDB调试"
+           data-author="" >
+            <span class="post-title" title="GDB调试">GDB调试</span>
+            <span class="post-date" title="2020-03-14 15:09:20">2020/03/14</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/03/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%92%8C%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%8F%8Acommit%E8%A7%84%E8%8C%83/"
+           data-tag="Git操作"
+           data-author="" >
+            <span class="post-title" title="分支管理和实际应用及commit规范">分支管理和实际应用及commit规范</span>
+            <span class="post-date" title="2020-03-06 19:34:25">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/03/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%BE%AA%E7%8E%AF%E5%88%A4%E6%96%AD%E4%B9%8B%E6%97%A0%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="循环判断中使用无符号类型">循环判断中使用无符号类型</span>
+            <span class="post-date" title="2020-03-06 17:37:08">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/03/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Jsoncpp%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Jsoncpp代码阅读">Jsoncpp代码阅读</span>
+            <span class="post-date" title="2020-03-01 10:26:55">2020/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%A3%B0%E6%98%8E%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="定义与声明详解">定义与声明详解</span>
+            <span class="post-date" title="2020-02-27 10:38:08">2020/02/27</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-CPP%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CPP11及以后的常用特性">CPP11及以后的常用特性</span>
+            <span class="post-date" title="2020-02-19 17:41:27">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/02/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Libevent%E4%BB%A3%E7%A0%81%E5%88%9D%E6%9C%9F%E4%BA%86%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Libevent代码初期了解">Libevent代码初期了解</span>
+            <span class="post-date" title="2020-02-19 14:56:55">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/02/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Git的基础使用">Git的基础使用</span>
+            <span class="post-date" title="2020-02-07 18:24:42">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/02/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%A4%B4%E6%96%87%E4%BB%B6%E4%BA%92%E7%9B%B8%E5%BC%95%E7%94%A8/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="头文件互相引用">头文件互相引用</span>
+            <span class="post-date" title="2020-02-07 16:37:08">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="字节对齐">字节对齐</span>
+            <span class="post-date" title="2020-02-06 11:38:08">2020/02/06</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2019/11/CPP-%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="指针">指针</span>
+            <span class="post-date" title="2019-11-07 22:26:22">2019/11/07</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2019/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++薄书整理">C++薄书整理</span>
+            <span class="post-date" title="2019-10-20 19:13:22">2019/10/20</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-云-K8S" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">K8S基础概念</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="云">云</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2025-11-29 09:26:42'>2025-11-01 10:38</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#入门操作"><span class="toc-text">入门操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#真机安装"><span class="toc-text">真机安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#自动补全"><span class="toc-text">自动补全</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#功能"><span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ingress"><span class="toc-text">Ingress</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Endpoint"><span class="toc-text">Endpoint</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Yaml文件"><span class="toc-text">Yaml文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#K8S组件"><span class="toc-text">K8S组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#K8S对象"><span class="toc-text">K8S对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#回收机制"><span class="toc-text">回收机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S-API"><span class="toc-text">K8S API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#K8S架构"><span class="toc-text">K8S架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#节点和控制面之间的通信"><span class="toc-text">节点和控制面之间的通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#控制器"><span class="toc-text">控制器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器"><span class="toc-text">容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#镜像"><span class="toc-text">镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器环境"><span class="toc-text">容器环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器回调"><span class="toc-text">容器回调</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工作负载"><span class="toc-text">工作负载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pod"><span class="toc-text">Pod</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod生命周期"><span class="toc-text">pod生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Init容器和Sidecar边车容器"><span class="toc-text">Init容器和Sidecar边车容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#临时容器"><span class="toc-text">临时容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#干扰，QoS类，命名空间-没怎么看，跳过了算是"><span class="toc-text">干扰，QoS类，命名空间 没怎么看，跳过了算是</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Downward-API"><span class="toc-text">Downward API</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作负载管理"><span class="toc-text">工作负载管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployments"><span class="toc-text">Deployments</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#更新Deployment"><span class="toc-text">更新Deployment</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#翻转-滚动更新"><span class="toc-text">翻转 滚动更新</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#回滚更新"><span class="toc-text">回滚更新</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#缩放"><span class="toc-text">缩放</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#暂停和恢复更新"><span class="toc-text">暂停和恢复更新</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Deployment状态，清理策略，金丝雀部署，规范-简单过了下"><span class="toc-text">Deployment状态，清理策略，金丝雀部署，规范 简单过了下</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet"><span class="toc-text">ReplicaSet</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#删除相关的过了一下"><span class="toc-text">删除相关的过了一下</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#StatefulSet"><span class="toc-text">StatefulSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DaemonSet"><span class="toc-text">DaemonSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JOB"><span class="toc-text">JOB</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#外部管理器-Job模板"><span class="toc-text">外部管理器+Job模板</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CronJob"><span class="toc-text">CronJob</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#管理工作负载"><span class="toc-text">管理工作负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动扩缩"><span class="toc-text">自动扩缩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务，负载均衡，联网"><span class="toc-text">服务，负载均衡，联网</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Service"><span class="toc-text">Service</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ingress-1"><span class="toc-text">Ingress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service和Ingress"><span class="toc-text">Service和Ingress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EndpointSlic"><span class="toc-text">EndpointSlic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-text">DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPV6支持，感知路由，Windows，Cluster-IP分配，跳过"><span class="toc-text">IPV6支持，感知路由，Windows，Cluster IP分配，跳过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#同一Node中Pod的通信"><span class="toc-text">同一Node中Pod的通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储"><span class="toc-text">存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#卷"><span class="toc-text">卷</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hostPath-不能迁移到其他Node"><span class="toc-text">hostPath 不能迁移到其他Node</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#emptyDir-POD移除时内容消失"><span class="toc-text">emptyDir POD移除时内容消失</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#持久卷"><span class="toc-text">持久卷</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建PV和PVC，POD申领PVC"><span class="toc-text">创建PV和PVC，POD申领PVC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#节点亲和性"><span class="toc-text">节点亲和性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#阶段"><span class="toc-text">阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StorageClass"><span class="toc-text">StorageClass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储类，PV，PVC，使用存储类进行动态卷制备"><span class="toc-text">存储类，PV，PVC，使用存储类进行动态卷制备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地存储"><span class="toc-text">本地存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#投射卷"><span class="toc-text">投射卷</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Secret"><span class="toc-text">Secret</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#configMap"><span class="toc-text">configMap</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#downwardAPI"><span class="toc-text">downwardAPI</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#临时卷"><span class="toc-text">临时卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#卷属性类，Beta功能跳过"><span class="toc-text">卷属性类，Beta功能跳过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#卷快照，卷快照类，CSI卷克隆，先跳过"><span class="toc-text">卷快照，卷快照类，CSI卷克隆，先跳过</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConfigMap"><span class="toc-text">ConfigMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Secret-1"><span class="toc-text">Secret</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源"><span class="toc-text">资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全-暂时跳过"><span class="toc-text">安全-暂时跳过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#策略"><span class="toc-text">策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#范围限制-LimitRange"><span class="toc-text">范围限制 LimitRange</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源配额"><span class="toc-text">资源配额</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点资源管理器"><span class="toc-text">节点资源管理器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度，强占和驱逐"><span class="toc-text">调度，强占和驱逐</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#调度器"><span class="toc-text">调度器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特定节点上运行POD"><span class="toc-text">特定节点上运行POD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POD开销"><span class="toc-text">POD开销</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POD调度就绪态"><span class="toc-text">POD调度就绪态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POD拓扑分布约束，内容很多，简单过了下"><span class="toc-text">POD拓扑分布约束，内容很多，简单过了下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#污点和容忍度"><span class="toc-text">污点和容忍度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度框架"><span class="toc-text">调度框架</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#调度框架扩展点"><span class="toc-text">调度框架扩展点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态资源分配如GPU，跳过"><span class="toc-text">动态资源分配如GPU，跳过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度器性能调优"><span class="toc-text">调度器性能调优</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源装箱，控制节点资源权重进而控制分数"><span class="toc-text">资源装箱，控制节点资源权重进而控制分数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD"><span class="toc-text">POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点压力驱逐"><span class="toc-text">节点压力驱逐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API发起的驱逐"><span class="toc-text">API发起的驱逐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集群管理"><span class="toc-text">集群管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#节点关闭"><span class="toc-text">节点关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node自动缩容和扩容"><span class="toc-text">Node自动缩容和扩容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群网络系统"><span class="toc-text">集群网络系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志架构"><span class="toc-text">日志架构</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="入门操作"><a href="#入门操作" class="headerlink" title="入门操作"></a>入门操作</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code class="sh"># install helm
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+# install kubectl
+curl -LO &quot;https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl&quot;
+sudo install kubectl /usr/local/bin/kubectl
+# install minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube &amp;&amp; rm minikube-linux-amd64
+
+# start
+minikube start
+# start dashboard
+minikube dashboard
+# forward
+kubectl proxy --address 0.0.0.0 --disable-filter=true
+
+# fast create
+helm create mychart
+# install unstall
+helm install mychart ./mychart
+helm uninstall mychart
+# only render
+helm install --debug --dry-run goodly-guppy ./mychart</code></pre>
+<h2 id="真机安装"><a href="#真机安装" class="headerlink" title="真机安装"></a>真机安装</h2><pre><code class="shell"># ubuntu
+swapoff /swap.img
+vim /etc/fstab
+
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo &#39;deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /&#39; | sudo tee /etc/apt/sources.list.d/kubernetes.list
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+sed -i &#39;/^\s*net\.ipv4\.ip_forward/s/^/#/&#39; /etc/sysctl.d/99-sysctl.conf
+sed -i &#39;/^\s*net\.ipv4\.ip_forward/s/^/#/&#39; /etc/sysctl.conf
+cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+modprobe br_netfilter
+sysctl --system
+
+apt update
+apt install -y containerd
+mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml
+sudo sed -i &#39;s/SystemdCgroup = false/SystemdCgroup = true/&#39; /etc/containerd/config.toml
+systemctl restart containerd
+systemctl enable containerd</code></pre>
+<p>master</p>
+<pre><code class="yaml"># rm -rf /etc/cni/net.d
+kubeadm init --pod-network-cidr=10.100.0.0/16
+
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+kubectl taint node master node-role.kubernetes.io/control-plane-
+
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml -O calico_new.yaml
+sed -i &#39;s/192.168.0.0\/16/10.100.0.0\/16/g&#39; calico_new.yaml
+sed -i &#39;s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/&#39; calico_new.yaml
+sed -i &#39;s/#   value: &quot;10.100.0.0\/16&quot;/  value: &quot;10.100.0.0\/16&quot;/&#39; calico_new.yaml
+kubectl apply -f calico_new.yaml
+systemctl restart containerd
+
+kubeadm token create --print-join-command
+# systemctl restart kubelet</code></pre>
+<pre><code class="node"></code></pre>
+<pre><code class="yaml"># /etc/crictl.yaml
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock</code></pre>
+<h3 id="自动补全"><a href="#自动补全" class="headerlink" title="自动补全"></a>自动补全</h3><pre><code class="bash">apt-get install bash-completion
+
+echo &#39;source /usr/share/bash-completion/bash_completion&#39; &gt;&gt; ~/.bashrc
+echo &#39;source &lt;(kubectl completion bash)&#39; &gt;&gt; ~/.bashrc</code></pre>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p><a href="https://kubernetes.io/zh-cn/docs/tutorials/hello-minikube/" target="_blank" rel="noopener">文档</a></p>
+<p><a href="https://kubernetes.io/zh-cn/docs/concepts/overview/" target="_blank" rel="noopener">文档</a></p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
+<li><strong>服务发现和负载均衡</strong>: Kubernetes可以通过DNS名称或IP地址暴露容器，并自动进行负载均衡，确保流量均匀分配，保持部署稳定。</li>
+<li><strong>存储编排</strong>: Kubernetes支持自动挂载各种存储系统，如本地存储和公共云存储，简化存储管理。</li>
+<li><strong>自动部署和回滚</strong>: Kubernetes允许描述容器的期望状态，并自动调整实际状态以匹配期望状态，支持自动化部署和回滚。</li>
+<li><strong>自动完成装箱计算</strong>: Kubernetes根据容器的CPU和内存需求，智能调度容器到集群中的节点，优化资源利用。</li>
+<li><strong>自我修复</strong>: Kubernetes会自动重启失败的容器、替换不健康的容器，并在服务准备好之前不将其通告给客户端。</li>
+<li><strong>密钥与配置管理</strong>: Kubernetes可以安全地存储和管理敏感信息，如密码和密钥，支持在不重建镜像的情况下更新配置。</li>
+<li><strong>批处理执行</strong>: Kubernetes不仅管理服务，还支持批处理和CI工作负载，自动替换失败的容器。</li>
+<li><strong>水平扩缩</strong>: Kubernetes支持通过简单命令、用户界面或根据CPU使用率自动扩缩应用。</li>
+<li><strong>IPv4/IPv6双栈</strong>: Kubernetes为Pod和Service分配IPv4和IPv6地址，支持双栈网络。</li>
+<li><strong>为可扩展性设计</strong>: Kubernetes允许在不改变上游源代码的情况下添加功能，支持集群的可扩展性。</li>
+</ol>
+<h2 id="Ingress"><a href="#Ingress" class="headerlink" title="Ingress"></a>Ingress</h2><p>控制Web流量达到工作负载，可以当做集群入口点。</p>
+<h2 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h2><p>云原生服务发现</p>
+<h2 id="Yaml文件"><a href="#Yaml文件" class="headerlink" title="Yaml文件"></a>Yaml文件</h2><p>使用yaml定义一个pod，此时不会被Deployment控制器所管理，出现问题后不会重新创建。</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image:latest
+    ports:
+    - containerPort: 80</code></pre>
+<p>使用yaml定义一个Deployment，当pod崩溃或者被删除时，会自动创建来保证存在指定数量的pod。</p>
+<pre><code class="yaml">apiVersion: apps/v1
+kind: Deployment # 这里不一样
+metadata:
+  name: my-deployment
+spec:
+  replicas: 3 # Pod副本数量
+  selector:
+    matchLabels:
+      app: my-app # 要与template.metadata.labels匹配，保证Deployment创建的pod能被正确管理。
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-container
+        image: my-image:latest
+        ports:
+        - containerPort: 80</code></pre>
+<h2 id="K8S组件"><a href="#K8S组件" class="headerlink" title="K8S组件"></a>K8S组件</h2><p>Node：工作机器<br>Container：容器<br>Pod：部署单元，一个应用可能有多个部署单元，一个部署单元可能包含一个或多个容器，容器共享相同的网络和存储单元。先有的部署单元，部署单元需要创建容器，容器位于节点上。<em>一个Node上不同的Container之间怎么做的共享和隔离？</em><br>Deployment：应用控制器，检测Pod的运行创建，出问题时自动创建。</p>
+<p>K8S集群由控制平面和一个或多个工作节点组成。</p>
+<ol>
+<li>控制平面组件：管理集群的整体状态，负责资源调度，检测和响应集群事件<ol>
+<li>kube-apiserver：公开 Kubernetes HTTP API 的核心组件服务器</li>
+<li>etcd：一致性和高可用的键值存储，用于API服务器的数据存储</li>
+<li>kube-scheduler：监听新创建的未指定运行Node的Pods，将Pod分配给合适的Node。<strong>资源需求，软硬件，策略约束，亲和，反亲和，数据位置，工作覆盖干扰，最后时限。东西还挺多，每个感觉都能看看</strong></li>
+<li>kube-controller-manager：运行控制器来实现 Kubernetes API 行为。（<em>不太懂</em>）<ol>
+<li>Node控制器，在节点出现故障时进行响应</li>
+<li>Job控制器，啥玩意</li>
+<li>EndpointSlice控制器，填充EndpointSlice对象，提供Service和Pod之间的链接。</li>
+<li>ServiceAccount控制器，啥玩意</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Node 组件：运行在节点上，<em>维护pod并提供k8s运行时环境</em><ol>
+<li>kubelet：确保pod及其容器正常运行。保证容器都运行在pod中，啥玩意</li>
+<li>kube-proxy：维护节点网络规则来实现service功能，（Kubernetes中Service是将运行在一个或一组Pod上的应用可被客户端访问，Service提供一个虚拟的IP地址和端口，以及选择器selector如<code>k8s-app: kube-dns</code>带有此标签的服务A会被注册到这个Service实现转发的作用）。</li>
+</ol>
+</li>
+<li>插件<ol>
+<li>DNS</li>
+<li>Web界面</li>
+<li>容器资源监控</li>
+<li>日志</li>
+</ol>
+</li>
+</ol>
+<h2 id="K8S对象"><a href="#K8S对象" class="headerlink" title="K8S对象"></a>K8S对象</h2><p>描述了K8S中的一个实体，对应一个yaml文件。其中描述了实体的名称，期望状态等内容。</p>
+<p><strong>对象管理</strong></p>
+<ul>
+<li><strong>指令式命令</strong>：<code>kubectl create deployment nginx --image nginx</code></li>
+<li><strong>指令式对象配置</strong>：指定一个对象 <code>kubectl create -f nginx.yaml</code></li>
+<li><strong>声明式对象配置</strong>：制定目录</li>
+</ul>
+<p>Name定义了一个对象名，对应的实体使用UID标识。对象删除重建后，对象名不变，应用名会变。</p>
+<p>label标签，可以通过标签进行选择和过滤操作。<code>&quot;metadata&quot;: { &quot;labels&quot;: {&quot;K1&quot;: &quot;value&quot;} }</code></p>
+<p>annotations注解，用于存储非标识数据，不用于选择和过滤附加信息，<code>&quot;metadata&quot;: { &quot;annotations&quot;: {&quot;K1&quot;: &quot;value&quot;} }</code></p>
+<p>namespace，将同一集群中的资源划分为互相隔离的组，供不同用户来使用。</p>
+<h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p>pods的管理和回收机制，Finalizers，属主，附属</p>
+<h3 id="K8S-API"><a href="#K8S-API" class="headerlink" title="K8S API"></a>K8S API</h3><p>K8S使用API查询和操纵其中对象的状态，kubectl这类命令行工具也是在调用API。kubectl获取并缓存API规范<strong>实现命令行补全</strong>。</p>
+<p>两个机制，<em>发现API，OpenAPI文档</em></p>
+<h2 id="K8S架构"><a href="#K8S架构" class="headerlink" title="K8S架构"></a>K8S架构</h2><h3 id="节点和控制面之间的通信"><a href="#节点和控制面之间的通信" class="headerlink" title="节点和控制面之间的通信"></a>节点和控制面之间的通信</h3><p>节点的API调用终止于API服务器</p>
+<p>API服务器到各个节点上的kubelet进程存在连接，作用：获取pod日志，挂接？，端口转发。</p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><p>对象中存在spec字段，表示对象期望达到的状态，控制器负责确保其当前状态接近于期望状态。</p>
+<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p>Kubernetes 可以使用的一些镜像名称示例包括：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>busybox</td>
+<td>仅包含镜像名称，没有标签或摘要，Kubernetes 将使用 Docker 公共镜像仓库和 latest 标签。 （例如 docker.io/library/busybox:latest）</td>
+</tr>
+<tr>
+<td>busybox:1.32.0</td>
+<td>带标签的镜像名称，Kubernetes 将使用 Docker 公共镜像仓库。 （例如 docker.io/library/busybox:1.32.0）</td>
+</tr>
+<tr>
+<td>registry.k8s.io/pause:latest</td>
+<td>带有自定义镜像仓库和 latest 标签的镜像名称。</td>
+</tr>
+<tr>
+<td>registry.k8s.io/pause:3.5</td>
+<td>带有自定义镜像仓库和非 latest 标签的镜像名称。</td>
+</tr>
+<tr>
+<td>registry.k8s.io/pause@sha256:1ff6c18fbef2045af6b9c16bf034cc421a29027b800e4f9b68ae9b1cb3e9ae07</td>
+<td>带摘要的镜像名称。</td>
+</tr>
+<tr>
+<td>registry.k8s.io/pause:3.5@sha256:1ff6c18fbef2045af6b9c16bf034cc421a29027b800e4f9b68ae9b1cb3e9ae07</td>
+<td>带有标签和摘要的镜像名称，镜像拉取仅参考摘要。</td>
+</tr>
+</tbody></table>
+<p>镜像拉取策略imagePullPolicy</p>
+<ul>
+<li>IfNotPresent：本地不存在才拉取（未指定且使用非latest标签时的默认项）</li>
+<li>Always：查询镜像摘要，如果本地不存在对应摘要则拉取，存在并不会拉取。（未指定且使用latest标签时的默认项）（未指定且无标签时的默认项）</li>
+<li>Never：只使用本地</li>
+</ul>
+<p>策略在对象初次创建时设置，此后更新Deployment的镜像标签时，拉取策略不会发生变化。</p>
+<h3 id="容器环境"><a href="#容器环境" class="headerlink" title="容器环境"></a>容器环境</h3><p>pod中定义的环境变量可在容器中使用</p>
+<p>Foo服务器的环境变量，用于访问FOO服务器</p>
+<pre><code class="txt">FOO_SERVICE_HOST=主机
+FOO_SERVICE_PORT=端口</code></pre>
+<p><a href="https://github.com/kubernetes/kubernetes/tree/v1.32.0/cluster/addons/dns/" target="_blank" rel="noopener">DNS插件</a></p>
+<h3 id="容器回调"><a href="#容器回调" class="headerlink" title="容器回调"></a>容器回调</h3><p>回调：无参数，执行失败会杀掉容器</p>
+<ul>
+<li><p>PostStart：容器创建之后被立即执行。执行时间过长或挂起，可能容器无法进入running状态。失败会发出FailedPostStartHook事件。</p>
+</li>
+<li><p>PreStop：容器被终止前调用。需要在限定时间内执行完成，时间一到即刻上路。失败会发出FailedPreStopHook事件。</p>
+</li>
+</ul>
+<p>注册方式(执行方式)</p>
+<p>Exec，执行命令，HTTP，Sleep</p>
+<p><code>kubectl describe pod lifecycle-demo</code></p>
+<pre><code class="yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - sed -i &#39;s/Welcome to nginx!/Welcome to nginx-1!/g&#39; /usr/share/nginx/html/index.html</code></pre>
+<h2 id="工作负载"><a href="#工作负载" class="headerlink" title="工作负载"></a>工作负载</h2><p>工作负载是运行程序，pod是一组运行状态的容器集合。一般不会直接管理pod，而是通过工作负载配置+控制器，自动管理pod</p>
+<p>工作负载配置类型</p>
+<ul>
+<li>Deployment，ReplicaSet：管理无状态应用，pod都是等价的</li>
+<li>StatefulSet：部署有状态服务，将Pod与PersistentVolume对应起来。<em>可以将数据复制到同一StatefulSet中其他Pod来提高整体服务的可靠性，怎么复制？</em></li>
+<li>DaemonSet：基础负载，添加新Node时，会自动在新Node部署一个pod</li>
+<li>Job：定义一直运行到结束并停止的任务，CronJob：根据排期表，多次运行同一个job</li>
+<li>定制：CRD。如果你希望运行一组 Pod，但要求所有 Pod 都可用时才执行操作 （比如针对某种高吞吐量的分布式任务），你可以基于定制资源实现一个能够满足这一需求的扩展， 并将其安装到集群中运行。<em>怎么定义感觉可以看看，CRD这个东西</em></li>
+</ul>
+<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><h4 id="pod生命周期"><a href="#pod生命周期" class="headerlink" title="pod生命周期"></a>pod生命周期</h4><p>Pod：定义的一个逻辑主机，容器的运行时环境，包含一个或多个应用容器，容器对应的紧密耦合在一起（共享网络（可以通过localhost通信）和存储（共享内存也行？））。Pod 类似于共享名字空间并共享文件系统卷的一组容器。</p>
+<p>除了应用容器：pod还可以在Pod启动期间运行init容器，还可以注入临时性容器来调试正在运行的pod。</p>
+<p>直接创建POD，不推荐：<code>kubectl apply -f https://k8s.io/examples/pods/simple-pod.yaml</code></p>
+<p><em>POD名称DNS子域值（这是啥？）DNS标签规则</em></p>
+<p>livenessProbe：容器存活探针<br>readinessProbe：就绪探针，探测失败时从Server/Endpoint/负责均衡中摘除，不分配流量。<br>startupProbe：启动检测探针。容器启动时间过长时，会被上面两个探针误伤。当启用了启动检查探针时，存活和就绪探针将会在启动检查探针检测成功后启用。</p>
+<p><strong>Pod.status.phase整体POD生命周期</strong>：起始于Pending，至少有一个主要容器正常启动后进入Running，之后有容器失败进入failed，没有则进入Succeeded。</p>
+<p>Pending：Pod被保存到了Etcd中，但是Pod中的容器不能被顺利创建<br>Running：Pod已经创建成功，和Node进行绑定。所有容器都创建成功，至少有一个正在运行中<br>Succeeded：所有容器正常运行完毕，并且退出了。常见于运行一次性任务。<br>Failed：至少有一个容器以非0错误码退出<br>Unknown：通信出现问题</p>
+<p><strong>Pod.status.conditionsPOD健康条件</strong>：展示<strong>pod</strong>关键阶段和健康性。<br>Ready：所有容器已经就绪，可以对外提供服务<br>ContainersReady：所有业务容器就绪（不含init容器）<br>PodScheduled：是否被调度到某一个Node上</p>
+<p><strong>Pod.status.containerStatuses.state单个容器状态</strong>：直观展示<strong>容器</strong>的状态，不同于phase。waiting等待需要结合reason查看，running，反复启动失败可能会有CrashLoopBackOff，被删除会有Terminating<br>livenessProbe失败会导致state切换到Terminated，之后按照restartPolicy处理。</p>
+<p>绑定：pod分配到特定节点</p>
+<p>调度：选择使用哪个节点</p>
+<p><code>kubectl describe pod &lt;pod 名称&gt;</code>：查看pod的状态和时间</p>
+<p><code>kubectl logs &lt;pod名称&gt;</code>: 查看pod的日志</p>
+<h4 id="Init容器和Sidecar边车容器"><a href="#Init容器和Sidecar边车容器" class="headerlink" title="Init容器和Sidecar边车容器"></a>Init容器和Sidecar边车容器</h4><p>Init按顺序执行完毕之后退出，应用容器才会运行</p>
+<p>应用</p>
+<ol>
+<li>运行shell检查并等待一个Service完成创建（Init运行结束之后，应用容器才会运行）</li>
+<li>curl注册POD到远程服务器</li>
+<li>sleep应用容器启动之前，等待一段时间。</li>
+<li>克隆git仓库到<strong>卷（后面会有一大章节介绍）</strong>中</li>
+<li>渲染配置文件的模板，如模板需要POD的ip</li>
+</ol>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app.kubernetes.io/name: MyApp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: [&#39;sh&#39;, &#39;-c&#39;, &#39;echo The app is running! &amp;&amp; sleep 3600&#39;]
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: [&#39;sh&#39;, &#39;-c&#39;, &quot;until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done&quot;]
+  - name: init-mydb
+    image: busybox:1.28
+    # 指定成Always会变成边车容器
+    restartPolicy: Always
+    command: [&#39;sh&#39;, &#39;-c&#39;, &quot;until nslookup mydb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done&quot;]</code></pre>
+<pre><code class="shell"># 启动
+kubectl apply -f myapp.yaml
+# 检查状态
+kubectl get -f myapp.yaml
+# 查看pod内Init容器的日志
+kubectl logs myapp-pod -c init-myservice</code></pre>
+<p>pod重启，init容器必须重新执行</p>
+<p>Init容器的restartPolicy设置成Always，就会在pod生命周期内持续运行</p>
+<h4 id="临时容器"><a href="#临时容器" class="headerlink" title="临时容器"></a>临时容器</h4><p>Pod是一次性可替换的，一旦创建完成，无法添加新的容器到其中。</p>
+<p>缺少对资源或者执行的保证，永远不会自动重启，不用于构建应用程序，没有端口配置，临时容器被添加到pod后，不能更改或删除临时容器。</p>
+<h4 id="干扰，QoS类，命名空间-没怎么看，跳过了算是"><a href="#干扰，QoS类，命名空间-没怎么看，跳过了算是" class="headerlink" title="干扰，QoS类，命名空间 没怎么看，跳过了算是"></a>干扰，QoS类，命名空间 没怎么看，跳过了算是</h4><h4 id="Downward-API"><a href="#Downward-API" class="headerlink" title="Downward API"></a>Downward API</h4><p>将pod和容器字段暴露给运行中的容器</p>
+<ol>
+<li>作为环境变量</li>
+<li>作为downwardAPI卷中的文件</li>
+</ol>
+<h3 id="工作负载管理"><a href="#工作负载管理" class="headerlink" title="工作负载管理"></a>工作负载管理</h3><p>Deployments：封装的ReplicaSet，提供了更新、回滚、恢复和暂停等能力。更新时创建新的RS用其中的POD逐步替换旧RS的POD。修改模板之后直接使用apply应用，会触发自动应用</p>
+<p>ReplicaSet：提供了维持POD数量的能力，修改POD模板之后需要删除旧POD才能触发新POD创建。</p>
+<p>StatefulSet：比起Deployments为它们的每个Pod维护了一个有粘性的永远不变的ID。</p>
+<p>Deployments vs StatefulSet</p>
+<p><strong>身份标识</strong></p>
+<ul>
+<li>Deployments的POD名称随机生成（nginx-deploy-5d5b64cf8-xj7pw），重启后变化。无固定网络标识，IP动态分配，服务依赖Service负载均衡</li>
+<li>StatefulSete的POD名称固定（mysql-0，mysql-1），重建后保持不变。提供稳定的DNS名称<code>（&lt;pod-name&gt;.&lt;svc-name&gt;.namespace.svc.cluster.local）</code></li>
+</ul>
+<p><strong>存储管理</strong></p>
+<ul>
+<li>Deployments默认使用临时存储（emptyDir），POD删除后数据丢失，持久化需要手动配置PVC，无法绑定到特定POD。</li>
+<li>StatefulSet为每个POD绑定独立PVC，与POD生命周期解耦</li>
+</ul>
+<p><strong>生命周期管理</strong></p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>Deployment</th>
+<th>StatefulSet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启动/停止顺序</td>
+<td>并行创建/删除，无顺序要求</td>
+<td>严格按序号顺序（如先启动 <code>web-0</code>，再 <code>web-1</code>）</td>
+</tr>
+<tr>
+<td>滚动更新</td>
+<td>无序更新，支持多 Pod 同时替换</td>
+<td>逆序更新（从最高序号 Pod 开始逐个更新）</td>
+</tr>
+<tr>
+<td>扩缩容</td>
+<td>随机创建/删除 Pod</td>
+<td>扩容：顺序新增 Pod（如新增 <code>web-2</code>）； 缩容：逆序删除（先删 <code>web-2</code>）</td>
+</tr>
+</tbody></table>
+<h4 id="Deployments"><a href="#Deployments" class="headerlink" title="Deployments"></a>Deployments</h4><pre><code class="yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment # 命名
+  labels: # Deployment的标签
+    app: nginx
+spec:
+  replicas: 3 # 创建一个ReplicaSet，标明pod副本数量
+  selector: # 定义ReplicaSet会管理所有带有后面标签的pod。如果先前通过其他方式创建过带有此标签的pod，且pod符合后面image和port的定义，也会被同时管理，不过此时相关NAME可能规范不同（如没有相关的HASH或者前缀）不建议这样做。假定你在ReplicaSet已经被部署之后创建Pod，并且你已经在ReplicaSet中设置了其初始的Pod副本数以满足其副本计数需要，新的Pod会被该ReplicaSet获取，并立即被ReplicaSet终止， 因为它们的存在会使得ReplicaSet中Pod个数超出其期望值。
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels: # 在模板中定义标签，这个是pod的标签
+        app: nginx
+    spec: 指定运行一个nginx容器并命名为nginx
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80</code></pre>
+<p><code>kubectl apply -f https://k8s.io/examples/controllers/nginx-deployment.yaml</code></p>
+<pre><code class="txt">kubectl get deployments
+
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   0/3     0            0           1s</code></pre>
+<ul>
+<li>NAME: Deployment名称</li>
+<li>READY：就绪个数/期望个数</li>
+<li>UP-TO-DATE：为了达到期望状态已经更新的副本数</li>
+<li>AVAILABLE：可用用户使用的副本数</li>
+<li>AGE：运行时间</li>
+</ul>
+<pre><code class="txt">kubectl get rs
+
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-75675f5897   3         3         3       18s</code></pre>
+<ul>
+<li>NAME: ReplicaSet名称，75675f5897是哈希，由<code>Deployment名称-哈希</code>组合而成</li>
+<li>DESIRED：期望副本数</li>
+<li>CURRENT：实际副本数</li>
+<li>READY：可以为用户提供服务的副本数</li>
+<li>AGE：显示应用运行时间的长度</li>
+</ul>
+<pre><code class="txt">kubectl get pods --show-labels
+
+NAME                                READY     STATUS    RESTARTS   AGE       LABELS
+nginx-deployment-75675f5897-7ci7o   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897
+nginx-deployment-75675f5897-kzszj   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897
+nginx-deployment-75675f5897-qqcnn   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897</code></pre>
+<p>NAME:Pod名称，<code>ReplicaSet名称-哈希</code></p>
+<p>Deployment控制器将pod-template-hash标签添加到<code>Deployment所创建或收留的每个ReplicaSet</code>此标签可确保Deployment的子ReplicaSet不重叠。标签是通过对ReplicaSet的PodTemplate进行哈希处理。所生成的哈希值被添加到ReplicaSet选择算符、Pod模板标签，并存在于在ReplicaSet可能拥有的任何现有<code>Pod中</code>。</p>
+<h5 id="更新Deployment"><a href="#更新Deployment" class="headerlink" title="更新Deployment"></a>更新Deployment</h5><p><code>kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.16.1</code></p>
+<p><code>kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1</code></p>
+<p><code>kubectl edit deployment/nginx-deployment</code></p>
+<p><strong>查看上线状态</strong></p>
+<p><code>kubectl rollout status deployment/nginx-deployment</code></p>
+<pre><code class="txt">kubectl get rs
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-1564180365   3         3         3       6s    这个是新的RS，已经创建完毕
+nginx-deployment-2035384211   0         0         0       36s   这个是旧的，已经全部归0</code></pre>
+<h5 id="翻转-滚动更新"><a href="#翻转-滚动更新" class="headerlink" title="翻转 滚动更新"></a>翻转 滚动更新</h5><pre><code class="txt">kubectl describe deployments nginx-deployment
+
+Normal  ScalingReplicaSet  2m    deployment-controller  Scaled up replica set nginx-deployment-2035384211 to 3  # 旧的创建到3个
+Normal  ScalingReplicaSet  24s   deployment-controller  Scaled up replica set nginx-deployment-1564180365 to 1  # 新的先创建1个
+Normal  ScalingReplicaSet  22s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 2 # 旧的缩容到2个
+Normal  ScalingReplicaSet  22s   deployment-controller  Scaled up replica set nginx-deployment-1564180365 to 2 # 新的扩容到2个
+Normal  ScalingReplicaSet  19s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 1 # 旧的缩容到1个
+Normal  ScalingReplicaSet  19s   deployment-controller  Scaled up replica set nginx-deployment-1564180365 to 3
+Normal  ScalingReplicaSet  14s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 0</code></pre>
+<p>更新了Deployment，控制标签匹配.sepc.selector, 模板不匹配.sepc.template。会进行缩容和扩容进行更新</p>
+<h5 id="回滚更新"><a href="#回滚更新" class="headerlink" title="回滚更新"></a>回滚更新</h5><p>检查上线状态</p>
+<pre><code class="txt">kubectl rollout status deployment/nginx-deployment
+
+Waiting for rollout to finish: 1 out of 3 new replicas have been updated...</code></pre>
+<p>获取rs信息</p>
+<pre><code class="txt">kubectl get rs
+
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-1564180365   3         3         3       25s
+nginx-deployment-2035384211   0         0         0       36s
+nginx-deployment-3066724191   1         1         0       6s</code></pre>
+<p>获取pod信息</p>
+<pre><code class="txt">kubectl get pods
+
+NAME                                READY     STATUS             RESTARTS   AGE
+nginx-deployment-1564180365-70iae   1/1       Running            0          25s
+nginx-deployment-1564180365-jbqqo   1/1       Running            0          25s
+nginx-deployment-1564180365-hysrc   1/1       Running            0          25s
+nginx-deployment-3066724191-08mng   0/1       ImagePullBackOff   0          6s  # 新的RS中的新的POD卡在镜像拉取</code></pre>
+<p>检查上线历史</p>
+<pre><code class="txt">kubectl rollout history deployment/nginx-deployment
+
+deployments &quot;nginx-deployment&quot;
+REVISION    CHANGE-CAUSE
+1           kubectl apply --filename=https://k8s.io/examples/controllers/nginx-deployment.yaml
+2           kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
+3           kubectl set image deployment/nginx-deployment nginx=nginx:1.161</code></pre>
+<p>查看修订历史的详细信息</p>
+<pre><code class="txt">kubectl rollout history deployment/nginx-deployment --revision=2
+
+deployments &quot;nginx-deployment&quot; revision 2
+  Labels:       app=nginx
+          pod-template-hash=1159050644
+  Annotations:  kubernetes.io/change-cause=kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
+  Containers:
+   nginx:
+    Image:      nginx:1.16.1
+    Port:       80/TCP
+     QoS Tier:
+        cpu:      BestEffort
+        memory:   BestEffort
+    Environment Variables:      &lt;none&gt;
+  No volumes</code></pre>
+<p>撤销当前上线，回滚到上一个版本<br>kubectl rollout undo deployment/nginx-deployment</p>
+<p>回滚到指定的版本<br>kubectl rollout undo deployment/nginx-deployment –to-revision=2</p>
+<h5 id="缩放"><a href="#缩放" class="headerlink" title="缩放"></a>缩放</h5><p>kubectl scale deployment/nginx-deployment –replicas=10</p>
+<h5 id="暂停和恢复更新"><a href="#暂停和恢复更新" class="headerlink" title="暂停和恢复更新"></a>暂停和恢复更新</h5><p>kubectl rollout pause deployment/nginx-deployment</p>
+<p>kubectl rollout resume deployment/nginx-deployment</p>
+<p>监视上线状态</p>
+<p>kubectl get rs –watch</p>
+<h5 id="Deployment状态，清理策略，金丝雀部署，规范-简单过了下"><a href="#Deployment状态，清理策略，金丝雀部署，规范-简单过了下" class="headerlink" title="Deployment状态，清理策略，金丝雀部署，规范 简单过了下"></a>Deployment状态，清理策略，金丝雀部署，规范 简单过了下</h5><h4 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a>ReplicaSet</h4><p>维持在任何给定时间运行的一组稳定的设置数量且完全相同的副本Pod，通常用Deployment来自动管理</p>
+<p>会在pod上添加metadata.ownerReferences字段，来标注属于哪个ReplicaSet。如果POD上没有ownerReference或者其ownerReference不是一个控制器，匹配到某ReplicaSet的选择运算符，则该pod会被RS获得。</p>
+<pre><code class="yaml">apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # 按你的实际情况修改副本数
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5</code></pre>
+<p>除了<code>kind字段</code>和Deployment章节的例子几乎完全一样，但是指定成ReplicaSet后，会失去Deployment的自动扩容和回滚等功能。ReplicaSet主要用于保证指定数量的pod副本运行。</p>
+<pre><code class="shell">kubectl apply -f https://kubernetes.io/examples/controllers/frontend.yaml
+
+kubectl get rs
+NAME       DESIRED   CURRENT   READY   AGE
+frontend   3         3         3       6s
+
+kubectl describe rs/frontend
+
+kubectl get pods
+NAME             READY   STATUS    RESTARTS   AGE
+frontend-gbgfx   1/1     Running   0          10m
+frontend-rwz57   1/1     Running   0          10m
+frontend-wkl7w   1/1     Running   0          10m</code></pre>
+<p>可以看到pods的命名里少了一节Deployment中RS的段，因为<code>kind：ReplicaSet</code>模式下定义的name直接就是RS的，而不是定义的Deployment，由Deployment来创建RS。</p>
+<p><strong>假定你在ReplicaSet已经被部署之后创建Pod，并且你已经在ReplicaSet中设置了其初始的Pod副本数以满足其副本计数需要，新的Pod会被该ReplicaSet 获取，并立即被ReplicaSet终止， 因为它们的存在会使得ReplicaSet中Pod个数超出其期望值。</strong></p>
+<h5 id="删除相关的过了一下"><a href="#删除相关的过了一下" class="headerlink" title="删除相关的过了一下"></a>删除相关的过了一下</h5><h4 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h4><p>当个Web-0的phase进入Running，Condition变成Ready前，Web-0一直是Pending状态。</p>
+<p>和Deployment不同的是，StatefulSet为它们的每个Pod维护了一个有粘性的永远不变的ID。<em>使用存储卷，这个存储卷是啥？</em></p>
+<ul>
+<li>稳定的、唯一的网络标识符。</li>
+<li>稳定的、持久的存储。</li>
+<li>有序的、优雅的部署和扩缩。</li>
+<li>有序的、自动的滚动更新。</li>
+</ul>
+<p>给定Pod的存储必须由PersistentVolume Provisioner基于所请求的storage class来制备，或者由管理员预先制备。删除或者扩缩StatefulSet并不会删除它关联的存储卷。这样做是为了保证数据安全，它通常比自动清除StatefulSet所有相关的资源更有价值。</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx # 必须匹配 .spec.template.metadata.labels
+  serviceName: &quot;nginx&quot;
+  replicas: 3 # 默认值是 1
+  updateStrategy: RollingUpdate # 默认的滚动更新   OnDelete手动删除pod后控制器才会创建新的pod，这时才能响应.sepc.template的变动
+  minReadySeconds: 10 # 默认值是 0
+  template:
+    metadata:
+      labels:
+        app: nginx # 必须匹配 .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx
+        image: registry.k8s.io/nginx-slim:0.24
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates: # 这个字段是创建PersistentVolumeClaim， PersistentVolume制备和PersistentVolumes是啥？卷相关的还比较多，后面有单独的章节，不急。
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ &quot;ReadWriteOnce&quot; ]
+      storageClassName: &quot;my-storage-class&quot;
+      resources:
+        requests:
+          storage: 1Gi</code></pre>
+<table>
+<thead>
+<tr>
+<th>集群域名</th>
+<th>服务（名字空间/名字）</th>
+<th>StatefulSet（名字空间/名字）</th>
+<th>StatefulSet 域名</th>
+<th>Pod DNS</th>
+<th>Pod 主机名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cluster.local</td>
+<td>default/nginx</td>
+<td>default/web</td>
+<td>nginx.default.svc.cluster.local</td>
+<td>web-{0..N-1}.nginx.default.svc.cluster.local</td>
+<td>web-{0..N-1}</td>
+</tr>
+<tr>
+<td>cluster.local</td>
+<td>foo/nginx</td>
+<td>foo/web</td>
+<td>nginx.foo.svc.cluster.local</td>
+<td>web-{0..N-1}.nginx.foo.svc.cluster.local</td>
+<td>web-{0..N-1}</td>
+</tr>
+</tbody></table>
+<p>web-{0..N-1}扩容按顺序进行。缩容会逆序执行。当前执行完毕之后，才会处理下一个。</p>
+<p>按照与Pod终止相同的顺序，Kubernetes控制平面会等到被更新的Pod进入Running和Ready状态，然后再更新其前身。如果有minReadySeconds则还会进行额外等待。</p>
+<p><strong>分区滚动更新</strong></p>
+<p>.spec.updateStrategy.rollingUpdate.partition</p>
+<p>当StatefulSet的.spec.template被更新时，所有序号大于等于该分区序号的Pod都会被更新。所有序号小于该分区序号的Pod都不会被更新，并且即使它们被删除也会依据之前的版本进行重建。如果StatefulSet的.spec.updateStrategy.rollingUpdate.partition大于.spec.replicas，则对它的.spec.template的更新将不会传递到它的Pod。</p>
+<p><em>这里还是实操一下比较好</em></p>
+<p><strong>稳定的存储 PersistentVolumeClaim保留</strong></p>
+<p>对于StatefulSet中定义的每个VolumeClaimTemplate，每个Pod会收到基于<code>storage class: my-storage-class</code>分配的1GiB的PersistentVolume。当pod被调度（重新调度）到节点时，volumeMounts会挂载与PersistentVolumeClaim关联的PersistentVolume。pod或StatefulSet被删除时，与PersistentVolumeClaim关联的PersistentVolume不会被一起自动删除，只能手动删除。</p>
+<p>.spec.persistentVolumeClaimRetentionPolicy可以控制是否保留等，简单过了下，默认都是保留。</p>
+<p>StatefulSet的.spec.volumeClaimTemplates会自动创建PVC，而POD就有的.spec.volumes需要指定已经创建好的PVC</p>
+<pre><code class="yaml"># pv
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data
+
+# pvc  POD需要创建好的PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi</code></pre>
+<h4 id="DaemonSet"><a href="#DaemonSet" class="headerlink" title="DaemonSet"></a>DaemonSet</h4><p>提供节点本地设施，新Node加入时会自动部署对应的pod。</p>
+<ul>
+<li>节点上运行集群守护进程</li>
+<li>节点上</li>
+</ul>
+<h4 id="JOB"><a href="#JOB" class="headerlink" title="JOB"></a>JOB</h4><pre><code class="yaml">apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  # 这里没有selector了
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: resouer/ubuntu-bc 
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;echo &#39;scale=10000; 4*a(1)&#39; | bc -l &quot;]
+      restartPolicy: Never # 只能是Never或者OnFailure
+  backoffLimit: 4 # 默认是6</code></pre>
+<p>当restartPolicy指定Never时，会不断创建新的POD，间隔（10S，20S，40S，80S）重试4次。<br>指定OnFailure时，会不断重启现有的容器，不会创建新的</p>
+<p>可以控制并行进行</p>
+<pre><code class="yaml">apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  parallelism: 2 # 最大并行数量
+  completions: 4 # 最小完成数量
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: resouer/ubuntu-bc
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;echo &#39;scale=5000; 4*a(1)&#39; | bc -l &quot;]
+      restartPolicy: Never
+  backoffLimit: 4</code></pre>
+<h5 id="外部管理器-Job模板"><a href="#外部管理器-Job模板" class="headerlink" title="外部管理器+Job模板"></a>外部管理器+Job模板</h5><pre><code class="yaml">apiVersion: batch/v1
+kind: Job
+metadata:
+  name: process-item-$ITEM
+  labels:
+    jobgroup: jobexample
+spec:
+  template:
+    metadata:
+      name: jobexample
+      labels:
+        jobgroup: jobexample
+    spec:
+      containers:
+      - name: c
+        image: busybox
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;echo Processing item $ITEM &amp;&amp; sleep 5&quot;]
+      restartPolicy: Never</code></pre>
+<p>使用工具对$ITEM进行替换后执行<br>KubeFlow使用的这种方式</p>
+<p><strong>拥有固定任务数目的并行 Job</strong>。没太看懂</p>
+<p><strong>指定并行度（parallelism），但不设置固定的 completions 的值。</strong></p>
+<h5 id="CronJob"><a href="#CronJob" class="headerlink" title="CronJob"></a>CronJob</h5><pre><code class="yaml">apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  schedule: &quot;*/1 * * * *&quot;
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure</code></pre>
+<p>像是Deploymet管理RS。Cronjob管理job</p>
+<p>spec.concurrencyPolicy，控制上一个Job未完成的时候，新Job开始时的动作</p>
+<ol>
+<li>concurrencyPolicy=Allow，默认，Job 可以同时存在；</li>
+<li>concurrencyPolicy=Forbid，不会创建新的 Pod，该创建周期被跳过；</li>
+<li>concurrencyPolicy=Replace，新产生的 Job 会替换旧的、没有执行完的 Job。</li>
+</ol>
+<p>一次Job失败miss+1，当miss达到100就会停止创建Job。统计时间段可以由startingDeadlineSeconds指定。</p>
+<h3 id="管理工作负载"><a href="#管理工作负载" class="headerlink" title="管理工作负载"></a>管理工作负载</h3><p>—可以分割多个负载放入一个文件中。</p>
+<h3 id="自动扩缩"><a href="#自动扩缩" class="headerlink" title="自动扩缩"></a>自动扩缩</h3><p>水平扩缩：运行多个实例，通过HPA实现。垂直扩缩：调整容器的CPU和内存资源、VPA不过是插件形式。</p>
+<h2 id="服务，负载均衡，联网"><a href="#服务，负载均衡，联网" class="headerlink" title="服务，负载均衡，联网"></a>服务，负载均衡，联网</h2><p>POD会获得此集群下的一个唯一IP，POD内部容器可以通过localhost通信, POD之间可以相互通信。</p>
+<p>ServiceAPI可以为一个或多个后端POD提供一个稳定的IP地址或主机名。K8S自动管理EndpointSlice对象，提供Service的POD信息。服务代理实现通过操作系统或云平台API来拦截或重写数据包，监视Service和EndpointSlice对象集，在数据平面编程将服务流量路由到其后端。</p>
+<p>Gateway API（前身是Ingress）：使得集群外能够访问Service</p>
+<p>NetworkPolic：控制POD之间的流量，POD和外部的流量</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><pre><code class="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP</code></pre>
+<p>对集群中其他服务暴露80端口，转到selector筛选后pod的端口8080。K8S会为Service分配一个集群IP。</p>
+<p>Pod的定义</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: nginx-proxy
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable
+    ports:
+      - containerPort: 80
+        name: http-web-svc # 这里给80端口起了一个名字</code></pre>
+<p>ClusterIP</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-cluster
+spec:
+  type: ClusterIP # ClusterIP是默认值，只能在集群内访问，可以使用Ingress或者GatewayAPI向外暴露服务。NodePort：通过Node上的IP和端口公开。ExternalName：映射到主机名
+  selector:
+    app.kubernetes.io/name: nginx-proxy
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc # 直接使用名字
+</code></pre>
+<p>NodePort</p>
+<pre><code class="yaml">
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+spec:
+  type: NodePort # NodePort：每个Node的kube-proxy监听nodePort并转发到符合selector的Pod的targetPort
+  selector:
+    app.kubernetes.io/name: nginx-proxy
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc # 直接使用名字
+    nodePort: 30000
+</code></pre>
+<p>lb</p>
+<pre><code class="yaml">
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lb
+spec:
+  type: LoadBalancer # 云厂商的CCM监听到后，会自动创建负载均衡，分配EXTERNAL-IP，通过EXTERNAL-IP调用时，会自动负载均衡到某一个pod
+  selector:
+    app.kubernetes.io/name: nginx-proxy
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc</code></pre>
+<h3 id="Ingress-1"><a href="#Ingress-1" class="headerlink" title="Ingress"></a>Ingress</h3><p>Ingress Controller通过Service（LoadBalance或者NodePort）对外暴露入口，根据其中设置的规则，将流量转发到指定的pod。</p>
+<pre><code class="yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+spec:
+  rules:
+  - host: cafe.example.com # IngressRule的Key
+    http:
+      paths:
+      - path: /tea
+        backend:
+          serviceName: tea-svc
+          servicePort: 80
+      - path: /coffee
+        backend:
+          serviceName: coffee-svc
+          servicePort: 80</code></pre>
+<p>Ingress对象更新后nginx-ingress-controller就会根据内容生成一个nginx配置</p>
+<h3 id="Service和Ingress"><a href="#Service和Ingress" class="headerlink" title="Service和Ingress"></a>Service和Ingress</h3><p>Service工作在四层，Ingress工作在七层，涉及TLS等HTTP内容是只能使用ingress</p>
+<h3 id="EndpointSlic"><a href="#EndpointSlic" class="headerlink" title="EndpointSlic"></a>EndpointSlic</h3><p>EndpointSlic对象是某个Service的后端网络断点的子集</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>cluster-domain默认为cluster.local.</p>
+<p>同一集群可以省略<code>&lt;cluster-domain&gt;</code>, 同一命名空间可以省略<code>&lt;namespace&gt;</code></p>
+<p>服务的DNS名称格式为 <code>&lt;service-name&gt;.&lt;namespace&gt;.svc.&lt;cluster-domain&gt;</code>，短域名<code>&lt;service-name&gt;.&lt;namespace&gt;</code>，同一命名空间<code>&lt;service-name&gt;</code></p>
+<p>Pod的DNS名称格式为 <code>&lt;pod-ip&gt;.&lt;namespace&gt;.pod.&lt;cluster-domain&gt;</code><br>同时还有端口的SRV记录<code>_&lt;port-name&gt;._&lt;protocol&gt;.&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local</code></p>
+<p>记录 A SRV PTR</p>
+<pre><code class="shell">nslookup -type=A paifu
+Server:         9.166.175.254
+Address:        9.166.175.254#53
+
+Name:   paifu.gamematrix.svc.cluster.local
+Address: 9.166.174.123
+
+nslookup -type=SRV _http-metrics._tcp.cgi-common-sendsysmail.happygame
+Server:         9.166.175.254
+Address:        9.166.175.254#53
+
+_http-metrics._tcp.cgi-common-sendsysmail.happygame.svc.cluster.local   service = 0 100 9100 cgi-common-sendsysmail.happygame.svc.cluster.local.
+
+nslookup -type=PTR 9.166.169.229
+Server:         9.166.175.254
+Address:        9.166.175.254#53
+
+229.169.166.9.in-addr.arpa      name = 9-166-169-229.paifu.gamematrix.svc.cluster.local.
+229.169.166.9.in-addr.arpa      name = 9-166-169-229.service-hlsvr.gamematrix.svc.cluster.local.
+229.169.166.9.in-addr.arpa      name = 9-166-169-229.service-configagent.gamematrix.svc.cluster.local.</code></pre>
+<p>Cluster IP的service<br><code>&lt;svc&gt;.&lt;namespace&gt;.svc.cluster.local</code> 指向Service的ClusterIP（VIP）</p>
+<p>Headless Service<br><code>&lt;svc&gt;.&lt;namespace&gt;.svc.cluster.local</code> 返回所有后端的Endpoints的IP列表</p>
+<p>Pod的记录<br><code>&lt;pod-ip-with-dashes&gt;.&lt;namespace&gt;.pod.cluster.local</code>, pod-ip-with-dashes: 将.替换成-，10.1.2.3 -&gt; 10-1-2-3</p>
+<p>StatefulSet的格式<br><code>&lt;hostname&gt;.&lt;subdomain&gt;.&lt;namespace&gt;.svc.cluster.local</code>, subdomain一般是0,1,2,3</p>
+<h3 id="IPV6支持，感知路由，Windows，Cluster-IP分配，跳过"><a href="#IPV6支持，感知路由，Windows，Cluster-IP分配，跳过" class="headerlink" title="IPV6支持，感知路由，Windows，Cluster IP分配，跳过"></a>IPV6支持，感知路由，Windows，Cluster IP分配，跳过</h3><h3 id="同一Node中Pod的通信"><a href="#同一Node中Pod的通信" class="headerlink" title="同一Node中Pod的通信"></a>同一Node中Pod的通信</h3><p>service中.spec.internalTrafficPolicy设置成Local，只会选择本Node中的Pod</p>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><h3 id="卷"><a href="#卷" class="headerlink" title="卷"></a>卷</h3><p>卷为POD中的容器提供了通过文件系统访问和共享数据的方式，可以进行数据的持久存储和共享。</p>
+<h4 id="hostPath-不能迁移到其他Node"><a href="#hostPath-不能迁移到其他Node" class="headerlink" title="hostPath 不能迁移到其他Node"></a>hostPath 不能迁移到其他Node</h4><pre><code class="yaml">spec:
+  volumes:
+    - hostPath:
+        path: /data/corefile/  # 给Node的此目录命名
+        type: &#39;&#39;
+      name: corefiles
+  containers:
+    - volumeMounts:
+        - name: corefiles
+          mountPath: /data/corefile/ # 将Node目录挂载到容器的此目录
+</code></pre>
+<h4 id="emptyDir-POD移除时内容消失"><a href="#emptyDir-POD移除时内容消失" class="headerlink" title="emptyDir POD移除时内容消失"></a>emptyDir POD移除时内容消失</h4><pre><code class="yaml">spec:
+  volumes:
+    - name: share_empty # 从节点临时存储创建一个卷
+      emptyDir: {}
+  containers:
+    - volumeMounts:
+        - name: share_empty # 挂载卷，POD崩溃时卷内容依然存在，POD删除时内容移除，适合用来做缓存
+          mountPath: /etc/config   </code></pre>
+<h3 id="持久卷"><a href="#持久卷" class="headerlink" title="持久卷"></a>持久卷</h3><p>存储如何制备的细节从其如何被使用中抽象出来</p>
+<p>持久卷（PersistentVolume，PV）: 集群中的存储，可手动制备或使用存储类动态制备，拥有独立于任何使用PV的POD的生命周期。将物理存储方式隐藏起来，对外提供存储</p>
+<p>持久卷申领（PersistentVolumeClaim，PVC）：POD会消耗Node资源，PVC可以设定大小或访问模式来消耗PV资源。</p>
+<p>保护：删除被某Pod使用的PVC对象，PVC申领不会被立即移除。PVC对象的移除会被推迟，直至其不再被任何Pod使用。删除已绑定到某PVC申领的PV卷，该PV卷也不会被立即移除。PV对象的移除也要推迟到该PV不再绑定到PVC。可以使用<code>kubectl describe pvc hostpath</code>查看</p>
+<p>PVC可以自动绑定到匹配的PV。也可以手动指定未通过claimRef预留给其他PVC的PV。</p>
+<pre><code class="yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: foo-pvc
+  namespace: foo
+spec:
+  storageClassName: &quot;&quot; # 此处须显式设置空字符串，否则会被设置为默认的 StorageClass
+  volumeName: foo-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: foo-pv
+spec:
+  storageClassName: &quot;&quot;
+  claimRef:
+    name: foo-pvc
+    namespace: foo</code></pre>
+<h4 id="创建PV和PVC，POD申领PVC"><a href="#创建PV和PVC，POD申领PVC" class="headerlink" title="创建PV和PVC，POD申领PVC"></a>创建PV和PVC，POD申领PVC</h4><pre><code class="yaml">apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0003
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem # Filesystem文件系统，可以被直接挂载。Block块，POD和卷之间不存在文件系统，原始块卷
+  accessModes:
+    - ReadWriteOnce # ReadWriteOnce被Node中多个Pod读写挂载，ReadOnlyMany，ReadWriteMany，ReadWriteOncePod被Node中一个POD读写挂载
+  persistentVolumeReclaimPolicy: Retain # PVC被删除时PV依然保留，对应数据卷视为已经释放，卷存在此前申领人的数据，不能用于其他申领。
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tmp
+    server: 172.17.0.2</code></pre>
+<pre><code class="yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  # volumeName: 指定要绑定的PV，不指定则会自动创建
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: slow # PVC指定时，只有存在相同指定slow的PV，申领才能成功
+  selector: # 选择算符，设置之后不会动态制备PV卷
+    matchLabels:
+      release: &quot;stable&quot;
+    matchExpressions:
+      - {key: environment, operator: In, values: [dev]}</code></pre>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: &quot;/var/www/html&quot;
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim</code></pre>
+<h4 id="节点亲和性"><a href="#节点亲和性" class="headerlink" title="节点亲和性"></a>节点亲和性</h4><p>限制那些节点可以访问此卷，使用这些卷的POD只会被调度到规则选择的节点上执行。<code>.spec.nodeAffinity</code></p>
+<h4 id="阶段"><a href="#阶段" class="headerlink" title="阶段"></a>阶段</h4><p>持久卷阶段：Available，Bound，Release（已经被删除，关联的存储资源未被回收），Failed。</p>
+<p><code>kubectl describe persistentvolume &lt;name&gt;</code> 查看绑定到PV的PVC的名称</p>
+<h3 id="StorageClass"><a href="#StorageClass" class="headerlink" title="StorageClass"></a>StorageClass</h3><p>可能会存在大量的PVC，如果每个PV都手动创建则非常繁琐。<br>自动PV的机制核心是StorageClass。<br>StorageClass实际是PV的模板。定义了PV的属性：存储类型，Volume大小。创建PV用到的存储插件。这样K8S就可以根据PVC的创建请求，找到StorageClass创建出PV。</p>
+<p>对于支持动态供应的存储系统，可以用来创建PV。<br>使用不支持动态供应的节点本地存储，需要手动创建PV表示具体的存储资源，但此时StorageClass仍能用来定义一些内容。</p>
+<p>provisioner，parameters，reclaimPolicy是必须的字段</p>
+<pre><code class="yaml">apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: low-latency
+  annotations:
+    storageclass.kubernetes.io/is-default-class: &quot;false&quot; # true 设置成默认的，当PVC未指定时会使用
+provisioner: csi-driver.example-vendor.example # 指定制作PV的卷插件
+reclaimPolicy: Retain # 默认值是 Delete
+allowVolumeExpansion: true # 允许部分类型的卷调整PVC对象大小，申请新的，大容量的存储卷。
+mountOptions:
+  - discard # 这可能会在块存储层启用 UNMAP/TRIM
+volumeBindingMode: WaitForFirstConsumer # 默认的Immediate是立刻绑定，可能导致PV与POD的可用区不同，速度降低。WaitForFirstConsumer将PVC的绑定从立刻绑定到PV，延迟到确定POD调度位置之后进行。
+parameters:
+  guaranteedReadWriteLatency: &quot;true&quot; # 这是服务提供商特定的</code></pre>
+<h3 id="存储类，PV，PVC，使用存储类进行动态卷制备"><a href="#存储类，PV，PVC，使用存储类进行动态卷制备" class="headerlink" title="存储类，PV，PVC，使用存储类进行动态卷制备"></a>存储类，PV，PVC，使用存储类进行动态卷制备</h3><p>存储管理实际是PV负责抽象物理存储，PVC负责消费。存储类负责PVC消耗时匹配对应的PV，如果PV不存在且可以动态制备，存储类会创建PV，但此时也是PV负责抽象的物理存储</p>
+<p>PV和PVC也实现了职责分离，PVC更像是接口调用，PV提供接口。开发人员只需要调用接口，接口PV的维护则是运维处理。</p>
+<p>PVC：Pod想要的大小，权限<br>PV：描述Volume的属性，Volume类型，挂载目录，远程服务器地址<br>StorageClass：PV的模板。同属一个StorageClass的PV和PVC才能进行绑定</p>
+<h3 id="本地存储"><a href="#本地存储" class="headerlink" title="本地存储"></a>本地存储</h3><p>PV，PVC，StorageClass使用的大多是远程存储来保证和节点无关，方便一个StorageClass在不同Node上使用。<br>然而部分服务器需要高性能的本地存储，如部分服务会将数据落地磁盘缓存。而本地存储这个是和Node绑定的（通过 PV 的 nodeAffinity 实现）。不同Node的本地存储是互相隔离的。且由于数据在Node上，一旦Node出现问题，数据就会丢失。所以本地存储要求具备定时备份能力。</p>
+<p><strong>延迟绑定</strong>：现在假设创建一个PVC，PVC会向Storageclass申请创建一个PV，此时由于没有Pod的信息，可能创建到了Node1上。Pod创建且使用此PVC时，会被直接约束在Node1上。延迟到POD创建时绑定，则可以根据POD的要求和选择更合适的PV进行绑定。避免被调度到不合适的Node上。</p>
+<p><strong>不应该将宿主机的目录当做PV使用</strong>：宿主机目录不可控，PVC申请的资源可能会被侵占。缺乏配额保证，缺乏隔离会被其他容器修改。</p>
+<p><strong>本地存储多为静态制备</strong>：PVC创建时会立刻与PV绑定，如果使用的是远程目录，立即绑定不会出现问题。使用本地目录则可能绑定到预期外的Node上，导致后续POD也被创建到此Node上。不过目前已经有provisioner支持动态制备。</p>
+<pre><code class="yaml">apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner # 不支持动态制备
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - 1.1.1.1
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Ti
+  storageClassName: local-storage
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: nginx
+    volumeMounts:
+    - mountPath: /data
+      name: my-volume
+  volumes:
+  - name: my-volume
+    persistentVolumeClaim:
+      claimName: local-pvc</code></pre>
+<h3 id="投射卷"><a href="#投射卷" class="headerlink" title="投射卷"></a>投射卷</h3><p>将多个不同内容来源，聚合到一个挂载目录。支持在一个目录下挂载多个来源</p>
+<p><strong>支持的投射类型</strong></p>
+<ul>
+<li>configMap</li>
+<li>secret</li>
+<li>downwardAPI</li>
+<li>serviceAccountToken</li>
+</ul>
+<h5 id="Secret"><a href="#Secret" class="headerlink" title="Secret"></a>Secret</h5><p>将etcd中的内容，映射到容器的某个目录上，提供了加密手段</p>
+<h5 id="configMap"><a href="#configMap" class="headerlink" title="configMap"></a>configMap</h5><p>于Secret几乎相同，不过是不需要加密的数据</p>
+<pre><code class="yaml">spec:
+  volumes:
+    - name: config-vol
+      configMap:
+        name: log-config # 声明一个卷config-vol，log-config中log_level条目会 只读 的保存到log_level.conf中
+        items:
+          - Key: log_level
+            path: log_level.conf
+  containers:
+    - volumeMounts:
+        - name: config-vol # 将卷config-vol挂载到容器中此目录，目录中存在log_level.conf文件
+          mountPath: /etc/config   </code></pre>
+<h5 id="downwardAPI"><a href="#downwardAPI" class="headerlink" title="downwardAPI"></a>downwardAPI</h5><p>提供访问容器属性的方法</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: test-downwardapi-volume
+  labels:
+    zone: us-est-coast
+    cluster: test-cluster1
+    rack: rack-22
+spec:
+  containers:
+    - name: client-container
+      image: k8s.gcr.io/busybox
+      command: [&quot;sh&quot;, &quot;-c&quot;]
+      args:
+      - while true; do
+          if [[ -e /etc/podinfo/labels ]]; then
+            echo -en &#39;\n\n&#39;; cat /etc/podinfo/labels; fi;
+          sleep 5;
+        done;
+      volumeMounts:
+        - name: podinfo
+          mountPath: /etc/podinfo
+          readOnly: false
+  volumes:
+    - name: podinfo
+      projected:
+        sources:
+        - downwardAPI:
+            items:
+              - path: &quot;labels&quot;
+                fieldRef:
+                  fieldPath: metadata.labels</code></pre>
+<p>使用kubectl logs查看</p>
+<p><strong>serviceAccountToken</strong><br>K8S为每个pod都默认挂载了serviceAccountToken到固定目录。为pod提供访问K8S API Server的token。容器中的进程如果需要使用K8S API Server就需要加载token。<br>算是特殊的secret</p>
+<h3 id="临时卷"><a href="#临时卷" class="headerlink" title="临时卷"></a>临时卷</h3><p>和POD保持统一生命周期，随POD创建和删除</p>
+<pre><code class="yaml">kind: Pod
+apiVersion: v1
+metadata:
+  name: my-app
+spec:
+  containers:
+    - name: my-frontend
+      image: busybox:1.28
+      volumeMounts:
+      - mountPath: &quot;/scratch&quot;
+        name: scratch-volume
+      command: [ &quot;sleep&quot;, &quot;1000000&quot; ]
+  volumes:
+    - name: scratch-volume
+      ephemeral: # 定义一个临时卷
+        volumeClaimTemplate: # 使用模板可以自动创建PVC，使用persistentVolumeClaim则需要手动指定一个创建好的PVC
+          metadata:
+            labels:
+              type: my-frontend-volume
+          spec:
+            accessModes: [ &quot;ReadWriteOnce&quot; ]
+            storageClassName: &quot;scratch-storage-class&quot;
+            resources:
+              requests:
+                storage: 1Gi</code></pre>
+<h3 id="卷属性类，Beta功能跳过"><a href="#卷属性类，Beta功能跳过" class="headerlink" title="卷属性类，Beta功能跳过"></a>卷属性类，Beta功能跳过</h3><h3 id="卷快照，卷快照类，CSI卷克隆，先跳过"><a href="#卷快照，卷快照类，CSI卷克隆，先跳过" class="headerlink" title="卷快照，卷快照类，CSI卷克隆，先跳过"></a>卷快照，卷快照类，CSI卷克隆，先跳过</h3><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h3><pre><code class="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-demo
+data:
+  # 类属性键；每一个键都映射到一个简单的值
+  player_initial_lives: &quot;3&quot;
+
+  # 类文件键
+  game.properties: |
+    enemy.types=aliens,monsters
+    player.maximum-lives=5    
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo-pod
+spec:
+  containers:
+      env:
+        # 定义环境变量
+        - name: PLAYER_INITIAL_LIVES # 请注意这里和 ConfigMap 中的键名是不一样的
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo           # 这个值来自 ConfigMap
+              key: player_initial_lives # 需要取值的键
+      volumeMounts:
+      - name: config
+        mountPath: &quot;/config&quot;
+        readOnly: true
+  volumes:
+  # 你可以在 Pod 级别设置卷，然后将其挂载到 Pod 内的容器中
+  - name: config
+    configMap:
+      # 提供你想要挂载的 ConfigMap 的名字
+      name: game-demo
+      # 来自 ConfigMap 的一组键，将被创建为文件
+      items:
+      - key: &quot;game.properties&quot;
+        path: &quot;game.properties&quot;</code></pre>
+<h3 id="Secret-1"><a href="#Secret-1" class="headerlink" title="Secret"></a>Secret</h3><pre><code class="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: dotfile-secret
+data:
+  .secret-file: dmFsdWUtMg0KDQo=
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-dotfiles-pod
+spec:
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: dotfile-secret
+  containers:
+    - name: dotfile-test-container
+      image: registry.k8s.io/busybox
+      command:
+        - ls
+        - &quot;-l&quot;
+        - &quot;/etc/secret-volume&quot;
+      volumeMounts:
+        - name: secret-volume
+          readOnly: true
+          mountPath: &quot;/etc/secret-volume&quot;  # 最终表现为/etc/secret-volume/.secret-file文件</code></pre>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>为POD指定资源的Request后，kube-scheduler就会决定将POD调度到哪个节点上，如果节点有大于Request的剩余量，POD可以多使用一些。但是指定limit后确保资源不超过设定值。</p>
+<p>CPU限制：通过CPU节流机制强制执行</p>
+<p>CPU单位：1CPU = 1个物理核或者1个虚拟核，1 CPU=1000m CPU，即500m为半个核心。最小为1m。</p>
+<p>Memory限制：使用OOM终止机制执行</p>
+<p>Memory单位：400m表示0.4字节，400Mi表示400M直接</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+spec:
+  containers:
+  - name: app
+    image: images.my-company.example/app:v4
+    resources:
+      requests:
+        memory: &quot;64Mi&quot;
+        cpu: &quot;250m&quot;
+      limits:
+        memory: &quot;128Mi&quot;
+        cpu: &quot;500m&quot;</code></pre>
+<h2 id="安全-暂时跳过"><a href="#安全-暂时跳过" class="headerlink" title="安全-暂时跳过"></a>安全-暂时跳过</h2><h2 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h2><h3 id="范围限制-LimitRange"><a href="#范围限制-LimitRange" class="headerlink" title="范围限制 LimitRange"></a>范围限制 LimitRange</h3><p>指定一个命名空间</p>
+<ol>
+<li>设置POD或者Container的最小和最大的资源使用量</li>
+<li>PVC最大和最小的存储空间</li>
+</ol>
+<p>如果新创建的POD或者container不满足要求则会创建失败</p>
+<h3 id="资源配额"><a href="#资源配额" class="headerlink" title="资源配额"></a>资源配额</h3><p>设定一个命名空间下，各种资源的上限或者下限</p>
+<h3 id="节点资源管理器"><a href="#节点资源管理器" class="headerlink" title="节点资源管理器"></a>节点资源管理器</h3><p>可以设置CPU调度相关，比如将POD绑定到某个核心上提高缓存使用效率。</p>
+<h2 id="调度，强占和驱逐"><a href="#调度，强占和驱逐" class="headerlink" title="调度，强占和驱逐"></a>调度，强占和驱逐</h2><p>调度：确保POD匹配到合适的节点，以便kubelet（Node上的运行的代理，保证容器运行在POD中）能够运行POD。<br>强占：终止低优先级的POD，以便运行高优先级的POD<br>驱逐：资源匮乏的节点上，主动让一个或多个POD失效</p>
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><p>通过Watch机制发现集群中新创建且未被调度到节点上的POD，将其调度到合适的节点上运行</p>
+<p>可调度节点：满足一个POD调度请求的节点。没有节点满足时，POD将停留在未调度状态</p>
+<p>绑定：可调度节点中打分，选出最高分的节点，通知kube-apiserver。</p>
+<h3 id="特定节点上运行POD"><a href="#特定节点上运行POD" class="headerlink" title="特定节点上运行POD"></a>特定节点上运行POD</h3><ol>
+<li>节点标签，nodeSelector</li>
+<li>亲和性<ol>
+<li>requiredDuringSchedulingIgnoredDuringExecution：规则满足时执行调度，是语法表达能力更强的nodeSelector</li>
+<li>preferredDuringSchedulingIgnoredDuringExecution：找不到匹配节点时，仍会调度</li>
+</ol>
+</li>
+<li>反亲和性<ol>
+<li>requiredDuringSchedulingIgnoredDuringExecution：满足规则是不执行调度</li>
+<li>preferredDuringSchedulingIgnoredDuringExecution：最好不调度到匹配的节点上</li>
+</ol>
+</li>
+</ol>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: with-node-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: # 必须有
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+            - antarctica-east1
+            - antarctica-west1
+      preferredDuringSchedulingIgnoredDuringExecution: # 最好有
+      - weight: 1 # 最好有的里面存在多项时，每项的权重，权重越高得分越高
+        preference:
+          matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+            - another-node-label-value</code></pre>
+<p>topologyKey：拓扑域，hostname 节点级别，zone可用区级别，region区域级别。</p>
+<pre><code class="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: with-pod-affinity
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: # 不调度到这个主机上
+      - labelSelector:
+          matchExpressions:
+          - key: app # 符合标签描述的POD
+            operator: In
+            values:
+            - my-app
+        topologyKey: &quot;kubernetes.io/hostname&quot; # 符合标签描述的POD，其所属的节点（hostname域）会被反亲和，同节点的无法调度。
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: security
+              operator: In
+              values:
+              - S2
+          topologyKey: topology.kubernetes.io/zone
+</code></pre>
+<h3 id="POD开销"><a href="#POD开销" class="headerlink" title="POD开销"></a>POD开销</h3><p>POD除了内部容器消耗请求的资源，POD本身也会消耗一些资源，调度时会将二者资源相加去寻找节点。</p>
+<p><code>kind: RuntimeClass</code>进行配置</p>
+<h3 id="POD调度就绪态"><a href="#POD调度就绪态" class="headerlink" title="POD调度就绪态"></a>POD调度就绪态</h3><p>通过yaml中的schedulingGates将就绪的POD放入等待列表，不是立即进行调度。删除后可以进行调度</p>
+<h3 id="POD拓扑分布约束，内容很多，简单过了下"><a href="#POD拓扑分布约束，内容很多，简单过了下" class="headerlink" title="POD拓扑分布约束，内容很多，简单过了下"></a>POD拓扑分布约束，内容很多，简单过了下</h3><p>将POD分布到不同的拓扑中以提高可用性，或者使得客户端就近调度</p>
+<h3 id="污点和容忍度"><a href="#污点和容忍度" class="headerlink" title="污点和容忍度"></a>污点和容忍度</h3><p>污点使得节点能够排斥一类特定的POD</p>
+<h3 id="调度框架"><a href="#调度框架" class="headerlink" title="调度框架"></a>调度框架</h3><p>调度是串行的，绑定是并行。调度+绑定称为调度上下文</p>
+<h4 id="调度框架扩展点"><a href="#调度框架扩展点" class="headerlink" title="调度框架扩展点"></a>调度框架扩展点</h4><p>EnqueueExtension：接口，插件实现此接口根据集群变化通过或者拒绝</p>
+<p>QueueingHint：集群中发生变化时，此回调函数被执行，能控制POD放入活跃或回退队列。</p>
+<ol>
+<li>进入队列前：<ol>
+<li>PreEnqueue：在POD被添加到内部活动队列之前调用，此队列中的POD被标记为<strong>准备好进行调度</strong>。</li>
+</ol>
+</li>
+<li>队列排序：<ol>
+<li>PreFilter：预处理POD或者检查相关条件</li>
+<li>Filter：标记不符合此POD的节点</li>
+<li>PostFilter：没有可用节点时调度</li>
+<li>PreScore：生成一个可共享状态给Score插件使用</li>
+<li>Score：评分</li>
+<li>NormalizeScore：可以修改分数</li>
+<li>Reserve：防止调度器等待绑定成功是发生竞争情况</li>
+<li>Permit：批准，拒绝，等待POD的绑定</li>
+</ol>
+</li>
+<li>绑定：<ol>
+<li>PreBind：执行POD绑定前的工作</li>
+<li>Bind：进行绑定</li>
+<li>PostBind：收尾清理相关资源</li>
+</ol>
+</li>
+</ol>
+<h3 id="动态资源分配如GPU，跳过"><a href="#动态资源分配如GPU，跳过" class="headerlink" title="动态资源分配如GPU，跳过"></a>动态资源分配如GPU，跳过</h3><h3 id="调度器性能调优"><a href="#调度器性能调优" class="headerlink" title="调度器性能调优"></a>调度器性能调优</h3><p>通过配置减少调度流程中的操作项目，比如有一个可调度的Node就直接用，不用评估其他的Node</p>
+<h3 id="资源装箱，控制节点资源权重进而控制分数"><a href="#资源装箱，控制节点资源权重进而控制分数" class="headerlink" title="资源装箱，控制节点资源权重进而控制分数"></a>资源装箱，控制节点资源权重进而控制分数</h3><h3 id="POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD"><a href="#POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD" class="headerlink" title="POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD"></a>POD优先级和抢占，通过PriorityClass使高优先级POD驱逐低优先POD</h3><h3 id="节点压力驱逐"><a href="#节点压力驱逐" class="headerlink" title="节点压力驱逐"></a>节点压力驱逐</h3><p>根据节点压力驱逐</p>
+<h3 id="API发起的驱逐"><a href="#API发起的驱逐" class="headerlink" title="API发起的驱逐"></a>API发起的驱逐</h3><p>API 发起的驱逐是一个先调用 Eviction API 创建 Eviction 对象，再由该对象体面地中止 Pod 的过程。</p>
+<h2 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h2><ol>
+<li>自己机器上尝试K8S还是构建高可用节点，或者是参与开发</li>
+<li>使用开箱即用的集群还是管理自己的</li>
+<li>本地还是云上</li>
+<li>本地配置时要选取合适的网络模型</li>
+<li>裸机还是虚拟机运行</li>
+<li>熟悉运行所需的相关组件</li>
+</ol>
+<h3 id="节点关闭"><a href="#节点关闭" class="headerlink" title="节点关闭"></a>节点关闭</h3><p>基于优先级的体面关闭，非体面关闭</p>
+<h3 id="Node自动缩容和扩容"><a href="#Node自动缩容和扩容" class="headerlink" title="Node自动缩容和扩容"></a>Node自动缩容和扩容</h3><p>Node不足时创建新的Node，足够时关闭Node。配合负载自动缩容和扩容使用</p>
+<h3 id="集群网络系统"><a href="#集群网络系统" class="headerlink" title="集群网络系统"></a>集群网络系统</h3><ol>
+<li>高度耦合容器间通信：POD和localhost解决</li>
+<li>POD间通信</li>
+<li>POD与Service通信</li>
+<li>外部和Service通信</li>
+</ol>
+<h3 id="日志架构"><a href="#日志架构" class="headerlink" title="日志架构"></a>日志架构</h3><p>K8S支持将标准输入和输出定向到文件，也可以用过kubectl logs查看</p>
+
+      
+       
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2023 lsmg
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

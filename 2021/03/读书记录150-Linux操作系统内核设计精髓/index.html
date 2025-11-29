@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Linux内核设计精髓 | Lsmg的大学之路</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Linux内核设计精髓 | Lsmg的大学之路">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S-istio">
+<meta property="og:url" content="http://blog.lsmg.xyz/2025/11/%E4%BA%91-istio/index.html">
+<meta property="og:site_name" content="Lsmg的大学之路">
+<meta property="og:description" content="istio安装mkdir -r &#x2F;k8s&#x2F;istio &amp;&amp; cd &#x2F;k8s&#x2F;istio curl -L https:&#x2F;&#x2F;istio.io&#x2F;downloadIstio | sh - echo &#39;export PATH&#x3D;&quot;$PATH:&#x2F;k8s&#x2F;istio&#x2F;istio-1.28.0&#x2F;bin&quot;&#39; &gt;&gt; ~&#x2F;.bashrc &amp;&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-15T10:38:08.000Z">
+<meta property="article:modified_time" content="2025-11-29T09:26:42.707Z">
+<meta property="article:author" content="Lsmg">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Lsmg的大学之路" type="application/atom+xml">
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Lsmg</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(91)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CPP">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        CPP
+                        <small>(14)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="CPP<--->源码学习">
+                                        
+                                        源码学习
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Linux">
+                        
+                        Linux
+                        <small>(9)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="NAS">
+                        
+                        NAS
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="UE5">
+                        
+                        UE5
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="个人记录">
+                        
+                        个人记录
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="云">
+                        
+                        云
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="优化">
+                        
+                        优化
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="分享会">
+                        
+                        分享会
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="学习记录">
+                        
+                        学习记录
+                        <small>(11)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="工具使用">
+                        <i class="fold iconfont icon-right"></i>
+                        
+                        工具使用
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                        <ul class="sub hide">
+                            
+                                <li>
+                                    <div data-rel="工具使用<--->Git操作">
+                                        
+                                        Git操作
+                                        
+                                            <small>(2
+                                                )</small>
+                                        
+                                    </div>
+                                    
+                                </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="日语">
+                        
+                        日语
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="模块设计">
+                        
+                        模块设计
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="算法">
+                        
+                        算法
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="网络编程">
+                        
+                        网络编程
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="计算机网络">
+                        
+                        计算机网络
+                        <small>(3)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="读书记录">
+                        
+                        读书记录
+                        <small>(20)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="采坑记">
+                        
+                        采坑记
+                        <small>(4)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="项目制作">
+                        
+                        项目制作
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">About</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">Friends</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="91">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>docker</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ebpf</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>GDB调试</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Git操作</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>HTTPS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Linux</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>NAS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Shell</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>spf-13</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>UP</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>常用命令</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>方向选择</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>时间触发器</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>编译加速</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>采坑记</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-GPT%E7%AD%94%E7%96%91%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="GPT答疑记录">GPT答疑记录</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 日语 "
+           href="/2023/03/%E6%97%A5%E8%AF%AD-%E4%BA%94%E5%A4%A7%E6%80%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="五大态">五大态</span>
+            <span class="post-date" title="2023-03-26 10:37:20">2023/03/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2023/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95180-%E6%80%A7%E8%83%BD%E4%B9%8B%E5%B7%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="性能之巅">性能之巅</span>
+            <span class="post-date" title="2023-03-21 23:37:20">2023/03/21</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95170-%E6%88%91%E6%98%AF%E4%B8%80%E5%8F%AAIT%E5%B0%8F%E5%B0%8F%E9%B8%9F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="我是一只IT小小鸟">我是一只IT小小鸟</span>
+            <span class="post-date" title="2022-05-30 19:09:20">2022/05/30</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95161-%E7%8E%B0%E4%BB%A3C++%E6%95%99%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="现代C++教程">现代C++教程</span>
+            <span class="post-date" title="2022-05-31 19:09:20">2022/05/31</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95160-TCPIP%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP/IP详解">TCP/IP详解</span>
+            <span class="post-date" title="2021-04-03 19:09:20">2021/04/03</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95150-Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E7%B2%BE%E9%AB%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux内核设计精髓">Linux内核设计精髓</span>
+            <span class="post-date" title="2021-03-28 19:09:20">2021/03/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95140-%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="程序员的自我修养">程序员的自我修养</span>
+            <span class="post-date" title="2021-03-17 19:09:20">2021/03/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/09/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95135-%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="深度探索C++对象模型">深度探索C++对象模型</span>
+            <span class="post-date" title="2020-09-15 15:17:39">2020/09/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2021/04/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95131-%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码整洁之道">代码整洁之道</span>
+            <span class="post-date" title="2021-04-28 08:19:39">2021/04/28</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/05/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95130-%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="代码大全">代码大全</span>
+            <span class="post-date" title="2020-05-13 21:19:39">2020/05/13</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2022/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95120-Linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux多线程服务器端编程">Linux多线程服务器端编程</span>
+            <span class="post-date" title="2022-02-15 17:19:39">2022/02/15</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95110-Effective%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EffectiveCpp读书记录">EffectiveCpp读书记录</span>
+            <span class="post-date" title="2020-02-26 21:43:46">2020/02/26</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/02/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95102-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-进程线程">Linux高性能服务器-进程线程</span>
+            <span class="post-date" title="2020-02-25 22:34:39">2020/02/25</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95101-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E9%AB%98%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-高级部分">Linux高性能服务器-高级部分</span>
+            <span class="post-date" title="2019-08-18 20:34:39">2019/08/18</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95100-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E5%88%9D%E7%BA%A7%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-初级部分">Linux高性能服务器-初级部分</span>
+            <span class="post-date" title="2019-08-17 20:34:39">2019/08/17</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9599-%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95%E7%90%86%E8%AE%BA%E9%83%A8%E5%88%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux高性能服务器-理论部分">Linux高性能服务器-理论部分</span>
+            <span class="post-date" title="2020-03-06 22:53:00">2020/03/06</span>
+        </a>
+        
+        
+        <a id="top" class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%9590-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="数据结构和STL">数据结构和STL</span>
+            <span class="post-date" title="2021-02-05 10:38:28">2021/02/05</span>
+        </a>
+        
+        
+        <a id="top" class="All 读书记录 "
+           href="/2019/08/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%9580-CPPPrimer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++Primer学习">C++Primer学习</span>
+            <span class="post-date" title="2019-08-16 19:13:22">2019/08/16</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-istio/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S-istio">K8S-istio</span>
+            <span class="post-date" title="2025-11-15 10:38:08">2025/11/15</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-K8S/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="K8S基础概念">K8S基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All 云 "
+           href="/2025/11/%E4%BA%91-HELM/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HELM基础概念">HELM基础概念</span>
+            <span class="post-date" title="2025-11-01 10:38:08">2025/11/01</span>
+        </a>
+        
+        
+        <a  class="All NAS "
+           href="/2025/09/NAS-bt/"
+           data-tag="NAS"
+           data-author="" >
+            <span class="post-title" title="BT内网穿透">BT内网穿透</span>
+            <span class="post-date" title="2025-09-23 19:48:22">2025/09/23</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-Windows%E4%B8%8BUnity%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Windows下Unity内存泄露排查">Windows下Unity内存泄露排查</span>
+            <span class="post-date" title="2024-11-14 19:48:22">2024/11/14</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2024/11/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F2/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="CMake项目常见的编译加速方式汇总">CMake项目常见的编译加速方式汇总</span>
+            <span class="post-date" title="2024-11-13 14:48:22">2024/11/13</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2024/07/CPP-CMAKE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CMAKE&amp;Make">CMAKE&amp;Make</span>
+            <span class="post-date" title="2024-07-02 17:07:45">2024/07/02</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/06/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%882/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦2">如何更好的添砖加瓦2</span>
+            <span class="post-date" title="2024-06-24 09:48:22">2024/06/24</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/04/Linux-massif/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="massif使用">massif使用</span>
+            <span class="post-date" title="2024-04-13 16:31:22">2024/04/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2024/03/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E4%BA%8BUP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="常事UP">常事UP</span>
+            <span class="post-date" title="2024-03-23 14:48:22">2024/03/23</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2024/01/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%8E%92%E8%A1%8C%E6%A6%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="排行榜">排行榜</span>
+            <span class="post-date" title="2024-01-25 14:38:08">2024/01/25</span>
+        </a>
+        
+        
+        <a  class="All 优化 "
+           href="/2023/12/%E4%BC%98%E5%8C%96-%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F/"
+           data-tag="编译加速"
+           data-author="" >
+            <span class="post-title" title="编译加速">编译加速</span>
+            <span class="post-date" title="2023-12-13 14:48:22">2023/12/13</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/12/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E6%96%B9%E5%90%91%E9%80%89%E6%8B%A9/"
+           data-tag="方向选择"
+           data-author="" >
+            <span class="post-title" title="方向选择">方向选择</span>
+            <span class="post-date" title="2023-12-11 19:48:22">2023/12/11</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/11/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E7%89%88/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="如何更好的添砖加瓦">如何更好的添砖加瓦</span>
+            <span class="post-date" title="2023-11-25 09:48:22">2023/11/25</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2023/11/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-PrometheusX%E7%81%AB%E7%84%B0%E5%9B%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="如何实现火焰图半自由">如何实现火焰图半自由</span>
+            <span class="post-date" title="2023-11-18 12:50:02">2023/11/18</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/11/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%86%99%E5%8D%9A%E5%AE%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="写博客技巧">写博客技巧</span>
+            <span class="post-date" title="2023-11-15 10:38:08">2023/11/15</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP%E6%9C%88%E8%AE%B0%E5%BD%95/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="UP月记录">UP月记录</span>
+            <span class="post-date" title="2023-10-27 09:48:22">2023/10/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="游戏设计">游戏设计</span>
+            <span class="post-date" title="2023-10-24 10:38:08">2023/10/24</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/10/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2023-10-20 18:38:08">2023/10/20</span>
+        </a>
+        
+        
+        <a  class="All 模块设计 "
+           href="/2023/10/%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1-%E6%97%B6%E9%97%B4%E8%A7%A6%E5%8F%91%E5%99%A8/"
+           data-tag="时间触发器"
+           data-author="" >
+            <span class="post-title" title="时间触发器">时间触发器</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-UP/"
+           data-tag="UP"
+           data-author="" >
+            <span class="post-title" title="个人UP">个人UP</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All 个人记录 "
+           href="/2023/10/%E4%B8%AA%E4%BA%BA%E8%AE%B0%E5%BD%95-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag="常用命令"
+           data-author="" >
+            <span class="post-title" title="常用命令">常用命令</span>
+            <span class="post-date" title="2023-10-16 09:48:22">2023/10/16</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2023/10/Linux-ebpf/"
+           data-tag="ebpf"
+           data-author="" >
+            <span class="post-title" title="bpf">bpf</span>
+            <span class="post-date" title="2023-10-11 17:00:22">2023/10/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E6%9E%B6%E6%9E%84/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="架构">架构</span>
+            <span class="post-date" title="2023-04-17 10:38:08">2023/04/17</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-Wireshark%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Wireshark插件开发">Wireshark插件开发</span>
+            <span class="post-date" title="2023-04-11 19:00:00">2023/04/11</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2023/04/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E9%80%9A%E8%AF%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="通识">通识</span>
+            <span class="post-date" title="2023-04-07 10:38:08">2023/04/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%B8%A7%E5%90%8C%E6%AD%A5/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="帧同步">帧同步</span>
+            <span class="post-date" title="2022-05-27 10:38:08">2022/05/27</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-SDL2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="SDL学习">SDL学习</span>
+            <span class="post-date" title="2022-05-25 10:38:08">2022/05/25</span>
+        </a>
+        
+        
+        <a  class="All UE5 "
+           href="/2022/05/UE5-%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UE5学习">UE5学习</span>
+            <span class="post-date" title="2022-05-12 20:31:22">2022/05/12</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2022/05/CPP-%E5%8D%8F%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="协程">协程</span>
+            <span class="post-date" title="2022-05-07 10:38:08">2022/05/07</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-6.s081/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="6.s081学习 &amp;&amp; tmux">6.s081学习 &amp;&amp; tmux</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All 学习记录 "
+           href="/2022/05/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-asio%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E7%AC%94%E8%AE%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="asio官方文档笔记">asio官方文档笔记</span>
+            <span class="post-date" title="2022-05-04 10:38:08">2022/05/04</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/07/CPP-alias/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-07-14 21:27:27">2021/07/14</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/05/CPP-ModernCpp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="ModernCpp.md">ModernCpp.md</span>
+            <span class="post-date" title="2021-05-25 23:27:27">2021/05/25</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/05/Linux-sed&awk&grep/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sed&amp;awk&amp;grep">sed&amp;awk&amp;grep</span>
+            <span class="post-date" title="2021-05-07 08:11:22">2021/05/07</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-HTTPS/"
+           data-tag="HTTPS"
+           data-author="" >
+            <span class="post-title" title="HTTPS的基本流程和原理">HTTPS的基本流程和原理</span>
+            <span class="post-date" title="2021-03-01 16:50:22">2021/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-class%20struct%20typename/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="class struct typename">class struct typename</span>
+            <span class="post-date" title="2021-02-24 10:54:08">2021/02/24</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-%E5%89%91%E6%8C%87Offer/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="剑指Offer">剑指Offer</span>
+            <span class="post-date" title="2021-02-10 00:08:28">2021/02/10</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/02/CPP-stdany,%20How%20when%20and%20why/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="void*|function|any|optional|variant, How when and why">void*|function|any|optional|variant, How when and why</span>
+            <span class="post-date" title="2021-02-06 18:56:27">2021/02/06</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2021/02/%E7%AE%97%E6%B3%95-leetcode/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="leetcode">leetcode</span>
+            <span class="post-date" title="2021-02-05 12:10:02">2021/02/05</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2021/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AEURL%E5%88%B0%E6%98%BE%E7%A4%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="浏览器访问URL到显示">浏览器访问URL到显示</span>
+            <span class="post-date" title="2021-02-01 16:55:22">2021/02/01</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-docker/"
+           data-tag="docker"
+           data-author="" >
+            <span class="post-title" title="Docker使用">Docker使用</span>
+            <span class="post-date" title="2021-01-31 23:34:22">2021/01/31</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-cast/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=".*_case">.*_case</span>
+            <span class="post-date" title="2021-01-14 21:27:27">2021/01/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-%E8%B0%83%E8%AF%95%E5%B8%B8%E7%94%A8Linux%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux-调试常用命令">Linux-调试常用命令</span>
+            <span class="post-date" title="2021-01-09 18:53:22">2021/01/09</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2021/01/CPP-pthread&thread/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread&amp;thread">pthread&amp;thread</span>
+            <span class="post-date" title="2021-01-03 11:27:27">2021/01/03</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2021/01/Linux-shell%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99/"
+           data-tag="Shell"
+           data-author="" >
+            <span class="post-title" title="Shell脚本编写">Shell脚本编写</span>
+            <span class="post-date" title="2021-01-02 22:00:22">2021/01/02</span>
+        </a>
+        
+        
+        <a  class="All 项目制作 "
+           href="/2020/12/%E9%A1%B9%E7%9B%AE%E5%88%B6%E4%BD%9C-%E7%9B%B4%E6%92%AD%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="直播服务器">直播服务器</span>
+            <span class="post-date" title="2020-12-02 12:50:02">2020/12/02</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/11/%E9%87%87%E5%9D%91%E8%AE%B0-delete%20this/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="由muduo tie引出的 delete this">由muduo tie引出的 delete this</span>
+            <span class="post-date" title="2020-11-26 17:37:08">2020/11/26</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/11/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-HTTP%E6%A1%86%E6%9E%B6%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="HTTP框架底层原理实现">HTTP框架底层原理实现</span>
+            <span class="post-date" title="2020-11-01 22:45:39">2020/11/01</span>
+        </a>
+        
+        
+        <a  class="All 分享会 "
+           href="/2020/10/%E5%88%86%E4%BA%AB%E5%AD%A6%E4%B9%A0%E4%BC%9A-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%AE%BF%E8%88%8D%E7%94%B5%E8%84%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="远程连接宿舍电脑">远程连接宿舍电脑</span>
+            <span class="post-date" title="2020-10-29 16:40:39">2020/10/29</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP记录">UNP记录</span>
+            <span class="post-date" title="2020-10-06 12:17:39">2020/10/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/08/%E9%87%87%E5%9D%91%E8%AE%B0-EPOLLET%E4%B8%A2%E5%A4%B1%E6%96%B0%E8%BF%9E%E6%8E%A5%E4%BA%8B%E4%BB%B6/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="EPOLLET丢失新连接事件">EPOLLET丢失新连接事件</span>
+            <span class="post-date" title="2020-08-03 23:03:08">2020/08/03</span>
+        </a>
+        
+        
+        <a  class="All 算法 "
+           href="/2020/07/%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9B%9B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="算法四">算法四</span>
+            <span class="post-date" title="2020-07-17 15:51:28">2020/07/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/07/Linux-VIM/"
+           data-tag="spf-13"
+           data-author="" >
+            <span class="post-title" title="VIM使用">VIM使用</span>
+            <span class="post-date" title="2020-07-05 20:31:22">2020/07/05</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/06/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-csapp/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="csapp笔记">csapp笔记</span>
+            <span class="post-date" title="2020-06-07 09:09:20">2020/06/07</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-EPOLL%E6%9C%AC%E8%B4%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="EPOLL本质">EPOLL本质</span>
+            <span class="post-date" title="2020-03-25 17:35:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 计算机网络 "
+           href="/2020/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-TCP%E7%8A%B6%E6%80%81%E6%9C%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="TCP状态机">TCP状态机</span>
+            <span class="post-date" title="2020-03-25 12:55:20">2020/03/25</span>
+        </a>
+        
+        
+        <a  class="All 网络编程 "
+           href="/2020/03/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B-Send%E8%BF%94%E5%9B%9E%E5%80%BC%E6%8E%A2%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Send返回值引出的(非)阻塞IO">Send返回值引出的(非)阻塞IO</span>
+            <span class="post-date" title="2020-03-20 11:14:20">2020/03/20</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-Linux%E4%BD%BF%E7%94%A8/"
+           data-tag="Linux"
+           data-author="" >
+            <span class="post-title" title="Linux的使用">Linux的使用</span>
+            <span class="post-date" title="2020-03-17 12:29:20">2020/03/17</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2020/03/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-UNP%E5%8D%B7%E4%BA%8C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="UNP卷二读书记录">UNP卷二读书记录</span>
+            <span class="post-date" title="2020-03-15 11:16:20">2020/03/15</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2020/03/Linux-GDB%E8%B0%83%E8%AF%95/"
+           data-tag="GDB调试"
+           data-author="" >
+            <span class="post-title" title="GDB调试">GDB调试</span>
+            <span class="post-date" title="2020-03-14 15:09:20">2020/03/14</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/03/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%92%8C%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%8F%8Acommit%E8%A7%84%E8%8C%83/"
+           data-tag="Git操作"
+           data-author="" >
+            <span class="post-title" title="分支管理和实际应用及commit规范">分支管理和实际应用及commit规范</span>
+            <span class="post-date" title="2020-03-06 19:34:25">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/03/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%BE%AA%E7%8E%AF%E5%88%A4%E6%96%AD%E4%B9%8B%E6%97%A0%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="循环判断中使用无符号类型">循环判断中使用无符号类型</span>
+            <span class="post-date" title="2020-03-06 17:37:08">2020/03/06</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/03/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Jsoncpp%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Jsoncpp代码阅读">Jsoncpp代码阅读</span>
+            <span class="post-date" title="2020-03-01 10:26:55">2020/03/01</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%A3%B0%E6%98%8E%E8%AF%A6%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="定义与声明详解">定义与声明详解</span>
+            <span class="post-date" title="2020-02-27 10:38:08">2020/02/27</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-CPP%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="CPP11及以后的常用特性">CPP11及以后的常用特性</span>
+            <span class="post-date" title="2020-02-19 17:41:27">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All CPP 源码学习 "
+           href="/2020/02/CPP-%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-Libevent%E4%BB%A3%E7%A0%81%E5%88%9D%E6%9C%9F%E4%BA%86%E8%A7%A3/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Libevent代码初期了解">Libevent代码初期了解</span>
+            <span class="post-date" title="2020-02-19 14:56:55">2020/02/19</span>
+        </a>
+        
+        
+        <a  class="All 工具使用 Git操作 "
+           href="/2020/02/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8-Git-%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Git的基础使用">Git的基础使用</span>
+            <span class="post-date" title="2020-02-07 18:24:42">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All 采坑记 "
+           href="/2020/02/%E9%87%87%E5%9D%91%E8%AE%B0-%E5%A4%B4%E6%96%87%E4%BB%B6%E4%BA%92%E7%9B%B8%E5%BC%95%E7%94%A8/"
+           data-tag="采坑记"
+           data-author="" >
+            <span class="post-title" title="头文件互相引用">头文件互相引用</span>
+            <span class="post-date" title="2020-02-07 16:37:08">2020/02/07</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2020/02/CPP-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="字节对齐">字节对齐</span>
+            <span class="post-date" title="2020-02-06 11:38:08">2020/02/06</span>
+        </a>
+        
+        
+        <a  class="All CPP "
+           href="/2019/11/CPP-%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="指针">指针</span>
+            <span class="post-date" title="2019-11-07 22:26:22">2019/11/07</span>
+        </a>
+        
+        
+        <a  class="All 读书记录 "
+           href="/2019/10/%E8%AF%BB%E4%B9%A6%E8%AE%B0%E5%BD%95-2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++薄书整理">C++薄书整理</span>
+            <span class="post-date" title="2019-10-20 19:13:22">2019/10/20</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-读书记录150-Linux操作系统内核设计精髓" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Linux内核设计精髓</h1>
+    
+    <div class="article-meta">
+        
+        <span class="top"><a>置顶</a></span>
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="读书记录">读书记录</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2025-11-29 09:26:42'>2021-03-28 19:09</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#进程线程概念与管理"><span class="toc-text">进程线程概念与管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#相关概念"><span class="toc-text">相关概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程的创建"><span class="toc-text">进程的创建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fork创建进程"><span class="toc-text">fork创建进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建线程"><span class="toc-text">创建线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程终结"><span class="toc-text">进程终结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程调度"><span class="toc-text">进程调度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux调度器"><span class="toc-text">Linux调度器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#睡眠和唤醒"><span class="toc-text">睡眠和唤醒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抢占和上下文切换"><span class="toc-text">抢占和上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实时调度策略"><span class="toc-text">实时调度策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绑定处理器内核和主动让出"><span class="toc-text">绑定处理器内核和主动让出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程调度算法"><span class="toc-text">进程调度算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步"><span class="toc-text">同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#死锁"><span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#哲学家就餐问题"><span class="toc-text">哲学家就餐问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux提供的锁"><span class="toc-text">Linux提供的锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生产者消费者"><span class="toc-text">生产者消费者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读者写者问题"><span class="toc-text">读者写者问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分布式"><span class="toc-text">分布式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存管理和虚拟内存"><span class="toc-text">内存管理和虚拟内存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#页面置换算法"><span class="toc-text">页面置换算法</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果你去直接搜索书名的话，应该是搜不到的。这里是两本书《Linux内核设计与实现》和《操作系统-精髓与设计原理》的总结内容😅</p>
+<h1 id="进程线程概念与管理"><a href="#进程线程概念与管理" class="headerlink" title="进程线程概念与管理"></a>进程线程概念与管理</h1><h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><p><strong>进程</strong>：是正在执行的程序代码的事实结果。是程序和相关资源的总称（不只有text代码段，还有诸如打开的文件、内存映射的内存地址空间和全局变量的数据段等等）</p>
+<p><strong>线程</strong>：线程是进程中活动的对象，每个线程都有独立的计数器、进程栈和一组进程寄存器。而在Linux中线程是一种特殊的进程。</p>
+<p><strong>进程描述符</strong>： 进程的列表被存放在任务队列中（一个双向循环链表，节点是<code>struct task_struct</code>其中包含一个进程的所有信息）。其中包含着诸如<code>打开的文件</code>、<code>进程的地址空间</code>、<code>挂起的信号</code>、<code>进程的状态</code>和其他信息。</p>
+<p>上面的<code>进程描述符结构</code>被包裹在<code>struct thread_info</code>结构体中，这个结构体位于进程内核栈的栈底</p>
+<ul>
+<li><p><strong>pid（进程标识值）</strong>：存放在上面的<code>进程描述符</code>中。由<code>pid</code>最大值限制的进程最大数量是可以调整的，但是这个值越大就代表上面的双向循环链表越长，遍历一圈的时间也就越长 。</p>
+</li>
+<li><p><strong>进程状态</strong></p>
+<ul>
+<li>TASK_RUNNING（运行）</li>
+<li>TASK_INTERRUPTIBLE（可中断）睡眠状态</li>
+<li>TASK_UNINTERRUPTIBLE（不可中断）即使接收到信号也不会被唤醒和准备投入运行</li>
+<li>__TASK_TRACED（被其他进程跟踪，如ptrace gdb）</li>
+<li>__TASK_STOPPED（停止）</li>
+</ul>
+</li>
+<li><p><strong>进程上下文</strong>：当程序调用了系统调用或者触发异常就陷入了内核空间 </p>
+</li>
+<li><p><strong>进程家族树</strong>：所有的进程都是PID为1的init进程后代。每个进程都有<code>parent</code>指针指向父进程的<code>task_struct</code>和一个叫做<code>children</code>的子进程链表<em>所以Linux中可以通过一个进程遍历到所有其他进程</em></p>
+</li>
+</ul>
+<img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96.png" style="zoom: 67%;" />
+
+
+
+<p>用户级线程的优点</p>
+<ul>
+<li>线程切换不需要内核态的权限，避免了两次状态转换。</li>
+<li>可以自己定制线程调度算法</li>
+<li>用户级线程可以运行在任何操作系统上</li>
+</ul>
+<p>用户级线程的缺点</p>
+<ul>
+<li>用户级线程一旦阻塞其他同进程的用户级线程也会阻塞</li>
+<li>无法利用系统多处理器的优点</li>
+</ul>
+<h2 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h2><p>通过<code>fork系统调用</code>可以拷贝当前进程创建一个子进程，此时父子进程的区别仅仅是PID和PPID和某些资源和统计量。</p>
+<p><strong>写时拷贝</strong>：Linux通过写时拷贝减少或者免除拷贝，<code>fork</code>之后并不是复制所有的进程地址空间，而是使用原来进程的地址空间。只有当需要写入的时候，才会进行拷贝，在此之前是通过只读方式共享。</p>
+<ul>
+<li>当<code>fork之后立即exec</code>的时候就完全没有必要复制父进程的地址空间。</li>
+<li>fork的实际开销就是复制父进程的<code>页表</code>以及创建唯一的<code>进程描述符</code></li>
+</ul>
+<h3 id="fork创建进程"><a href="#fork创建进程" class="headerlink" title="fork创建进程"></a>fork创建进程</h3><pre><code class="c++">pid_t fork()
+{
+    clone();
+}
+int clone(参数)
+{
+    do_fork();
+}
+UNKNOW do_fork()
+{
+    copy_process();
+
+    // 唤醒新创建的子进程开始运行
+}
+UNKNOW copy_process()
+{
+    dup_task_struct(); // 为新进程创建内核栈，thread_info和task_struct结构体。此时父子进程的进程描述符完全相同。
+
+    检查是否有空闲的pid来分配
+
+    将自已与父进程区别开，进程描述符中的小部分信息被清除，主要是统计信息
+
+    子进程被设置为不可中断状态，防止被投入运行
+
+    copy_flags(); // 更新flag成员
+    alloc_pid(); // 为新进程分配pid
+
+    根据传递给clone的参数 这里会拷贝或者共享打开的文件，文件系统信息，信号处理函数，进程地址空间等等 
+        一般同一进程的线程会共享这些内容，而不同的进程之前则是不同的需要拷贝
+
+    return 指向子进程的指针
+}</code></pre>
+<h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><p>在Linux中可以说没有线程这个独立的概念。有的是创建进程时根据传入clone的参数决定哪些资源共享、哪些资源拷贝。</p>
+<pre><code class="c++">pid_t fork()
+{
+    clone(SIGCHLD, 0);
+}
+int pthread_create()
+{
+    clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0);
+}</code></pre>
+<ul>
+<li>CLONE_VM 父子进程共享地址空间</li>
+<li>CLONE_FS 父子进程共享文件系统信息 </li>
+<li>CLONE_FILES 父子进程共享打开的文件.<strong>如果不指定会进行拷贝使得引用计数+1，而共享的话则不会+1</strong></li>
+<li>CLONE_SIGHAND 父子进程共享信号处理函数和被阻断的信号</li>
+</ul>
+<h3 id="进程终结"><a href="#进程终结" class="headerlink" title="进程终结"></a>进程终结</h3><p>虽然让人伤感😥，但进程终归要终结的。当一个进程终结的时候，内核必须释放其占有的资源，并将这一不幸通知父进程。</p>
+<p>不管是显示或者隐式调用exit，或者收到不能处理也不能忽视的信号时可能被动终结。最终都会调用<code>do_exit</code>函数</p>
+<pre><code class="c++">UNKNOW do_exit()
+{
+    将task_struct中的标志成员设置为PF_EXITING();
+
+    del_timer_sync(); // 删除定时器
+
+    if (开启记账)
+    {
+        进行记账();
+    }
+
+    exit_mm(); // 释放进程占用的mm_struct 如果这个地址空间没有被共享 则彻底释放
+
+    sem_exit(); // 取消IPC信号的排队等待
+
+    exit_files(); // 递减文件描述符和引用计数
+    exit_fs(); // 递减文件系统的引用计数
+
+    设置task_struct的exit_code成员中的任务退出代码(代码是exit传入的值);
+
+    exit_notify(); // 向父进程发送信息，为本进程的子进程寻找养父 然后将自己设置成EXIT_ZOMBIE
+
+    schedule(); // 本进程已经终结，调用此函数切换到新的线程。因为EXIT_ZOMBIE的进程永远不会再次被调用，do_exit永远不会返回了😇
+}</code></pre>
+<p>至此此进程没有了地址空间，仅存的是<code>内核栈</code>、<code>thread_info</code>和<code>task_struct</code>结构。为的是向父进程提供信息，可以通过wait系列函数收回仅存的这些内容</p>
+<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p>从处理器的角度来看，它只是从程序计数器指向的地址中取得指令然后执行，并忠实的执行这些指令。而程序计数器在系统运行过程中，可能时不时地从指向一个进程的代码指向另一个进程的代码，从而实现进程的切换。</p>
+<p>进程必须能够被操作系统跟踪，也就是说，一个进程必须包含一些必要的信息（进程控制块、进程的状态和在内存中的地址），使得操作系统能够感知到进程的存在，从而控制它的执行。</p>
+<p>系统必须设计某种队列暂时执行和暂时无法执行的进程。进程要么因为时间片用完而被中断，然后加入等待队列。要么执行完毕离开系统。或者阻塞等这时候操作系统从队列中找到新的进程来运行。</p>
+<p>PSW（程序状态字）中存在当前执行模式的标记（用户级 内核级）。当出现中断的时候，需要从用户级向内核级切换这时候这个标记就从<code>用户级切换为内核级</code>这样就能够执行内核空间的代码。当从内核返回的时候标记从<code>内核级切换为用户级</code>这样返回用户空间。</p>
+<p><strong>何时进行进程切换</strong>？</p>
+<p>当操作系统从当前运行的进程处得到了控制权的时候。</p>
+<ul>
+<li>中断（时间片用尽会发生时间中断）</li>
+<li>异常</li>
+<li>系统调用（Linux中系统调用就是中断的方式）</li>
+</ul>
+<p><strong>模式切换？</strong></p>
+<p>从用户态临时转向内核态，仅仅是保存和恢复进程上下文。并不会导致当前进程被切换</p>
+<p><strong>进程切换步骤</strong></p>
+<ol>
+<li>保存当前进程上下文（程序计数器和其他寄存器）</li>
+<li>改变当前进程的进程控制块内容（进程状态变更）</li>
+<li>将当前进程控制块移动到其他队列（就绪队列，<strong>某个事件</strong>的阻塞队列等）</li>
+<li>选择一个合适的进程</li>
+<li>更新被选择进程的进程控制块（设置为运行态）</li>
+</ol>
+<p>Linux提供了<code>抢占式的任务调度</code>和<code>实时的任务调度</code>策略</p>
+<p>主动让出  <code>VER1.0</code>  <code>EX协程</code></p>
+<ul>
+<li><p>抢占式调度器</p>
+<ul>
+<li>时间片耗尽或者执行完毕让出<code>VER2.0</code></li>
+<li>O（1）对于交互式进程很不友好 <code>VER3.0</code></li>
+<li>完全平衡调度算法，简称CFS <code>VER4.0</code></li>
+</ul>
+</li>
+<li><p>实时任务调度器</p>
+</li>
+</ul>
+<p>进程可以分为<code>I/O消耗型</code>和<code>处理器消耗型</code>。GUI程序的交互一般属于前者。这里就存在了两种矛盾</p>
+<ol>
+<li>处理器消耗型 希望使用更大的时间片，减少进程切换多做计算</li>
+<li>GUI等交互程序 希望快速响应，这就意味着需要更小的时间片，保证快速响应</li>
+</ol>
+<p>调度策略在这两个矛盾间寻找平衡点。</p>
+<p>我们希望能够快速的响应交互程序。所以最终将分配时间片改成了分配CPU使用比。加假如系统中仅存两个优先级相同的进程（交互进程和计算进程），那么调度器会给这两个进程各自分配50%的使用占比。然而对于交互进程这些时间远远足够，每次分配后都无法用尽，对于计算进程却能每次用尽分配的占比。这样CFS将会在交互进程需要运行时，毫不犹豫立刻抢占CPU给交互进程（这是因为 CPU承若给他50%的使用，然而他却没有用完。）这样就能使得交互进程快速响应以及计算进程占用更多的CPU。</p>
+<h3 id="Linux调度器"><a href="#Linux调度器" class="headerlink" title="Linux调度器"></a>Linux调度器</h3><p><strong>Linux调度器</strong></p>
+<p>Linux调度器是以模块的方式提供，不同的继承可以选择不同的调度器。这种模块化的结构称为<code>调度器类</code>。每个调度器都有自己的优先级，基础的调度器会按照优先级遍历这些调度器。而每个调度器都会提供经过他自己的算法决定下一个应该运行的进程。</p>
+<p><strong>Linux 调度器入口</strong></p>
+<p>每个调度器有自己的入口函数</p>
+<p>之后<code>schedule</code>函数调用优先级最高的一个调度器，问这个调度器谁是下一个该运行的进程。</p>
+<h3 id="睡眠和唤醒"><a href="#睡眠和唤醒" class="headerlink" title="睡眠和唤醒"></a>睡眠和唤醒</h3><p>为了防止调度器选出一个本不想运行的进程，调度器会从<code>可执行红黑树</code>中寻找下一个该运行的进程</p>
+<p><strong>睡眠</strong></p>
+<p>进程在将自己标记为休眠时，可以从<code>可执行红黑树</code>中将自己移除，放入等待队列。然后通过<code>schedule</code>选出下一个可执行的进程</p>
+<pre><code class="c++">void 睡眠()
+{
+    DEFINE_WAIT(); // 在等待队列创建一个位置
+
+    add_wait_queue(); // 将自己加入等待队列中
+
+    while(条件不满足)
+    {
+        prepare_to_wait(); // 将自己变更为TASK_INTERRUPTIBLE或者TASK_UNINTERRUPTIBLE
+
+        if (信号到来); // TASK_INTERRUPTIBLE下会被信号唤醒，而不是条件满足
+        {
+            处理信号();
+        }
+        if (条件满足)
+        {
+            break; // 条件满足时退出循环
+        }
+        else
+        {
+            schedule(); // 让出CPU 睡眠
+        }
+    }
+
+    将自己变更为TASK_RUNNING;
+
+    finish_wait(); // 将自己移出等待队列
+}</code></pre>
+<p><strong>唤醒</strong></p>
+<p>将自己标记为可执行状态，然后从等待队列移动回<code>可执行红黑树</code></p>
+<pre><code class="c++">void wake_up()
+{
+    唤醒等待队列上所有进程;
+
+    将进程设置为TASK_RUNNING;
+
+    将自己放入红黑树;
+}</code></pre>
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E4%BC%91%E7%9C%A0%E5%92%8C%E5%94%A4%E9%86%92.png" alt=""></p>
+<h3 id="抢占和上下文切换"><a href="#抢占和上下文切换" class="headerlink" title="抢占和上下文切换"></a>抢占和上下文切换</h3><p><strong>上下文切换</strong></p>
+<p>从一个可执行进程切换到另一个可执行进程。通过<code>context_switch</code>负责处理。当进程A被选定要投入运行的时候通过<code>schedule</code>函数就能调用前面的函数，实现上下文切换。</p>
+<pre><code class="c++">void schedule()
+{
+    context_switch();
+}
+void context_switch()
+{
+    switch_mm(); // 将虚拟内存从上一个进程切换到新的进程
+
+    switch_to(); // 负责处理器状态的切换。包括保存、恢复进程和栈的信息。
+}</code></pre>
+<p>内核必须知道什么时候调用<code>schedule</code>。</p>
+<p>当每个进程应该被抢占时，会被设置<code>need_resched</code>标志。这个标志告诉内核有其他进程应该被运行了，要尽快调动调度程序</p>
+<p><strong>用户抢占</strong></p>
+<p>从内核返回用户空间的时候，如果<code>need_resched</code>被设置，将会导致<code>schedule</code>被调用 内核会选取一个更加合适的进程投入运行</p>
+<p>用户抢占的发生时机</p>
+<ul>
+<li>从系统调用返回用户空间</li>
+<li>从中断处理程序返回用户空间</li>
+</ul>
+<p><strong>内核抢占</strong></p>
+<p>当从中断返回的时候如果当前没有持有锁（通过thread_info中的preempt_count计数器，加锁时+1，解锁时-1 为0时说明没有锁），而且<code>need_resched</code>被设置说明存在更加需要执行的进程可以被安全抢占</p>
+<p>如果内核中的进程被阻塞了，或者显示调用了<code>schedule</code>内核抢占就会显示的发生（<em>根本不需要额外的逻辑保证可以安全的抢占，因为如果代码显示的调用了schedule说明他清楚自己是可以安全的被抢占的</em>）</p>
+<h3 id="实时调度策略"><a href="#实时调度策略" class="headerlink" title="实时调度策略"></a>实时调度策略</h3><p><strong>SCHED_FIFO</strong></p>
+<p>不使用时间片，处于此状态的进程会比任何<code>SCHED_NORMAL</code>级的进程都先得到调度。他会一直执行下去直到自己受到阻塞或者主动让出，如果存在多个此策略的进程则会轮流执行。</p>
+<p><strong>SCHED_RR</strong></p>
+<p>带时间片的<code>SCHED_FIFO</code></p>
+<h3 id="绑定处理器内核和主动让出"><a href="#绑定处理器内核和主动让出" class="headerlink" title="绑定处理器内核和主动让出"></a>绑定处理器内核和主动让出</h3><h2 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h2><p>先来先服务（FCFS）</p>
+<p>最短进程优先（SPN）</p>
+<p>最短剩余时间优先（SRT）</p>
+<p>时间片轮换法(以此为基础的升级版 动态时间片)</p>
+<p>CFS（公平调度）</p>
+<p><strong>sched_setaffinity</strong></p>
+<p><strong>sched_getaffinity</strong></p>
+<p><strong>sched_yield 主动让出</strong></p>
+<p><img src="https://lsmg-img.oss-cn-beijing.aliyuncs.com/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/%E4%B8%8E%E8%B0%83%E5%BA%A6%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.png" alt=""></p>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><p>在单一处理器的时候，只有在中断发生的时候，或者内核明确地提出重新调度、执行另外一个任务的时候，才会出现数据的并发访问。</p>
+<p><strong>竞争条件和同步</strong></p>
+<p>如果两个执行线程在同一个临界区中执行，而且会因为执行顺序的不同影响最终结果，这就是程序存在的BUG。将这种情况称为<code>竞争条件</code>。这种条件出现的可能很低，所以非常难于排查。避免并发和防止竞争条件称为<code>同步</code>。</p>
+<p>需要辨认出真正需要共享的资源和相应的临界区，才是难的地方</p>
+<p><strong>进程交互的三种类型</strong></p>
+<ul>
+<li>无交互 存在对系统资源的竞争<ul>
+<li>竞争可能导致饥饿</li>
+<li>竞争可能导致死锁</li>
+</ul>
+</li>
+<li>间接交互 知道其他进程的存在，但是不和其直接交互。存在共享协作要求</li>
+<li>直接交互 知道其他进程的存在，通过PID直接进行交互。同样存在通信协作要求</li>
+</ul>
+<p><strong>造成并发执行的原因</strong></p>
+<ul>
+<li>中断 （几乎能在任意时刻发生，然后就会打断当前执行的代码）</li>
+<li>软中断和tasklet</li>
+<li>内核抢占</li>
+<li>睡眠以及用户空间的同步</li>
+</ul>
+<p><strong>锁</strong></p>
+<p>锁的使用是程序员自愿的，并不是系统强制的，是程序员可以选择的手段。</p>
+<p>锁是采用原子操作实现的</p>
+<p><strong>锁之间的区别</strong></p>
+<p>当锁已经其他线程获取后导致的不可用时的行为表现。</p>
+<ul>
+<li>有的锁在争用时简单的忙等待。（自旋锁）</li>
+<li>有的锁则会睡眠直到锁可用。（读写锁 信号量 互斥体 条件变量 这四个的具体行为各不相同）</li>
+</ul>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><ul>
+<li>自死锁 当一个线程尝试去获取已经持有的锁的时候</li>
+<li>ABBA死锁  线程1拿着A锁获取B锁 线程2拿着B锁获取A锁</li>
+<li>除了资源争用还有互相等待消息也会导致死锁（B等待A的消息，但是A的消息丢失或者没有发送）</li>
+</ul>
+<p>死锁解决办法</p>
+<ul>
+<li>按顺序加锁</li>
+<li>防止发生饥饿</li>
+<li>不要重复请求一个锁</li>
+<li>设计应该力求简单</li>
+</ul>
+<p><strong>死锁的解决</strong></p>
+<ul>
+<li><p>使用相同的顺序锁定两个互斥元，可以使用<code>std::lock</code>同时锁定所有需要的互斥元</p>
+</li>
+<li><p>持有锁的时候尽量不要调用其他部分的函数，防止其他函数中也存在锁相关内容</p>
+</li>
+<li><p>使用层次锁</p>
+</li>
+</ul>
+<ul>
+<li>死锁预防<ul>
+<li>一次性申请所有资源（解决占有且等待）<ul>
+<li>未得到资源的可能需要长时间等待，已得到资源的则会长时间不使用</li>
+<li>可能不能明确知道需要分配多少资源</li>
+</ul>
+</li>
+<li>抢占 （解决不可剥夺）<em>内存可以采用此方案， 因为可以将内存数据保存到硬盘中</em><ul>
+<li>进程占有资源后，在后续执行中申请所有需要的资源，资源得不到满足的情况下释放已经占有的资源</li>
+<li>通过进程优先级决定高优先级进程可以抢占低优先级进程资源</li>
+</ul>
+</li>
+<li>资源有序分配  （解决循环等待）<ul>
+<li>有序资源分配，对资源进行编码申请编码R资源后，后续申请只能申请编码大于R的资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>死锁避免<ul>
+<li>拒绝创建进程，所有进程需要的资源总量小于可使用的资源总量</li>
+<li>拒绝分配资源（银行家算法）使得系统一直在稳定状态</li>
+</ul>
+</li>
+<li>死锁检测<ul>
+<li>周期性检查（将现有的剩余资源进行分配，如果某个进程拿到了所有需要的资源则结束并返回所有占有的资源，当能够结束的进程都结束后依然存在进程无法得到足够的资源说明剩余进程之间存在死锁）</li>
+</ul>
+</li>
+</ul>
+<p>死锁预防</p>
+<ul>
+<li>优点<ul>
+<li>排除了出现死锁的可能</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>资源使用率低</li>
+</ul>
+</li>
+</ul>
+<p>死锁避免</p>
+<ul>
+<li>优点<ul>
+<li>相对于死锁检测，不需要抢占资源或者回滚进程</li>
+<li>相对于死锁预防更加灵活</li>
+<li>虽然可能出现死锁，但是尽力不让死锁出现</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>需要知道进程的最大资源使用</li>
+<li>进程之间是独立的</li>
+<li>可分配资源数是固定的</li>
+<li>进程结束必须释放所有资源</li>
+</ul>
+</li>
+</ul>
+<p>死锁检测</p>
+<p><strong>原子性和顺序性</strong></p>
+<p>前者通过原子操作实现，后者通过屏障实现。</p>
+<h3 id="哲学家就餐问题"><a href="#哲学家就餐问题" class="headerlink" title="哲学家就餐问题"></a>哲学家就餐问题</h3><h3 id="Linux提供的锁"><a href="#Linux提供的锁" class="headerlink" title="Linux提供的锁"></a>Linux提供的锁</h3><p><strong>自旋锁</strong></p>
+<ul>
+<li>短时间锁定的锁</li>
+</ul>
+<p><strong>信号量</strong></p>
+<ul>
+<li>用于长时间被锁定的锁</li>
+<li>锁的时间较短的话，可能会导致因为睡眠锁导致的用户态到内核态的切换和内核态到用户态的切换，以及相关队列的维护是得不偿失的</li>
+</ul>
+<h3 id="生产者消费者"><a href="#生产者消费者" class="headerlink" title="生产者消费者"></a>生产者消费者</h3><p><strong>生产者</strong></p>
+<p>在生产的时候不仅需要写缓冲区，还要读缓冲区确认缓冲区状态和将要写的位置。</p>
+<p><strong>消费者</strong></p>
+<p>不仅需要读缓冲区，还需要将已读的从缓冲区移出</p>
+<p>PV操作 通过计数值作为资源的数量</p>
+<p>条件变量 生产后signal消费者</p>
+<h3 id="读者写者问题"><a href="#读者写者问题" class="headerlink" title="读者写者问题"></a>读者写者问题</h3><p>读者优先</p>
+<p>写者优先</p>
+<p>读写锁</p>
+<h1 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h1><p><strong>中间件</strong>： 在上层应用程序和下层的通信软件及操作系统之间使用标准的编程接口和协议。这种标准化的接口和协议称为中间件</p>
+<p>中间件的基本目的：使得位于客户端的应用程序或用户能够访问服务器上的各种服务，而无需考虑服务器之间的差距。</p>
+<p>现在存在两种不同的数据库，有一个程序想要从两个数据库中读取数据。如果通过中间件，程序不需要考虑两个数据库之间的差异，而是直接根据标准读取即可</p>
+<p>可以通过添加一个中间层解决大多数问题。</p>
+<p><strong>分布式消息传递</strong></p>
+<ul>
+<li>使用消息</li>
+<li>以消息为基础，称为远程过程调用</li>
+</ul>
+<h1 id="内存管理和虚拟内存"><a href="#内存管理和虚拟内存" class="headerlink" title="内存管理和虚拟内存"></a>内存管理和虚拟内存</h1><p>内存保护需要通过硬件方式实现，因为操作系统无法预测程序所有的内存访问。</p>
+<p>分页使用拼接的方式 得到真实物理地址 因为每个页面大小相同</p>
+<p>分段则使用相加的方式 因为每个段的大小不同</p>
+<p>换出一块将要被使用的内存块，内存块马上又要被使用将会导致频繁的换出和换入造成抖动</p>
+<p>页表（分页式和段页式）段表（段式）的表中 每条项目存在P（存在标记）M（修改标记）</p>
+<p>减少页的大小</p>
+<ul>
+<li>页内碎片减少</li>
+<li>进程使用的页的数量增加，页表增大</li>
+<li>页的数量多，每个页面都是最近访问的页面，这样缺页率较低</li>
+</ul>
+<p>增加页的大小</p>
+<ul>
+<li>页的数量小且单个页大，每个页包含的内容将与任何一个最近访问的内容越来越远，局部性原理将会削弱，缺页率会增加</li>
+</ul>
+<p><strong>读取策略</strong></p>
+<p>请求分页：开始执行时会发生大量的缺页中断</p>
+<p>预分页：预先加载一些页</p>
+<h2 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h2><p>最佳页面置换算法（Opt）</p>
+<p>换出未来不会使用的页面</p>
+<p>最近最少使用（LRU）</p>
+<p>置换出最长时间没有被访问的页面</p>
+<p>先进先出（FIFO）</p>
+<p>时钟策略</p>
+<p>第一次被加载到内存时的使用为是1，当需要置换的时候指针扫描一圈，如果遇到使用位是1的将其变为0，遇到是0的则选中这个页面进行置换</p>
+<p>增加了修改位后的时钟策略</p>
+<p>首先选取未被使用未被修改的作为置换页（扫描过程不修改使用位）</p>
+<p>其次选取未被使用但修改过的作为置换页（扫描过程会将使用位从1改为0）</p>
+
+      
+       
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2023 lsmg
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
